@@ -118,20 +118,7 @@ use yii\helpers\Url;
         </li>
         <?php endif?>
 
-        <?php if(\Yii::$app->user->isGuest):?>
-        <li>
-            <a href="<?=Url::to(['/user/login'])?>">
-                <i class="fa fa-sign-in"></i> Login
-            </a>
-        </li>
-        <?php else:?>
-        <li>
-            <a href="<?=Url::to(['/user/logout'])?>" data-method="post">
-                <i class="fa fa-sign-out"></i> Log out
-            </a>
-        </li>
 
-        <?php endif?>
     </ul>
 
 </nav>

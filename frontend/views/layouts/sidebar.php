@@ -11,7 +11,17 @@
             [
                 'options' => ['class' => 'nav metismenu', 'id'=>'side-menu'],
                 'submenuTemplate' => "\n<ul class='nav nav-second-level collapse' {show}>\n{items}\n</ul>\n",
-                'items' => $menu,
+                'items' => [
+                    ['label' => 'Справочники', 'icon' => 'fa fa-file-code-o', 'url' => '#', 'visible' => true,
+                        'items' => [
+                        ['label' => 'Страны', 'icon' => 'fa fa-globe', 'url' => ['/catalog/country/index'], 'visible' => true],
+                        ['label' => 'Организации', 'icon' => 'fa fa-university', 'url' => ['/catalog/organization/index'], 'visible' => true],
+                        ['label' => 'Должностные лица', 'icon' => 'fa fa-address-book-o', 'url' => ['/catalog/employee/index'], 'visible' => true],
+                    ]],
+                    ['label' => 'Соглашения', 'icon' => 'fa fa-handshake-o', 'url' => ['/agreement/default/index'], 'visible' => true],
+
+                ],
+
             ]
         ) ?>
     </div>

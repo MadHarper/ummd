@@ -18,7 +18,18 @@
         "yiisoft/yii2": "~2.0.6",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "jcabanillas/yii2-inspinia": "*"
+        "jcabanillas/yii2-inspinia": "*",
+        "toris/toris-rbac": "~2.0",
+        "toris/logger": "~1.1",
+        "toris/templates": "~1.0",
+        "toris/filter-table": "~2.0",
+        "unclead/yii2-multiple-input": "2.8.0",
+        "kartik-v/yii2-dynagrid": "1.4.6",
+        "phpoffice/phpexcel": "dev-develop",
+        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "kartik-v/yii2-date-range": "*",
+        "kartik-v/yii2-field-range": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
@@ -27,6 +38,7 @@
         "codeception/base": "^2.2.3",
         "codeception/verify": "~0.3.1"
     },
+
     "config": {
         "process-timeout": 1800
     },
@@ -34,6 +46,34 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.infra.toris.vpn:toris/php/ui-modules/source/box.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.infra.toris.vpn:toris/php/ui-modules/source/check-box-column-template.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.infra.toris.vpn:toris/php/ui-modules/source/filter-table.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.infra.toris.vpn:toris/php/ui-modules/source/base.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.infra.toris.vpn:toris/php/ui-modules/source/toris-rbac.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.infra.toris.vpn:toris/php/ui-modules/source/logger.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.infra.toris.vpn:toris/php/ui-modules/source/templates.git"
         }
     ]
 }
