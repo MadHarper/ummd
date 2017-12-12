@@ -15,6 +15,8 @@ class AgreementSearch extends Agreement
 
     public $created_at_range;
     public $ended_at_range;
+    public $organization;
+    public $employee;
 
 
 
@@ -25,7 +27,7 @@ class AgreementSearch extends Agreement
     public function rules()
     {
         return [
-            [['id', 'status', 'iogv_id', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'status', 'iogv_id', 'created_at', 'updated_at', 'organization', 'employee'], 'integer'],
             [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range'], 'safe'],
         ];
     }
@@ -39,6 +41,15 @@ class AgreementSearch extends Agreement
         return Model::scenarios();
     }
 
+    public function attributeLabels()
+    {
+        /*
+        return [
+            'organization' => 'Организации',
+        ];
+        */
+    }
+
     /**
      * Creates data provider instance with search query applied
      *
@@ -48,7 +59,7 @@ class AgreementSearch extends Agreement
      */
     public function search($params)
     {
-        $query = Agreement::find();
+        $query = Agreement::find()->joinWith(['sideAgrs t1']);
 
         // add conditions that should always apply here
 
@@ -66,26 +77,38 @@ class AgreementSearch extends Agreement
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'status' => $this->status,
+            'agreement.id' => $this->id,
+            'agreement.status' => $this->status,
             //'date_start' => $this->date_start,
             //'date_end' => $this->date_end,
-            'iogv_id' => $this->iogv_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'agreement.iogv_id' => $this->iogv_id,
+            'agreement.created_at' => $this->created_at,
+            'agreement.updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['ilike', 'name', $this->name])
-            ->andFilterWhere(['ilike', 'desc', $this->desc]);
+        if(isset($this->organization)){
+            $query->andFilterWhere([
+                't1.org_id' => $this->organization,
+            ]);
+        }
+
+        if(isset($this->employee)){
+            $query->andFilterWhere([
+                't1.employee_id' => $this->employee,
+            ]);
+        }
+
+        $query->andFilterWhere(['ilike', 'agreement.name', $this->name])
+            ->andFilterWhere(['ilike', 'agreement.desc', $this->desc]);
 
         if(!empty($this->created_at_range) && strpos($this->created_at_range, '-') !== false) {
             list($from_date_start, $to_date_start) = explode(' - ', $this->created_at_range);
-            $query->andFilterWhere(['between', 'date_start', $from_date_start, $to_date_start]);
+            $query->andFilterWhere(['between', 'agreement.date_start', $from_date_start, $to_date_start]);
         }
 
         if(!empty($this->ended_at_range) && strpos($this->ended_at_range, '-') !== false) {
             list($from_date_end, $to_date_end) = explode(' - ', $this->ended_at_range);
-            $query->andFilterWhere(['between', 'date_end', $from_date_end, $to_date_end]);
+            $query->andFilterWhere(['between', 'agreement.date_end', $from_date_end, $to_date_end]);
         }
 
         return $dataProvider;

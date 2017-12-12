@@ -9,7 +9,9 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use yii\bootstrap\Alert;
 
+
 AppAsset::register($this);
+\frontend\assets\AppAsset::register($this);
 $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/jcabanillas/yii2-inspinia/assets');
 ?>
 <?php $this->beginPage() ?>
@@ -62,7 +64,7 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/jcabanillas/
 
                 <div class="wrapper wrapper-content">
 
-<?= Alert::widget() ?>
+
 
                     <div class="row">
                         <div class="col-lg-12">

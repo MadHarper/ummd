@@ -1,0 +1,8 @@
+.intable_list{
+    display: flex;
+    flex-direction: row;
+}
+
+.intable_list span{
+    margin-right: 8px;
+}

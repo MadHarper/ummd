@@ -9,10 +9,10 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = '@frontend/assets/dist';
+    //public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'css/table.css',
     ];
     public $js = [
     ];
@@ -20,4 +20,11 @@ class AppAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
+
+
+    public function init()
+    {
+        parent::init();
+        $this->publishOptions['forceCopy'] = true;
+    }
 }

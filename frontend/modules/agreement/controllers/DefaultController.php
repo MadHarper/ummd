@@ -109,6 +109,43 @@ class DefaultController extends Controller
         return $this->redirect(['index']);
     }
 
+
+
+    public function actionSearchOrg($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['id', 'name as text'])
+            ->from('organization')
+            ->where(['ilike','name',$q])
+            ->limit(10)
+            ->all());
+
+        return $out;
+    }
+
+    public function actionSearchEmployee($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['id', "CONCAT (fio, ' - ', position) as text"])
+            ->from('employee')
+            ->where(['ilike','fio',$q])
+            ->limit(10)
+            ->all());
+
+        return $out;
+    }
+
+
+
+
     /**
      * Finds the Agreement model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
