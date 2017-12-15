@@ -14,7 +14,7 @@ use yii\filters\VerbFilter;
 /**
  * SideController implements the CRUD actions for SideAgr model.
  */
-class SideController extends Controller
+class SideController extends \frontend\components\BaseController
 {
     /**
      * @inheritdoc
@@ -22,6 +22,15 @@ class SideController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

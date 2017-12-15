@@ -23,6 +23,13 @@ use yii\db\ActiveRecord;
  */
 class Agreement extends ActiveRecord
 {
+
+
+    const STATUS_PROJECT = 1;
+    const STATUS_DONE = 2;
+
+
+
     /**
      * @inheritdoc
      */
@@ -51,7 +58,8 @@ class Agreement extends ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'name'], 'required'],
+            ['status', 'default', 'value' => self::STATUS_PROJECT],
+            [['name'], 'required'],
             [['status', 'iogv_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['status', 'iogv_id', 'created_at', 'updated_at'], 'integer'],
             [['name', 'desc'], 'string'],
@@ -76,6 +84,27 @@ class Agreement extends ActiveRecord
             'updated_at' => 'Updated At',
         ];
     }
+
+
+    public static function find()
+    {
+        return new AgreementQuery(get_called_class());
+    }
+
+    public static function getStatusList()
+    {
+        return [
+            self::STATUS_PROJECT => 'Проект',
+            self::STATUS_DONE => 'Заключено'
+        ];
+    }
+
+    public function getStatusToString()
+    {
+        $arr = self::getStatusList();
+        return $arr[$this->status];
+    }
+
 
     /**
      * @return \yii\db\ActiveQuery

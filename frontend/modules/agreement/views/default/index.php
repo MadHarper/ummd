@@ -89,6 +89,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute'=>'status',
                     'vAlign'=>'middle',
+                    'width'=>'150px',
+                    'content' => function($data){
+                        return $data->getStatusToString();
+                    },
+                    'filter' => \common\models\Agreement::getStatusList(),
                     //'order'=>DynaGrid::ORDER_FIX_LEFT
                 ],
                 [

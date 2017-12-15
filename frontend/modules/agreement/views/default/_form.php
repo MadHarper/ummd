@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
+use common\models\Agreement;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Agreement */
@@ -13,7 +14,9 @@ use kartik\date\DatePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?php if(!$model->isNewRecord): ?>
+        <?= $form->field($model, 'status')->dropDownList(Agreement::getStatusList()) ?>
+    <?php endif;?>
 
     <?= $form->field($model, 'name')->textarea(['rows' => 6]) ?>
 

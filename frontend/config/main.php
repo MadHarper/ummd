@@ -1,4 +1,7 @@
 <?php
+
+use common\models\UserToris;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -8,11 +11,18 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'homeUrl' => ['/agreement/default/index'],
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log',
+        'toris'
+    ],
     'controllerNamespace' => 'frontend\controllers',
     'language' => 'ru',
     'modules' => [
+        'toris' => [
+            'class' => 'frontend\modules\toris\Module',
+        ],
         'catalog' => [
             'class' => 'frontend\modules\catalog\Module',
         ],
@@ -33,9 +43,10 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => UserToris::class,
+            'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'loginUrl' => ['/site/login']
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -53,10 +64,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => '/agreement/default/index'
             ],
         ],
     ],

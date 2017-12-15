@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * DefaultController implements the CRUD actions for Agreement model.
  */
-class DefaultController extends Controller
+class DefaultController extends \frontend\components\BaseController
 {
     /**
      * @inheritdoc
@@ -20,6 +20,15 @@ class DefaultController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -66,7 +75,9 @@ class DefaultController extends Controller
     {
         $model = new Agreement();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->iogv_id = Yii::$app->user->identity->iogv_id;
+            $model->save();
             return $this->redirect(['update', 'id' => $model->id]);
         }
 

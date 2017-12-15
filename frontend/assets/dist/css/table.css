@@ -6,3 +6,15 @@
 .intable_list span{
     margin-right: 8px;
 }
+
+.modal-dialog{
+    margin-top: 50px;
+}
+
+.btn-group .dropdown-menu.dropdown-menu-right{
+    left: -80px;
+}
+
+.btn-group .dropdown-menu.dropdown-menu-right .dropdown-header{
+    display: none;
+}
