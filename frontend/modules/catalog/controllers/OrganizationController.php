@@ -25,7 +25,7 @@ class OrganizationController extends \frontend\components\BaseController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@']
+                        'roles' => ['viewDirectory']
                     ],
                 ],
             ],

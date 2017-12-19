@@ -16,4 +16,14 @@ class AgreementQuery extends ActiveQuery
             $this->andWhere(['agreement.iogv_id' => $iogv]);
         }
     }
+
+    public function all($db = null)
+    {
+        return parent::all($db);
+    }
+
+    public function one($db = null)
+    {
+        return parent::one($db);
+    }
 }

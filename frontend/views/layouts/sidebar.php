@@ -12,7 +12,7 @@
                 'options' => ['class' => 'nav metismenu', 'id'=>'side-menu'],
                 'submenuTemplate' => "\n<ul class='nav nav-second-level collapse' {show}>\n{items}\n</ul>\n",
                 'items' => [
-                    ['label' => 'Справочники', 'icon' => 'fa fa-file-code-o', 'url' => '#', 'visible' => true,
+                    ['label' => 'Справочники', 'icon' => 'fa fa-file-code-o', 'url' => '#', 'visible' => Yii::$app->user->can('viewDirectory'),
                         'items' => [
                         ['label' => 'Страны', 'icon' => 'fa fa-globe', 'url' => ['/catalog/country/index'], 'visible' => true],
                         ['label' => 'Организации', 'icon' => 'fa fa-university', 'url' => ['/catalog/organization/index'], 'visible' => true],

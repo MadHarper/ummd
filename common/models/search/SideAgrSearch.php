@@ -32,44 +32,7 @@ class SideAgrSearch extends SideAgr
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    public function search($params)
-    {
-        $query = SideAgr::find();
 
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'agreement_id' => $this->agreement_id,
-            'org_id' => $this->org_id,
-            'employee_id' => $this->employee_id,
-        ]);
-
-        $query->andFilterWhere(['ilike', 'desc', $this->desc])
-            ->andFilterWhere(['ilike', 'subdivision', $this->subdivision]);
-
-        return $dataProvider;
-    }
 
 
     /**
@@ -110,4 +73,51 @@ class SideAgrSearch extends SideAgr
 
         return $dataProvider;
     }
+
+
+
+
+
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function search($params)
+    {
+        $query = SideAgr::find();
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'agreement_id' => $this->agreement_id,
+            'org_id' => $this->org_id,
+            'employee_id' => $this->employee_id,
+        ]);
+
+        $query->andFilterWhere(['ilike', 'desc', $this->desc])
+            ->andFilterWhere(['ilike', 'subdivision', $this->subdivision]);
+
+        return $dataProvider;
+    }
+
+
+
 }

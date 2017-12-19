@@ -143,9 +143,15 @@ class SideController extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $side = $this->findModel($id);
+        $agreement = Agreement::findOne(['id' => $side->agreement_id]);
+        if(!$agreement){
+            throw new NotFoundHttpException('Запрашиваемая страница не найдена.');
+        }
 
-        return $this->redirect(['index']);
+        $side->delete();
+
+        return $this->redirect(['index', 'agreementId' => $agreement->id]);
     }
 
     /**

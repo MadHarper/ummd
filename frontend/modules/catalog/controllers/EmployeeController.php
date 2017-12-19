@@ -5,14 +5,13 @@ namespace frontend\modules\catalog\controllers;
 use Yii;
 use common\models\Employee;
 use common\models\search\EmployeeSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * EmployeeController implements the CRUD actions for Employee model.
  */
-class EmployeeController extends Controller
+class EmployeeController extends \frontend\components\BaseController
 {
     /**
      * @inheritdoc
@@ -20,6 +19,15 @@ class EmployeeController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['viewDirectory']
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

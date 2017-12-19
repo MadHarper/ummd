@@ -48,7 +48,7 @@ class DefaultController extends Controller
         }
 
         //если пришел false - юзер не имеет ролей
-        return $this->redirect(Url::toRoute(['/site/denied']));
+        return $this->redirect(Url::toRoute(['/toris/default/denied']));
     }
 
 
@@ -90,21 +90,30 @@ class DefaultController extends Controller
                     }else{
                         $res = [
                             'need_redirect' => true,
-                            'redirect'      => Url::to(['/site/denied']),
+                            'redirect'      => Url::to(['/toris/default/denied']),
                         ];
                     }
                 }else{
-                    // если пользователь уже авторизован у нас, то освежаем aistoken
-
-
+                    // если пользователь уже авторизован у нас
 
                     $user = Yii::$app->user->identity;
                     if($user->aistoken != $post['aistoken']){
-                        $user->aistoken = $post['aistoken'];
-                        $user->save();
+                        //в другом окне зашел в другую систему под другим юзером, и у нас стал
+                        //другой юзер, возможно не имеющий к нам отношения
+
+                        //старый код
+                        //$user->aistoken = $post['aistoken'];
+                        //$user->save();
+
+                        //новый код
+                        Yii::$app->user->logout();
+                        $res = [
+                            'need_redirect' => true,
+                            'redirect'      => Url::to(['/site/login']),
+                        ];
                     }
 
-                    $res = ['need_redirect' => false];
+                    //$res = ['need_redirect' => false];
                 }
 
                 return $res;
@@ -113,11 +122,31 @@ class DefaultController extends Controller
             //если пользователь не наш
             $res = [
                 'need_redirect' => true,
-                'redirect'      => Url::toRoute(['/site/denied'])
+                //'redirect'      => Url::toRoute(['/site/denied'])
+                'redirect'      => Url::toRoute(['/toris/default/denied'])
             ];
 
             return $res;
         }
+    }
+
+    public function actionDenied(){
+        $this->layout = 'denied_layout';
+
+        $view = $this->getView();
+        \frontend\assets\TorisDeniedAsset::register($view);
+        $return_url = Url::toRoute(['/toris/default/access'], true);
+        $logout_url = Url::toRoute(['/toris/default/logout'], true);
+
+        $torisSevice = Yii::createObject(TorisAuthService::class);
+
+        $torisDomain = $torisSevice->getDomain();
+        $torisCode = $torisSevice->getCode();
+
+        $view->registerJs('TorisWidget.init("' . $return_url . '", "' . $logout_url . '", true, "'.$torisDomain.'", "'. $torisCode .'");');
+
+
+        return $this->render('denied');
     }
 
 }

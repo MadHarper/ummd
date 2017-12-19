@@ -5,14 +5,15 @@ namespace frontend\modules\catalog\controllers;
 use Yii;
 use common\models\Country;
 use common\models\search\CountrySearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
+
 
 /**
  * CountryController implements the CRUD actions for Country model.
  */
-class CountryController extends Controller
+class CountryController extends \frontend\components\BaseController
 {
     /**
      * @inheritdoc
@@ -20,6 +21,15 @@ class CountryController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['viewDirectory']
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
