@@ -28,14 +28,61 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'status',
+            [
+                'attribute'=>'status',
+                'value' => function($model){
+                    return $model->getStatusToString();
+                },
+            ],
             'name:ntext',
-            'date_start',
-            'date_end',
+            [
+                'label' => 'Стороны соглашения',
+                'value' => function ($model) {
+                    $str = '';
+                    if($model->sideAgrs){
+                        $n = 1;
+
+                        foreach ($model->sideAgrs as $side){
+                            $str .= "<div class='intable_list'>";
+                            $str .= '<div><span class="badge">' . $n .'</span></div>';
+                            $str .= '<div>' . $side->org->name . '</div>';
+                            $str .= "</div>";
+                            $n++;
+                        }
+
+                    }
+
+                    return $str;
+                },
+                'format' => 'html',
+            ],
+            [
+                'attribute' => 'date_start',
+                'value' => function($model){
+                    return date("d.m.Y", strtotime($model->date_start));
+                }
+            ],
+            [
+                'attribute' => 'date_end',
+                'value' => function($model){
+                    return date("d.m.Y", strtotime($model->date_end));
+                }
+            ],
             'iogv_id',
             'desc:ntext',
-            'created_at',
-            'updated_at',
+            [
+                'attribute'=>'created_at',
+                'value' => function($model){
+                    return date('d.m.Y', $model->created_at);
+                },
+            ],
+            [
+                'attribute'=>'updated_at',
+                //'label' => 'Создан',
+                'value' => function($model){
+                    return date('d.m.Y', $model->updated_at);
+                },
+            ],
         ],
     ]) ?>
 

@@ -19,6 +19,7 @@
                         ['label' => 'Должностные лица', 'icon' => 'fa fa-address-book-o', 'url' => ['/catalog/employee/index'], 'visible' => true],
                     ]],
                     ['label' => 'Соглашения', 'icon' => 'fa fa-handshake-o', 'url' => ['/agreement/default/index'], 'visible' => true],
+                    ['label' => 'Документы', 'icon' => 'fa fa-file-word-o', 'url' => ['/agreement/document/list'], 'visible' => true],
 
                 ],
 

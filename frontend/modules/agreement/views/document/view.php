@@ -12,14 +12,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="document-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Вы уверены что хотите удалить этот документ?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -29,16 +26,36 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'model',
-            'model_id',
-            'content:ntext',
-            'description:ntext',
+            [
+                'attribute'=>'model',
+                'value' => function($model){
+                    return HTML::a($model->masterModel->name,['/agreement/default/view', 'id' => $model->model_id]);
+                },
+                'format' => 'html'
+            ],
             'origin_name',
-            'sea_name',
-            'link',
-            'visible:boolean',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'link',
+                'value' => function($model){
+                    return "<a href='". $model->link ."' target='_blank'>
+                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                },
+                'format' => 'html'
+            ],
+            [
+                'attribute'=>'created_at',
+                //'label' => 'Создан',
+                'value' => function($model){
+                    return date('d.m.Y', $model->created_at);
+                },
+            ],
+            //'content:ntext',
+            //'description:ntext',
+            //'sea_name',
+            //'visible:boolean',
+            //'updated_at',
         ],
     ]) ?>
 

@@ -2,9 +2,11 @@
 
 namespace frontend\modules\agreement\controllers;
 
+use common\models\UserToris;
 use Yii;
 use frontend\modules\agreement\models\Document;
 use frontend\modules\agreement\models\search\DocumentSearch;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Agreement;
@@ -195,7 +197,7 @@ class DocumentController extends \frontend\components\BaseController
         */
 
         //$searchString = "Комитет по внешним связям Санкт-Петербурга";
-        $searchString = "описание автоматизация функция";
+        $searchString = "Пояснительная Записка";
         $res = $this->findSuggest($searchString);
         var_dump($res);
         return $this->render('temp');
@@ -211,6 +213,9 @@ class DocumentController extends \frontend\components\BaseController
         }
         return $query;
     }
+
+
+
     /**
      * @param string $query
      * @param int $cat
@@ -251,10 +256,19 @@ class DocumentController extends \frontend\components\BaseController
             ->limit(10)
             ->orderBy(['rank' => SORT_DESC]);
 
-        //ToDo: учесть visible
-
-
         return $tQuery->all();
-
     }
+
+
+    public function actionList(){
+        $searchModel = new DocumentSearch();
+        $dataProvider = $searchModel->searchFullText(Yii::$app->request->queryParams);
+
+        return $this->render('list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
 }

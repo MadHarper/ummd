@@ -34,7 +34,7 @@ class UserToris extends \yii\db\ActiveRecord  implements IdentityInterface
         return [
             [['bx_id', 'iogv_id', 'aistoken'], 'required'],
             [['bx_id'], 'integer'],
-            [['aistoken'], 'string'],
+            [['aistoken', 'esov_uid'], 'string'],
             [['created', 'updated'], 'safe'],
             [['iogv_id', 'fio'], 'string', 'max' => 255],
         ];
@@ -71,7 +71,8 @@ class UserToris extends \yii\db\ActiveRecord  implements IdentityInterface
             'fio'      => $data->data->USER_FIO,
             'bx_id'    => $data->data->USER_BX_ID,
             'aistoken' => $data->data->AISTOKEN,
-            'iogv_id'  => $data->data->ORG_CODE_IOGV
+            'iogv_id'  => $data->data->ORG_CODE_IOGV,
+            'esov_uid' => $data->data->USER_ESOV_UID
         ]);
         if ($user->validate() && $user->save(false)) {
             return $user;

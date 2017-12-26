@@ -5,6 +5,8 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use common\services\jobs\TorisAgreementMessageJob;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "agreement".
@@ -61,9 +63,10 @@ class Agreement extends ActiveRecord
             ['status', 'default', 'value' => self::STATUS_PROJECT],
             [['name'], 'required'],
             [['status', 'iogv_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['status', 'iogv_id', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'desc'], 'string'],
+            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['name', 'desc', 'iogv_id',], 'string'],
             [['date_start', 'date_end'], 'safe'],
+            ['status', 'filter', 'filter' => 'intval'],
         ];
     }
 
@@ -80,8 +83,8 @@ class Agreement extends ActiveRecord
             'date_end' => 'Дата окончания   ',
             'iogv_id' => 'Iogv ID',
             'desc' => 'Служебные пометки',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => 'Создан',
+            'updated_at' => 'Изменен',
         ];
     }
 
@@ -114,6 +117,20 @@ class Agreement extends ActiveRecord
         return $this->hasMany(SideAgr::className(), ['agreement_id' => 'id']);
     }
 
+    public function getCountries(){
+
+        if($sides = $this->sideAgrs){
+            $result = [];
+            foreach ($sides as $side){
+                $result[] = $side->org->country;
+            }
+
+            return $result;
+        }
+
+        return false;
+    }
+
 
     public function getShortName(){
         $short = $this->name;
@@ -123,5 +140,18 @@ class Agreement extends ActiveRecord
         }
 
         return $short;
+    }
+
+
+    public function afterSave($insert, $changedAttributes){
+        if(isset($changedAttributes['status']) && $changedAttributes['status'] == self::STATUS_PROJECT && $this->status == self::STATUS_DONE ){
+            // Помещаем в очередь
+            Yii::$app->queue->push(new TorisAgreementMessageJob([
+                'link'          => Url::to(['/agreement/default/view', 'id' => $this->id], true),
+                'aistoken'      => Yii::$app->user->identity->aistoken,
+            ]));
+        }
+
+        parent::afterSave($insert, $changedAttributes);
     }
 }

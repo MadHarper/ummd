@@ -10,6 +10,7 @@ use kartik\select2\Select2;
 use common\models\Organization;
 use yii\web\JsExpression;
 use common\models\Employee;
+use common\models\Country;
 
 
 /* @var $this yii\web\View */
@@ -98,6 +99,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'attribute' => 'date_start',
+                    'value' => function($data){
+                        return date("d.m.Y", strtotime($data->date_start));
+                    },
                     'filter' => DateRangePicker::widget([
                         'model' => $searchModel,
                         'convertFormat'=>true,
@@ -113,6 +117,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'attribute' => 'date_end',
+                    'value' => function($data){
+                        return date("d.m.Y", strtotime($data->date_end));
+                    },
                     'filter' => DateRangePicker::widget([
                         'model' => $searchModel,
                         'convertFormat'=>true,
@@ -221,6 +228,51 @@ $this->params['breadcrumbs'][] = $this->title;
                             'minimumInputLength' => 3,
                             'ajax'               => [
                                 'url'      => '/agreement/default/search-employee',
+                                'dataType' => 'json',
+                                'data'     => new JsExpression('function(params) { return {q:params.term}; }')
+                            ],
+                            'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+                            'templateResult'     => new JsExpression('function(city) {  return city.text; }'),
+                            'templateSelection'  => new JsExpression('function (city) { console.log(city); return  city.text; }'),
+                        ],
+                        'options'       => [
+                            'placeholder' => '',
+                        ]
+                    ]),
+                ],
+                [
+                    'attribute'=>'country',
+                    'vAlign'=>'middle',
+                    'label' => 'Страны',
+                    'width'=>'240px',
+                    'content' => function ($data) {
+                        $str = '';
+                        if($countries = $data->countries){
+                            $n = 1;
+                            foreach ($countries as $c){
+                                $str .= "<div class='intable_list'>";
+                                $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                $str .= '<div>' . $c->name . '</div>';
+                                $str .= "</div>";
+                                $n++;
+                            }
+                        }
+                        return $str;
+                    },
+                    'format' => 'raw',
+                    'filter' => Select2::widget([
+                        'model'         => $searchModel,
+                        'attribute'     => 'country',
+                        'initValueText' => $searchModel->country ? Country::find()
+                            ->where(['id' => $searchModel->country])
+                            ->one()
+                            ->name:
+                            "",
+                        'pluginOptions' => [
+                            'allowClear'         => true,
+                            'minimumInputLength' => 3,
+                            'ajax'               => [
+                                'url'      => '/catalog/organization/searchid',
                                 'dataType' => 'json',
                                 'data'     => new JsExpression('function(params) { return {q:params.term}; }')
                             ],

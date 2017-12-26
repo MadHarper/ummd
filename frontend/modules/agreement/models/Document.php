@@ -1,8 +1,7 @@
 <?php
 
 namespace frontend\modules\agreement\models;
-
-
+use common\models\Agreement;
 
 
 /**
@@ -33,4 +32,25 @@ class Document extends \common\models\Document
     {
         return new DocumentQuery(get_called_class());
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'model' => $this->model === Agreement::class ? 'Соглашение' : '',
+            'model_id' => 'Model ID',
+            'content' => 'Контент',
+            'description' => 'Описание',
+            'origin_name' => 'Название',
+            'sea_name' => 'Sea Name',
+            'link' => 'Ссылка',
+            'visible' => 'Доступен',
+            'created_at' => 'Создан',
+            'updated_at' => 'Обновлен',
+            'status' => 'Статус',
+            'iogv_id' => 'ID подразделения'
+        ];
+    }
+
+
 }

@@ -17,6 +17,7 @@ class AgreementSearch extends Agreement
     public $ended_at_range;
     public $organization;
     public $employee;
+    public $country;
 
 
 
@@ -27,8 +28,8 @@ class AgreementSearch extends Agreement
     public function rules()
     {
         return [
-            [['id', 'status', 'iogv_id', 'created_at', 'updated_at', 'organization', 'employee'], 'integer'],
-            [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range'], 'safe'],
+            [['id', 'status', 'created_at', 'updated_at', 'organization', 'employee', 'country'], 'integer'],
+            [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range', 'iogv_id'], 'safe'],
         ];
     }
 
@@ -59,7 +60,12 @@ class AgreementSearch extends Agreement
      */
     public function search($params)
     {
-        $query = Agreement::find()->joinWith(['sideAgrs t1']);
+        //$query = Agreement::find()->joinWith(['sideAgrs t1']);
+        $query = Agreement::find()
+            ->join('LEFT JOIN','side_agr', 'side_agr.agreement_id = agreement.id')
+            ->join('LEFT JOIN','organization', 'organization.id = side_agr.org_id')
+            ->join('LEFT JOIN','country', 'country.id = organization.country_id');
+
 
         // add conditions that should always apply here
 
@@ -88,13 +94,19 @@ class AgreementSearch extends Agreement
 
         if(isset($this->organization)){
             $query->andFilterWhere([
-                't1.org_id' => $this->organization,
+                'side_agr.org_id' => $this->organization,
+            ]);
+        }
+
+        if(isset($this->country)){
+            $query->andFilterWhere([
+                'country.id' => $this->country,
             ]);
         }
 
         if(isset($this->employee)){
             $query->andFilterWhere([
-                't1.employee_id' => $this->employee,
+                'side_agr.employee_id' => $this->employee,
             ]);
         }
 

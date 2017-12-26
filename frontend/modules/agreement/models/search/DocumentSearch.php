@@ -6,12 +6,17 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use frontend\modules\agreement\models\Document;
+use yii\db\Expression;
 
 /**
  * DocumentSearch represents the model behind the search form of `common\models\Document`.
  */
 class DocumentSearch extends Document
 {
+
+    public $parsed_content;
+
+
     /**
      * @inheritdoc
      */
@@ -19,7 +24,7 @@ class DocumentSearch extends Document
     {
         return [
             [['id', 'model_id', 'created_at', 'updated_at'], 'integer'],
-            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link'], 'safe'],
+            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link', 'parsed_content', 'iogv_id'], 'safe'],
             [['visible'], 'boolean'],
         ];
     }
@@ -124,5 +129,60 @@ class DocumentSearch extends Document
             ->andFilterWhere(['ilike', 'link', $this->link]);
 
         return $dataProvider;
+    }
+
+
+
+    public function searchFullText($params)
+    {
+        $query = Document::find()->andWhere(['visible' => true]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere(['ilike', 'origin_name', $this->origin_name]);
+
+        if(isset($this->parsed_content) && !empty($this->parsed_content)){
+            $queryString = $this->prepareQuery($this->parsed_content);
+
+            $query->select([
+                '{{%document}}.id',
+                '{{%document}}.origin_name',
+                '{{%document}}.link',
+                '{{%document}}.status',
+                '{{%document}}.created_at',
+                new Expression('ts_rank({{%document}}.fts,to_tsquery(:q)) as rank'),
+            ])
+                ->andWhere(new Expression("{{%document}}.fts  @@ to_tsquery(:q)", [':q' => $queryString]));
+
+
+            if (!\Yii::$app->user->can('changeAllAgrements')) {
+                $iogv = \Yii::$app->user->identity->iogv_id;
+                $query->andWhere(['{{%document}}.iogv_id' => $iogv]);
+            }
+
+            $query->orderBy(['rank' => SORT_DESC]);
+        }
+
+        return $dataProvider;
+    }
+
+
+    private function prepareQuery(string $queryString):string
+    {
+        $queryString = array_filter(explode(' ', mb_strtolower($queryString)), 'trim');
+        if (count($queryString) < 2) {
+            $queryString = implode('', $queryString) . ':*';
+        } else {
+            $queryString = implode(' & ', $queryString) . ':*';
+        }
+        return $queryString;
     }
 }

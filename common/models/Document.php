@@ -61,7 +61,7 @@ class Document extends \yii\db\ActiveRecord
             [['model', 'model_id'], 'required'],
             [['model_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['model_id', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['content', 'description'], 'string'],
+            [['content', 'description', 'iogv_id'], 'string'],
             [['visible'], 'boolean'],
             [['model', 'origin_name', 'sea_name', 'link'], 'string', 'max' => 255],
         ];
@@ -85,7 +85,18 @@ class Document extends \yii\db\ActiveRecord
             'created_at' => 'Создан',
             'updated_at' => 'Обновлен',
             'status' => 'Статус',
+            'iogv_id' => 'ID подразделения'
         ];
+    }
+
+
+    public function getMasterModel()
+    {
+        switch ($this->model) {
+            case Agreement::class:
+                return $this->hasOne(Agreement::className(), ['id' => 'model_id']);
+        }
+
     }
 
 }

@@ -93,9 +93,6 @@ class SideController extends \frontend\components\BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        //ToDo: выполнить проверку, что пользователь имеет доступ к данному соглашению
-
-
         $model = new SideAgr();
 
         if ($model->load(Yii::$app->request->post())) {
@@ -105,9 +102,9 @@ class SideController extends \frontend\components\BaseController
             }
         }
 
-
         return $this->render('create', [
             'model' => $model,
+            'agreement' => $agreement,
         ]);
     }
 

@@ -11,21 +11,23 @@ use yii\widgets\ActiveForm;
 <div class="document-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['list'],
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <?php // echo $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'model') ?>
+    <?php // echo $form->field($model, 'model') ?>
 
-    <?= $form->field($model, 'model_id') ?>
+    <?php // echo $form->field($model, 'model_id') ?>
 
-    <?= $form->field($model, 'content') ?>
+    <?php // echo $form->field($model, 'content') ?>
 
-    <?= $form->field($model, 'description') ?>
+    <?php // echo $form->field($model, 'description') ?>
 
     <?php // echo $form->field($model, 'origin_name') ?>
+
+    <?php echo $form->field($model, 'parsed_content')->label('Содержание') ?>
 
     <?php // echo $form->field($model, 'sea_name') ?>
 
@@ -38,8 +40,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'updated_at') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton('Очистить', ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

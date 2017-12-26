@@ -2,13 +2,15 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\SideAgrSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Стороны соглашения';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = $agreement->shortName . ': Стороны соглашения';
+$this->params['breadcrumbs'][] = ['label' => $agreement->shortName, 'url'=> Url::to(['/agreement/default/view', 'id' => $agreement->id])];
+$this->params['breadcrumbs'][] = 'Стороны соглашения';
 ?>
 <div class="side-agr-index">
 

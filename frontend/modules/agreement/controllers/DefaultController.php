@@ -74,9 +74,9 @@ class DefaultController extends \frontend\components\BaseController
     public function actionCreate()
     {
         $model = new Agreement();
+        $model->iogv_id = Yii::$app->user->identity->iogv_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->iogv_id = Yii::$app->user->identity->iogv_id;
             $model->save();
             return $this->redirect(['update', 'id' => $model->id]);
         }

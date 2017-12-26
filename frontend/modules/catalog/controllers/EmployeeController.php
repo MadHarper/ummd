@@ -24,7 +24,13 @@ class EmployeeController extends \frontend\components\BaseController
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
                         'roles' => ['viewDirectory']
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['searchid'],
+                        'roles' => ['@']
                     ],
                 ],
             ],

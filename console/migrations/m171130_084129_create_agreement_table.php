@@ -18,7 +18,7 @@ class m171130_084129_create_agreement_table extends Migration
             'name' => $this->text()->notNull(),
             'date_start' => $this->date(),
             'date_end' => $this->date(),
-            'iogv_id' => $this->integer(),
+            'iogv_id' => $this->string()->notNull(),
             'desc' => $this->text(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),

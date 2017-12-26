@@ -27,6 +27,11 @@ class OrganizationController extends \frontend\components\BaseController
                         'allow' => true,
                         'roles' => ['viewDirectory']
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['searchid'],
+                        'roles' => ['@']
+                    ],
                 ],
             ],
             'verbs' => [

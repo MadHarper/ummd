@@ -25,7 +25,14 @@
     display: none;
 }
 
-
 .fa-check-square-o{
     color: #3c763d;
+}
+
+.navbar-static-top{
+    display: none;
+}
+
+.agreement-index .summary{
+    display: none;
 }

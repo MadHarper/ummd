@@ -22,7 +22,7 @@ class DocumentQuery extends \yii\db\ActiveQuery
         if (!\Yii::$app->user->can('changeAllAgrements')) {
 
             $iogv = \Yii::$app->user->identity->iogv_id;
-            $this->andWhere(['document.iogv_id' => $iogv]);
+            $this->andWhere(['document.iogv_id' => $iogv, 'document.visible' => true]);
         }
     }
 
