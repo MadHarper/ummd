@@ -34,25 +34,12 @@ class DocumentSaveJob extends BaseObject implements \yii\queue\JobInterface
         $reader = new DocxReaderService($this->tempPath);
         $text = $reader->convertToText();
 
-        /*
-        $document = new Document();
-        $document->content      = $text;
-        $document->model        = $this->masterClass;
-        $document->model_id     = $this->model_id;
-        $document->origin_name  = $this->originName;
-        $document->sea_name     = $this->newName;
-        $document->link         = $link;
-        $document->user_id      = $this->user_id;
-        $document->save();
-        */
         echo $this->document_id;
         $document = Document::find()->where(['id' => $this->document_id])->one();
-        var_dump($document);
         $document->link = $link;
         $document->content = $text;
         $document->status = Document::STATUS_YES_PROCESSED;
         $document->save();
-        var_dump($document->getErrors());
 
         //удалим файл с нашего сервера
         unlink($this->tempPath);
