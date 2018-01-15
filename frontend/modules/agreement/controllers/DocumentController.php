@@ -16,6 +16,8 @@ use yii\helpers\Json;
 use yii\db\Expression;
 use yii\db\Query;
 use common\services\jobs\DocumentSaveJob;
+use common\services\jobs\FileRemoveJob;
+
 
 
 /**
@@ -97,6 +99,7 @@ class DocumentController extends \frontend\components\BaseController
                 $document->origin_name   = $res['base_name'];
                 $document->sea_name     = $res['newName'];
                 $document->status       = Document::STATUS_NOT_PROCESSED;
+                $document->type         = $res['ext'];
                 $document->save();
 
                 // Помещаем документ в очередь
@@ -270,5 +273,52 @@ class DocumentController extends \frontend\components\BaseController
         ]);
     }
 
+
+    /*
+    public function actionDocDownload($documentId)
+    {
+        $document = Document::find()->where(['id' => $documentId, 'visible' => true])->one();
+        try{
+            if(!$document){
+                throw new NotFoundHttpException('Document does not found.');
+            }
+
+            $seaFileService = Yii::$app->seaFileService;
+            $seaFileService->download($document->iogv_id,
+                                      $document->sea_name,
+                                      $document->origin_name,
+                                      $document->type);
+
+            Yii::$app->response->sendFile(Yii::getAlias('@frontend/web/docs/' . $document->origin_name . "." . $document->type));
+            //unlink(Yii::getAlias('@frontend/web/docs/' . 'yep1.docx'));
+        }catch (\Exception $e){
+            Yii::error("Ошибка скачивания документа " . $e->getMessage());
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+    }
+    */
+
+    public function actionDocDownload($documentId)
+    {
+        $document = Document::find()->where(['id' => $documentId, 'visible' => true])->one();
+
+            if(!$document){
+                throw new NotFoundHttpException('Document does not found.');
+            }
+
+            $downloadDir = Yii::$app->params['sea']['download_path'];
+            $filePath = Yii::getAlias($downloadDir . $document->origin_name . "." . $document->type);
+
+            if(!file_exists($filePath)){
+                $seaFileService = Yii::$app->seaFileService;
+                $seaFileService->download($document->iogv_id,
+                    $document->sea_name,
+                    $document->type,
+                    $filePath);
+            }
+
+            Yii::$app->response->sendFile($filePath);
+            Yii::$app->queue->delay(1 * 60)->push(new FileRemoveJob(['path' => $filePath]));
+    }
 
 }

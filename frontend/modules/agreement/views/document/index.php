@@ -41,11 +41,8 @@ $this->params['breadcrumbs'][] = 'Документы';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'model',
-            //'model_id',
-            //'description:ntext',
             'origin_name',
-            //'sea_name',
+            /*
             [
                 'attribute'=>'link',
                 'content' => function($data){
@@ -57,6 +54,19 @@ $this->params['breadcrumbs'][] = 'Документы';
                 'filter' => false,
                 'format' => 'html'
             ],
+            */
+            [
+                'attribute'=>'link',
+                'content' => function($data){
+                    return "<a href='". Url::to(['/agreement/document/doc-download', 'documentId' => $data->id]) ."' target='_blank' data-pjax='0'>
+                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                },
+                'filter' => false,
+                'format' => 'html'
+            ],
+
             [
                 'attribute'=>'status',
                 'content' => function($data){

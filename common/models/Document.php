@@ -61,7 +61,7 @@ class Document extends \yii\db\ActiveRecord
             [['model', 'model_id'], 'required'],
             [['model_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['model_id', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['content', 'description', 'iogv_id'], 'string'],
+            [['content', 'description', 'iogv_id', 'type'], 'string'],
             [['visible'], 'boolean'],
             [['model', 'origin_name', 'sea_name', 'link'], 'string', 'max' => 255],
         ];

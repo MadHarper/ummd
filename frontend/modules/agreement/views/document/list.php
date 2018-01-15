@@ -34,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'origin_name',
                 'filter' => false,
             ],
+            /*
             [
                 'attribute'=>'link',
                 'content' => function($data){
@@ -45,6 +46,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => false,
                 'format' => 'html'
             ],
+            */
+            [
+                'attribute'=>'link',
+                'content' => function($data){
+                    return "<a href='". Url::to(['/agreement/document/doc-download', 'documentId' => $data->id]) ."' target='_blank'>
+                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                },
+                'filter' => false,
+                'format' => 'html'
+            ],
+
             [
                 'attribute'=>'status',
                 'content' => function($data){

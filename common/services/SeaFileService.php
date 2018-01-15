@@ -10,6 +10,7 @@ use Seafile\Client\Resource\Directory;
 use Seafile\Client\Resource\File;
 use Seafile\Client\Resource\SharedLink;
 use Seafile\Client\Type\SharedLink as SharedLinkType;
+use Exception;
 
 
 class SeaFileService{
@@ -165,5 +166,55 @@ class SeaFileService{
         $shareLinkType = $sharedLinkResource->create($lib, $p, $expire, $shareType);
         $link = $shareLinkType->url . "?dl=1";
         return $link;
+    }
+
+
+    /*
+    public function test3(){
+        $subDir = "00200000078" . "/";
+        $libType = $this->_library->getById(Yii::$app->params['sea']['libID']);
+        $items = $this->_directory->getAll($libType, $subDir);
+
+        $saveTo =  Yii::getAlias('@frontend/web/docs/') . "yep1.docx";
+        $downloadResponse = $this->_file->downloadFromDir($libType, $items[1], $saveTo, $subDir);
+    }
+    */
+
+
+    public function download($iogvId, $seaName, $type, $path){
+        $subDir = "0" . $iogvId . "/";
+        $libType = $this->_library->getById(Yii::$app->params['sea']['libID']);
+
+        if (is_readable($path)) {
+            throw new Exception('File already exists !');
+        }
+
+        $fileName = $seaName . "." . $type;
+        $downloadUrl = $this->getDownloadUrl($libType, $fileName, $subDir, 1);
+        return $this->_client->request('GET', $downloadUrl, ['save_to' => $path]);
+    }
+
+
+
+
+    private function getDownloadUrl($library, $itemName, $dir = '/', $reuse = 1)
+    {
+        $url = $this->_client->getConfig('base_uri')
+            . '/repos/'
+            . $library->id
+            . '/file/'
+            . '?reuse=' . $reuse
+            . '&p=' . $this->urlEncodePath($dir . $itemName);
+
+        $response    = $this->_client->request('GET', $url);
+        $downloadUrl = (string)$response->getBody();
+
+        return preg_replace("/\"/", '', $downloadUrl);
+    }
+
+
+    protected function urlEncodePath($path)
+    {
+        return implode('/', array_map('rawurlencode', explode('/', (string)$path)));
     }
 }

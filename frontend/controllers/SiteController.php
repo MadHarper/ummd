@@ -2,7 +2,6 @@
 namespace frontend\controllers;
 
 use Yii;
-use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -107,5 +106,47 @@ class SiteController extends Controller
         $this->layout = 'login_empty';
         return $this->render('401');
     }
+
+
+
+    public function actionTest()
+    {
+        $seaFileService = Yii::$app->seaFileService;
+
+        $seaFileService->test3();
+
+        var_dump('555');die;
+    }
+
+
+    public function actionLink()
+    {
+        return $this->render('link');
+    }
+
+
+    public function actionAjax()
+    {
+        if(Yii::$app->request->isAjax){
+            Yii::$app->response->sendFile(Yii::getAlias('@frontend/web/docs/' . 'big_file_test.docx'));
+        }
+    }
+
+    public function actionNotajax()
+    {
+        $seaFileService = Yii::$app->seaFileService;
+
+        try{
+            $seaFileService->test3();
+            Yii::$app->response->sendFile(Yii::getAlias('@frontend/web/docs/' . 'yep1.docx'));
+            unlink(Yii::getAlias('@frontend/web/docs/' . 'yep1.docx'));
+        }catch (\Exception $e){
+            Yii::error("Ошибка скачивания документа " . $e->getMessage());
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+
+    }
+
+
 
 }

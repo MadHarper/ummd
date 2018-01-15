@@ -34,7 +34,6 @@ class DocumentSaveJob extends BaseObject implements \yii\queue\JobInterface
         $reader = new DocxReaderService($this->tempPath);
         $text = $reader->convertToText();
 
-        echo $this->document_id;
         $document = Document::find()->where(['id' => $this->document_id])->one();
         $document->link = $link;
         $document->content = $text;

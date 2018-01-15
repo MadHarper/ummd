@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Document */
@@ -34,10 +35,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'html'
             ],
             'origin_name',
+            /*
             [
                 'attribute' => 'link',
                 'value' => function($model){
                     return "<a href='". $model->link ."' target='_blank'>
+                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                },
+                'format' => 'html'
+            ],
+            */
+            [
+                'attribute' => 'link',
+                'value' => function($model){
+                    return "<a href='". Url::to(['/agreement/document/doc-download', 'documentId' => $model->id]) ."' target='_blank'>
                                 <i class='fa fa-file-word-o' aria-hidden='true'></i>
                                 <span>Скачать</span>
                            </a>";
