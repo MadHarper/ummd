@@ -1,3 +1,14 @@
+# CI
+
+- Сборочное окружение: composer, php (modules: zip, curl, mbstring, xml)
+- Сборка веток: test -> test (ручная сборка), pre -> predrelease (ручная сборка), prod -> production (ручная сборка)
+- Конфигурации под окружение (используется yii параметризация): environments/ENV/common/config/*.php
+- Сборка: http://ci.infra.toris.vpn/jenkins/job/toris/job/ummd/job/ummd-2018/
+- Результат: веб-сервис http://ummd.toris.vpn/
+
+
+
+
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
