@@ -3,10 +3,6 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\search\MissionQuery */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
 $this->title = 'Missions';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -25,7 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
             'name:ntext',
             'date_start',
             'date_end',

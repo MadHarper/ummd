@@ -56,6 +56,7 @@ class Organization extends \yii\db\ActiveRecord
             [['contact'], 'string'],
             [['country_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['country_id', 'created_at', 'updated_at'], 'integer'],
+            [['iogv'], 'boolean'],
             [['name'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];

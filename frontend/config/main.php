@@ -37,6 +37,9 @@ return [
             'class'=>'\kartik\grid\Module',
             // other module settings
         ],
+        'mission' => [
+            'class' => 'frontend\modules\mission\Module'
+        ],
     ],
     'components' => [
         'request' => [

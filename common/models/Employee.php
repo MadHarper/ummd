@@ -32,7 +32,7 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['active'], 'boolean'],
+            [['active', 'visible'], 'boolean'],
             [['organization_id'], 'default', 'value' => null],
             [['organization_id'], 'integer'],
             [['fio', 'position'], 'string', 'max' => 255],
@@ -51,6 +51,7 @@ class Employee extends \yii\db\ActiveRecord
             'position' => 'Должность',
             'active' => 'Активен',
             'organization_id' => 'Организация',
+            'visible' => 'Видимый'
         ];
     }
 

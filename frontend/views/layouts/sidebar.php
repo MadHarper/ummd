@@ -20,6 +20,7 @@
                     ]],
                     ['label' => 'Соглашения', 'icon' => 'fa fa-handshake-o', 'url' => ['/agreement/default/index'], 'visible' => true],
                     ['label' => 'Документы', 'icon' => 'fa fa-file-word-o', 'url' => ['/agreement/document/list'], 'visible' => true],
+                    ['label' => 'Командировки', 'icon' => 'fa fa-paper-plane', 'url' => ['/mission/default/index'], 'visible' => true],
 
                 ],
 

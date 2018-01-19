@@ -23,7 +23,7 @@
         "toris/logger": "~1.1",
         "toris/templates": "~1.0",
         "toris/filter-table": "~2.0",
-        "unclead/yii2-multiple-input": "2.8.0",
+        "unclead/yii2-multiple-input": "~2.0",
         "kartik-v/yii2-dynagrid": "@dev",
         "phpoffice/phpexcel": "dev-develop",
         "kartik-v/yii2-widget-select2": "@dev",

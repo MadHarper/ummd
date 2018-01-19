@@ -30,14 +30,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name:ntext',
+            [
+                'attribute'=>'iogv_id',
+                'value' => function($model){
+                    return $model->country->name;
+                },
+            ],
             'date_start',
             'date_end',
-            'country_id',
+            [
+                'attribute'=>'country_id',
+                'value' => function($model){
+                    return $model->country->name;
+                },
+            ],
             'region_id',
             'city_id',
             'order',
             'target:ntext',
-            'iogv_id',
             'duty_man_id',
         ],
     ]) ?>

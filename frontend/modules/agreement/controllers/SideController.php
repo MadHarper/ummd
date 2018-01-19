@@ -47,6 +47,9 @@ class SideController extends \frontend\components\BaseController
      */
     public function actionIndex($agreementId)
     {
+        if(!$agreementId){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
 
         $agreement = Agreement::find()->where(['id' => $agreementId])->one();
         if(!$agreement){
@@ -75,8 +78,15 @@ class SideController extends \frontend\components\BaseController
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $agreement = Agreement::find()->where(['id' => $model->agreement_id])->one();
+        if(!$agreement){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'agreement' => $agreement,
         ]);
     }
 
@@ -88,6 +98,10 @@ class SideController extends \frontend\components\BaseController
      */
     public function actionCreate($agreementId)
     {
+        if(!$agreementId){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
         $agreement = Agreement::find()->where(['id' => $agreementId])->one();
         if(!$agreement){
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -117,10 +131,11 @@ class SideController extends \frontend\components\BaseController
      */
     public function actionUpdate($id)
     {
-
-        //ToDo: выполнить проверку, что пользователь имеет доступ к данному соглашению
-
         $model = $this->findModel($id);
+        $agreement = Agreement::find()->where(['id' => $model->agreement_id])->one();
+        if(!$agreement){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'agreementId' => $model->agreement_id]);
@@ -128,6 +143,7 @@ class SideController extends \frontend\components\BaseController
 
         return $this->render('update', [
             'model' => $model,
+            'agreement' => $agreement,
         ]);
     }
 

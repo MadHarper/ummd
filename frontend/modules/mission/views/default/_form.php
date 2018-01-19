@@ -2,6 +2,12 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use yii\web\JsExpression;
+use kartik\date\DatePicker;
+use common\models\Employee;
+
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Mission */
@@ -14,11 +20,69 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'date_start')->textInput() ?>
+    <?= $form->field($model, 'iogv_id')->widget(Select2::classname(), [
+        'name' => 'iogv-select',
+        'data' => $iogvList,
+        'options' => ['placeholder' => 'Выберите ИОГВ ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+        'pluginEvents' => [
+            "change" => "function() { console.log(this.value); loadEmployee(this.value);}",
+        ]
+    ]);
+    ?>
 
-    <?= $form->field($model, 'date_end')->textInput() ?>
 
-    <?= $form->field($model, 'country_id')->textInput() ?>
+    <?php
+    $arrEmployees = [];
+    if($model->iogv_id){
+        $all = Employee::find()->where(['organization_id' => $model->iogv_id])->all();
+        foreach ($all as $item){
+            $arrEmployees[$item->id] = $item->fio . " - " . $item->position;
+        }
+    }
+    ?>
+
+    <?= $form->field($model, 'duty_man_id')->dropDownList($arrEmployees); ?>
+
+
+    <?= $form->field($model, 'date_start')->widget(DatePicker::class, [
+        'type' => DatePicker::TYPE_INPUT,
+        'pluginOptions' => [
+            'autoclose' => true,
+            'format'    => 'yyyy-mm-dd'
+        ]
+    ]) ?>
+
+    <?= $form->field($model, 'date_end')->widget(DatePicker::class, [
+        'type' => DatePicker::TYPE_INPUT,
+        'pluginOptions' => [
+            'autoclose' => true,
+            'format'    => 'yyyy-mm-dd'
+        ]
+    ]) ?>
+
+    <?php
+    echo $form->field($model, 'country_id')->widget(Select2::classname(),
+        [
+            'initValueText' => $model->country ? $model->country->name : '',
+            'options' => ['placeholder' => 'Выберите страну'],
+            'pluginOptions' => [
+                'allowClear' => false,
+                'minimumInputLength' => 4,
+                'ajax' => [
+                    'url' => '/catalog/organization/searchid',
+                    'dataType' => 'json',
+                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                ],
+                'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                'templateResult' => new JsExpression('function(city) {  return city.text; }'),
+                'templateSelection' => new JsExpression('function (city) { console.log(city.text); return  city.text; }'),
+            ],
+        ]);
+    ?>
+
 
     <?= $form->field($model, 'region_id')->textInput() ?>
 
@@ -28,10 +92,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'target')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'iogv_id')->textInput() ?>
-
-    <?= $form->field($model, 'duty_man_id')->textInput() ?>
-
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
@@ -39,3 +99,22 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+
+<?php
+$script = <<< JS
+    var org_id;
+
+    function loadEmployee(orgId){
+        var carSelect = $('select[name="Mission[duty_man_id]"]');
+        $.get('/mission/default/list', {
+            id: orgId
+        }, function(res){
+            carSelect.html('');
+            carSelect.append(res);      
+        });
+}
+JS;
+$this->registerJs($script, yii\web\View::POS_READY);
+?>

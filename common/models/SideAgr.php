@@ -53,7 +53,7 @@ class SideAgr extends \yii\db\ActiveRecord
             'id' => 'ID',
             'desc' => 'Служебные пометки',
             'subdivision' => 'Ответственное подразделение',
-            'agreement_id' => 'Agreement ID',
+            'agreement_id' => 'Соглашение',
             'org_id' => 'Наименование организации',
             'employee_id' => 'ФИО представителя организации',
         ];

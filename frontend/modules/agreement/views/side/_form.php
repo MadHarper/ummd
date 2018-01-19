@@ -64,13 +64,10 @@ use common\models\Employee;
 
 </div>
 
-<script>
-   var org_id;
-</script>
-
 <?php
-
 $script = <<< JS
+    var org_id;
+
     function loadEmployee(orgId){
         var carSelect = $('select[name="SideAgr[employee_id]"]');
         $.get('/agreement/side/list', {
@@ -82,5 +79,4 @@ $script = <<< JS
 }
 JS;
 $this->registerJs($script, yii\web\View::POS_READY);
-
 ?>
