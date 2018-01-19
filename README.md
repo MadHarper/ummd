@@ -1,10 +1,10 @@
 # CI
 
 - Сборочное окружение: composer, php (modules: zip, curl, mbstring, xml)
-- Сборка веток: test -> test (ручная сборка), pre -> predrelease (ручная сборка), prod -> production (ручная сборка)
+- Сборка веток: test -> test (ручная сборка), predrelease -> predrelease (ручная сборка), production -> production (ручная сборка)
 - Конфигурации под окружение (используется yii параметризация): environments/ENV/common/config/*.php
 - Сборка: http://ci.infra.toris.vpn/jenkins/job/toris/job/ummd/job/ummd-2018/
-- Результат: веб-сервис http://ummd.toris.vpn/
+- Результат: веб-сервис http://ummd-2018.toris.vpn/
 
 
 
