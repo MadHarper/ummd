@@ -3,7 +3,7 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=ummd',
+            'dsn' => 'pgsql:host=localhost;port=5432;dbname=ummd',
             'username' => 'ummd',
             'password' => '2fdvwWPkeycFgtHHM',
             'charset' => 'utf8',
