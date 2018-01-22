@@ -9,10 +9,16 @@ namespace common\models;
  */
 class MissionQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
+    public function init()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        parent::init();
+
+        if (!\Yii::$app->user->can('changeAllAgrements')) {
+
+            $iogv = \Yii::$app->user->identity->iogv_id;
+            $this->andWhere(['mission.master_iogv_id' => $iogv]);
+        }
+    }
 
     /**
      * @inheritdoc

@@ -70,7 +70,7 @@ use common\models\Employee;
             'options' => ['placeholder' => 'Выберите страну'],
             'pluginOptions' => [
                 'allowClear' => false,
-                'minimumInputLength' => 4,
+                'minimumInputLength' => 3,
                 'ajax' => [
                     'url' => '/catalog/organization/searchid',
                     'dataType' => 'json',

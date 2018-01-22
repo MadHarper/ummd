@@ -100,4 +100,14 @@ class Organization extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SideAgr::className(), ['org_id' => 'id']);
     }
+
+    public function getShortName(){
+        $short = $this->name;
+        if(strlen($short) > 70){
+            $short = mb_substr($short, 0, 70);
+            $short .= "...";
+        }
+
+        return $short;
+    }
 }

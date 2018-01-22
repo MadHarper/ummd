@@ -1,6 +1,7 @@
 <?php
 
-namespace frontend\modules\agreement\models;
+namespace frontend\models;
+
 use common\models\Agreement;
 
 

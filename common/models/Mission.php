@@ -25,8 +25,10 @@ use yii\db\ActiveRecord;
  * @property City $city
  * @property Country $country
  * @property Employee $dutyMan
- * @property Iogv $iogv
+ * @property Iogv $iogv                              // id Организации (ИОГВ) - выбирается из справочника
+ * @property string $master_iogv_id                  // iogv_id пользователя, создавшего Командировку
  * @property Region $region
+ * @property boolean $visible
  * @property MissionAgreement[] $missionAgreements
  * @property MissionEmployee[] $missionEmployees
  */
@@ -63,9 +65,11 @@ class Mission extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end'], 'required'],
-            [['name', 'target'], 'string'],
+            [['name', 'target', 'master_iogv_id'], 'string'],
             [['date_start', 'date_end'], 'safe'],
+            [['visible'], 'boolean'],
             [['country_id', 'region_id', 'city_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
+            [['visible'], 'default', 'value' => true],
             [['country_id', 'region_id', 'city_id', 'iogv_id', 'duty_man_id', 'created_at', 'updated_at'], 'integer'],
             [['order'], 'string', 'max' => 255],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],

@@ -28,53 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Добавить Соглашение', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php
-        /*
-        GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'status',
-            'name:ntext',
-
-
-            [
-                'attribute' => 'date_start',
-                'filter' => DateRangePicker::widget([
-                    'model' => $searchModel,
-                    'convertFormat'=>true,
-                    'attribute' => 'created_at_range',
-                    'pluginOptions' => [
-                        'locale' => [
-                            'cancelLabel' => 'Clear',
-                            'format' => 'Y-m-d',
-                        ],
-                        'opens' => 'left',
-                    ]
-                ])
-            ],
-            [
-                'attribute' => 'date_end',
-                'filter' => DateRangePicker::widget([
-                    'model' => $searchModel,
-                    'convertFormat'=>true,
-                    'attribute' => 'ended_at_range',
-                    'pluginOptions' => [
-                        'locale' => [
-                            'cancelLabel' => 'Clear',
-                            'format' => 'Y-m-d',
-                        ],
-                        'opens' => 'left',
-                    ]
-                ])
-            ],
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]);
-       */
-        ?>
 
     <?php
         $columns =

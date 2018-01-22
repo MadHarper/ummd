@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\agreement\models;
+namespace frontend\models;
 
 /**
  * This is the ActiveQuery class for [[Document]].

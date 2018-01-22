@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = 'Update';
                     </div>
                     <div class="col-xs-10 text-right">
                         <span>Участники</span>
-                        <h2 class="font-bold">12</h2>
+                        <h2 class="font-bold"><?= \common\models\MissionEmployee::find()->where(['mission_id' => $model->id])->count() ;?></h2>
                     </div>
                 </div>
             </div>

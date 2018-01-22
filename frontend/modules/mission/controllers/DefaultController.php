@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Organization;
 use common\models\Employee;
+use common\models\Country;
 
 /**
  * DefaultController implements the CRUD actions for Mission model.
@@ -40,9 +41,17 @@ class DefaultController  extends \frontend\components\BaseController
         $searchModel = new MissionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $iogvList = $this->getIogvList();
+        $countryList = Country::find()
+                            ->select(['name', 'id'])
+                            ->indexBy('id')
+                            ->column();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'iogvList' => $iogvList,
+            'countryList' => $countryList,
         ]);
     }
 
@@ -68,8 +77,9 @@ class DefaultController  extends \frontend\components\BaseController
     {
         $model = new Mission();
 
+        $model->master_iogv_id = Yii::$app->user->identity->iogv_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['update', 'id' => $model->id]);
         }
         $iogvList = $this->getIogvList();
 
@@ -111,7 +121,10 @@ class DefaultController  extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+
+        $model = $this->findModel($id);
+        $model->visible = false;
+        $model->save();
 
         return $this->redirect(['index']);
     }
@@ -125,11 +138,12 @@ class DefaultController  extends \frontend\components\BaseController
      */
     protected function findModel($id)
     {
-        if (($model = Mission::findOne($id)) !== null) {
-            return $model;
-        }
+        $model = Mission::find()->where(['id' => $id, 'visible' => true])->one();
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        if (!$model) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+        return $model;
     }
 
 
@@ -173,6 +187,22 @@ class DefaultController  extends \frontend\components\BaseController
             ->column();
 
         return $objectList;
+    }
+
+    public function actionSearchEmployee($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['id', "CONCAT (fio, ' - ', position) as text"])
+            ->from('employee')
+            ->where(['ilike','fio',$q])
+            ->limit(10)
+            ->all());
+
+        return $out;
     }
 
 

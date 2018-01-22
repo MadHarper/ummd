@@ -4,8 +4,8 @@ namespace frontend\modules\agreement\controllers;
 
 use common\models\UserToris;
 use Yii;
-use frontend\modules\agreement\models\Document;
-use frontend\modules\agreement\models\search\DocumentSearch;
+use frontend\models\Document;
+use frontend\models\search\DocumentSearch;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -103,8 +103,10 @@ class DocumentController extends \frontend\components\BaseController
                 $document->save();
 
                 // Помещаем документ в очередь
+                $uploadPath = Yii::$app->params['sea']['upload_path'];
+
                 Yii::$app->queue->push(new DocumentSaveJob([
-                    'tempPath'          => Yii::getAlias('@common/seafile/docs/') . $res['newName'] . '.' . $res['ext'],
+                    'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
                     'document_id'       => $document->id,
                     'newName'           => $res['newName'] . '.' . $res['ext'],
                     'iogv_id'           => $agreement->iogv_id,
@@ -188,23 +190,6 @@ class DocumentController extends \frontend\components\BaseController
     }
 
 
-    public function actionSearch()
-    {
-        /*
-        $searchString = "Типизированный запрос к данным источника";
-        $pr = $this->prepareQuery($searchString);
-        var_dump($pr);die;
-        $res = $this->findSuggest($pr);
-        var_dump($res);
-        die;
-        */
-
-        //$searchString = "Комитет по внешним связям Санкт-Петербурга";
-        $searchString = "Пояснительная Записка";
-        $res = $this->findSuggest($searchString);
-        var_dump($res);
-        return $this->render('temp');
-    }
 
     public function prepareQuery(string $query):string
     {

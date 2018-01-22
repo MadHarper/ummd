@@ -20,7 +20,7 @@ return [
         ],
         'queue' => [
             'class' => \yii\queue\db\Queue::class,
-            'db' => 'db', // Компонент подключения к Redis или его конфиг
+            'db' => 'db',
             'tableName' => '{{%queue}}',
             'channel' => 'queue', // Ключ канала очереди
             'mutex' => \yii\mutex\PgsqlMutex::class, // Mutex that used to sync queries

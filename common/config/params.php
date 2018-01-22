@@ -9,7 +9,8 @@ return [
         'base_path'     => "http://cloud.test.toris.vpn",
         'library'       => "ummd",
         'libID'         => "fba29a6b-139d-40a8-be5e-0c30c45af24a",
-        'download_path' => '@frontend/web/docs/'
+        'download_path' => '@frontend/web/docs/',
+        'upload_path'   => '@common/seafile/docs/'
     ],
 
     'kvs_iogv_id'       => "0100000031"

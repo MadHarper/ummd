@@ -1,11 +1,11 @@
 <?php
 
-namespace frontend\modules\agreement\models\search;
+namespace frontend\models\search;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\modules\agreement\models\Document;
+use frontend\models\Document;
 use yii\db\Expression;
 
 /**

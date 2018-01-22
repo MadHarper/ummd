@@ -12,6 +12,12 @@ use common\models\Mission;
  */
 class MissionSearch extends Mission
 {
+
+    public $created_at_range;
+    public $ended_at_range;
+
+
+
     /**
      * @inheritdoc
      */
@@ -19,7 +25,7 @@ class MissionSearch extends Mission
     {
         return [
             [['id', 'country_id', 'region_id', 'city_id', 'iogv_id', 'duty_man_id'], 'integer'],
-            [['name', 'date_start', 'date_end', 'order', 'target'], 'safe'],
+            [['name', 'date_start', 'date_end', 'order', 'target', 'visible', 'created_at_range', 'ended_at_range', 'master_iogv_id'], 'safe'],
         ];
     }
 
@@ -43,6 +49,9 @@ class MissionSearch extends Mission
     {
         $query = Mission::find();
 
+        $query->andWhere(['visible' => true]);
+
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -60,8 +69,8 @@ class MissionSearch extends Mission
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'date_start' => $this->date_start,
-            'date_end' => $this->date_end,
+            //'date_start' => $this->date_start,
+            //'date_end' => $this->date_end,
             'country_id' => $this->country_id,
             'region_id' => $this->region_id,
             'city_id' => $this->city_id,
@@ -72,6 +81,17 @@ class MissionSearch extends Mission
         $query->andFilterWhere(['ilike', 'name', $this->name])
             ->andFilterWhere(['ilike', 'order', $this->order])
             ->andFilterWhere(['ilike', 'target', $this->target]);
+
+
+        if(!empty($this->created_at_range) && strpos($this->created_at_range, '-') !== false) {
+            list($from_date_start, $to_date_start) = explode(' - ', $this->created_at_range);
+            $query->andFilterWhere(['between', 'mission.date_start', $from_date_start, $to_date_start]);
+        }
+
+        if(!empty($this->ended_at_range) && strpos($this->ended_at_range, '-') !== false) {
+            list($from_date_end, $to_date_end) = explode(' - ', $this->ended_at_range);
+            $query->andFilterWhere(['between', 'mission.date_end', $from_date_end, $to_date_end]);
+        }
 
         return $dataProvider;
     }
