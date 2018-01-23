@@ -77,11 +77,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'items' => function($data){
                     $employee = Employee::find()->where(['id' => $data['employee_id']])->one();
-                    return Employee::find()
-                                    ->select(['fio', 'id'])
-                                    ->where(['organization_id' => $employee->organization_id])
-                                    ->indexBy('id')
-                                    ->column();
+                    if($employee){
+                        return Employee::find()
+                            ->select(['fio', 'id'])
+                            ->where(['organization_id' => $employee->organization_id])
+                            ->indexBy('id')
+                            ->column();
+                    }
+                    return [];
                 }
             ],
 

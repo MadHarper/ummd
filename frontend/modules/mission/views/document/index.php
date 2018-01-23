@@ -8,8 +8,8 @@ use yii\helpers\Url;
 /* @var $searchModel common\models\search\DocumentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $agreement->shortName . ': Стороны соглашения';
-$this->params['breadcrumbs'][] = ['label' => $agreement->shortName, 'url'=> Url::to(['/agreement/default/view', 'id' => $agreement->id])];
+$this->title = $mission->name . ': Документы';
+$this->params['breadcrumbs'][] = ['label' => $mission->name, 'url'=> Url::to(['/agreement/default/view', 'id' => $agreement->id])];
 $this->params['breadcrumbs'][] = 'Документы';
 ?>
 <div class="document-index">
