@@ -9,7 +9,7 @@ use yii\helpers\Url;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = $mission->name . ': Документы';
-$this->params['breadcrumbs'][] = ['label' => $mission->name, 'url'=> Url::to(['/agreement/default/view', 'id' => $agreement->id])];
+$this->params['breadcrumbs'][] = ['label' => $mission->name, 'url'=> Url::to(['/mission/default/view', 'id' => $mission->id])];
 $this->params['breadcrumbs'][] = 'Документы';
 ?>
 <div class="document-index">
@@ -46,18 +46,6 @@ $this->params['breadcrumbs'][] = 'Документы';
             [
                 'attribute'=>'link',
                 'content' => function($data){
-                    return "<a href='". $data->link ."' target='_blank'>
-                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
-                                <span>Скачать</span>
-                           </a>";
-                },
-                'filter' => false,
-                'format' => 'html'
-            ],
-            */
-            [
-                'attribute'=>'link',
-                'content' => function($data){
                     return "<a href='". Url::to(['/agreement/document/doc-download', 'documentId' => $data->id]) ."' target='_blank' data-pjax='0'>
                                 <i class='fa fa-file-word-o' aria-hidden='true'></i>
                                 <span>Скачать</span>
@@ -66,7 +54,26 @@ $this->params['breadcrumbs'][] = 'Документы';
                 'filter' => false,
                 'format' => 'html'
             ],
+            */
 
+            [
+                'attribute'=>'link',
+                'content' => function($data){
+                    if($data->type === "docx"){
+                        return "<a href='". $data->link ."' target='_blank'>
+                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                    }
+
+                    return "<a href='". $data->link ."' target='_blank'>
+                                <i class='fa fa-file-image-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                },
+                'filter' => false,
+                'format' => 'html'
+            ],
             [
                 'attribute'=>'status',
                 'content' => function($data){
