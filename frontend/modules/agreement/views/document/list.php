@@ -32,33 +32,29 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute'=>'origin_name',
+                'content' => function($data){
+                    return $data->origin_name . "." . $data->type;
+                },
                 'filter' => false,
             ],
-            /*
             [
                 'attribute'=>'link',
                 'content' => function($data){
-                    return "<a href='". $data->link ."' target='_blank'>
+                    if($data->type === "docx"){
+                        return "<a href='". $data->link ."' target='_blank'>
                                 <i class='fa fa-file-word-o' aria-hidden='true'></i>
                                 <span>Скачать</span>
                            </a>";
-                },
-                'filter' => false,
-                'format' => 'html'
-            ],
-            */
-            [
-                'attribute'=>'link',
-                'content' => function($data){
-                    return "<a href='". $data->link ."' target='_blank'>
-                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
-                                <span>Скачать</span>
-                           </a>";
-                },
-                'filter' => false,
-                'format' => 'html'
-            ],
+                    }
 
+                    return "<a href='". $data->link ."' target='_blank'>
+                                <i class='fa fa-file-image-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                },
+                'filter' => false,
+                'format' => 'html'
+            ],
             [
                 'attribute'=>'status',
                 'content' => function($data){
