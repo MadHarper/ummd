@@ -16,17 +16,17 @@ use yii\db\ActiveRecord;
  * @property string $date_end
  * @property int $country_id
  * @property int $region_id
- * @property int $city_id
+ * @property string $city
  * @property string $order
  * @property string $target
- * @property int $iogv_id
+ * @property string $iogv_id        // iogv_id пользователя, создавшего Командировку
  * @property int $duty_man_id
+ * @property int $organization_id
+
  *
- * @property City $city
  * @property Country $country
  * @property Employee $dutyMan
- * @property Iogv $iogv                              // id Организации (ИОГВ) - выбирается из справочника
- * @property string $master_iogv_id                  // iogv_id пользователя, создавшего Командировку
+ * @property Iogv $iogv
  * @property Region $region
  * @property boolean $visible
  * @property MissionAgreement[] $missionAgreements
@@ -64,18 +64,17 @@ class Mission extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end'], 'required'],
-            [['name', 'target', 'master_iogv_id'], 'string'],
+            [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end', 'organization_id', 'duty_man_id'], 'required'],
+            [['name', 'target', 'iogv_id', 'city'], 'string'],
             [['date_start', 'date_end'], 'safe'],
             [['visible'], 'boolean'],
-            [['country_id', 'region_id', 'city_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
+            [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['visible'], 'default', 'value' => true],
-            [['country_id', 'region_id', 'city_id', 'iogv_id', 'duty_man_id', 'created_at', 'updated_at'], 'integer'],
+            [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at', 'organization_id'], 'integer'],
             [['order'], 'string', 'max' => 255],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
             [['duty_man_id'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['duty_man_id' => 'id']],
-            [['iogv_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['iogv_id' => 'id']],
+            [['organization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['organization_id' => 'id']],
             [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'id']],
         ];
     }
@@ -92,21 +91,14 @@ class Mission extends \yii\db\ActiveRecord
             'date_end' => 'Дата окончания',
             'country_id' => 'Страна',
             'region_id' => 'Регион',
-            'city_id' => 'Город',
+            'city' => 'Город',
             'order' => 'Номер приказа',
             'target' => 'Цель',
-            'iogv_id' => 'ИОГВ',
+            'organization_id' => 'ИОГВ',
             'duty_man_id' => 'Ответственный за предоставление отчета',
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCity()
-    {
-        return $this->hasOne(City::className(), ['id' => 'city_id']);
-    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -127,9 +119,9 @@ class Mission extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIogv()
+    public function getOrganization()
     {
-        return $this->hasOne(Organization::className(), ['id' => 'iogv_id']);
+        return $this->hasOne(Organization::className(), ['id' => 'organization_id']);
     }
 
     /**

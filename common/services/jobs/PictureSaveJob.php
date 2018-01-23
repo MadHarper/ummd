@@ -7,7 +7,7 @@ use yii\base\BaseObject;
 use common\models\Document;
 use common\services\DocxReaderService;
 
-class DocumentSaveJob extends BaseObject implements \yii\queue\JobInterface
+class PictureSaveJob extends BaseObject implements \yii\queue\JobInterface
 {
     //public $originName;
     public $tempPath;
@@ -31,9 +31,7 @@ class DocumentSaveJob extends BaseObject implements \yii\queue\JobInterface
         }
 
         $link = $seaFileService->uploadToSea($directoryItemName, $this->tempPath, $this->newName);
-        // Распарсим docx в текст
-        $reader = new DocxReaderService($this->tempPath);
-        $text = $reader->convertToText();
+
 
         $document = Document::find()->where(['id' => $this->document_id])->one();
 
@@ -44,7 +42,6 @@ class DocumentSaveJob extends BaseObject implements \yii\queue\JobInterface
             $document->link = $link;
         }
 
-        $document->content = $text;
         $document->status = Document::STATUS_YES_PROCESSED;
         $document->save();
 

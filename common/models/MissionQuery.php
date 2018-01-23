@@ -16,7 +16,7 @@ class MissionQuery extends \yii\db\ActiveQuery
         if (!\Yii::$app->user->can('changeAllAgrements')) {
 
             $iogv = \Yii::$app->user->identity->iogv_id;
-            $this->andWhere(['mission.master_iogv_id' => $iogv]);
+            $this->andWhere(['mission.iogv_id' => $iogv]);
         }
     }
 

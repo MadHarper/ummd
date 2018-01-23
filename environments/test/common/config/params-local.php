@@ -5,5 +5,6 @@ return [
         'domain'        => 'beta.test.toris.vpn',
         'code'          => 'urn:eis:toris:ummd',
         'urn'           => '/api/personal/user/profile/'
-    ]
+    ],
+    'cutSeafileDomain' => true,
 ];

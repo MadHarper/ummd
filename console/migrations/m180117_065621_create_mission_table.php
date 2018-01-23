@@ -13,17 +13,21 @@ class m180117_065621_create_mission_table extends Migration
     public function safeUp()
     {
         $this->createTable('mission', [
-            'id'            => $this->primaryKey(),
-            'name'          => $this->text()->notNull(),
-            'date_start'    => $this->date(),
-            'date_end'      => $this->date(),
-            'country_id'    => $this->integer()->notNull(),
-            'region_id'     => $this->integer(),
-            'city_id'       => $this->integer(),
-            'order'         => $this->string()->notNull(),
-            'target'        => $this->text(),
-            'iogv_id'       => $this->integer(),
-            'duty_man_id'   => $this->integer(),
+            'id'                => $this->primaryKey(),
+            'name'              => $this->text()->notNull(),
+            'date_start'        => $this->date(),
+            'date_end'          => $this->date(),
+            'country_id'        => $this->integer()->notNull(),
+            'region_id'         => $this->integer(),
+            'city'              => $this->string(),
+            'order'             => $this->string()->notNull(),
+            'target'            => $this->text(),
+            'organization_id'   => $this->integer(),
+            'iogv_id'           => $this->string(),
+            'duty_man_id'       => $this->integer(),
+            'visible'           => $this->boolean()->defaultValue(true),
+            'created_at'        => $this->integer(),
+            'updated_at'        => $this->integer(),
         ]);
 
 

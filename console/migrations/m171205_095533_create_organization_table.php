@@ -13,12 +13,13 @@ class m171205_095533_create_organization_table extends Migration
     public function safeUp()
     {
         $this->createTable('organization', [
-            'id' => $this->primaryKey(),
-            'name' => $this->string()->notNull(),
-            'contact' => $this->text(),
-            'country_id' => $this->integer(),
-            'created_at' => $this->integer(),
-            'updated_at' => $this->integer(),
+            'id'            => $this->primaryKey(),
+            'name'          => $this->string()->notNull(),
+            'contact'       => $this->text(),
+            'country_id'    => $this->integer(),
+            'created_at'    => $this->integer(),
+            'updated_at'    => $this->integer(),
+            'iogv'          => $this->boolean()->defaultValue(false),
         ]);
 
         $this->addForeignKey(

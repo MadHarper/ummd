@@ -10,13 +10,14 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Agreement;
-use frontend\modules\agreement\forms\DocumentUploadForm;
+use frontend\forms\DocumentUploadForm;
 use yii\web\UploadedFile;
 use yii\helpers\Json;
 use yii\db\Expression;
 use yii\db\Query;
 use common\services\jobs\DocumentSaveJob;
 use common\services\jobs\FileRemoveJob;
+use common\services\jobs\PictureSaveJob;
 
 
 
@@ -105,13 +106,24 @@ class DocumentController extends \frontend\components\BaseController
                 // Помещаем документ в очередь
                 $uploadPath = Yii::$app->params['sea']['upload_path'];
 
-                Yii::$app->queue->push(new DocumentSaveJob([
-                    'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
-                    'document_id'       => $document->id,
-                    'newName'           => $res['newName'] . '.' . $res['ext'],
-                    'iogv_id'           => $agreement->iogv_id,
-                    //'user_id'       => Yii::$app->user->id,
-                ]));
+
+                if($res['ext'] === 'docx'){
+                    Yii::$app->queue->push(new DocumentSaveJob([
+                        'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
+                        'document_id'       => $document->id,
+                        'newName'           => $res['newName'] . '.' . $res['ext'],
+                        'iogv_id'           => $agreement->iogv_id,
+                        //'user_id'       => Yii::$app->user->id,
+                    ]));
+                }else{
+                    Yii::$app->queue->push(new PictureSaveJob([
+                        'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
+                        'document_id'       => $document->id,
+                        'newName'           => $res['newName'] . '.' . $res['ext'],
+                        'iogv_id'           => $agreement->iogv_id,
+                    ]));
+                }
+
 
 
                 //отдаем json для виджета мультиаплоад

@@ -21,21 +21,12 @@ class m180117_082924_create_fk extends Migration
             'RESTRICT'
         );
 
-        $this->addForeignKey(
-            'fk-mission-city_id',
-            'mission',
-            'city_id',
-            'city',
-            'id',
-            'RESTRICT'
-        );
-
 
         //ToDo на таблицу organization
         $this->addForeignKey(
-            'fk-mission-iogv-org_id',
+            'fk-mission-org-org_id',
             'mission',
-            'iogv_id',
+            'organization_id',
             'organization',
             'id',
             'RESTRICT'
@@ -52,13 +43,9 @@ class m180117_082924_create_fk extends Migration
             'mission'
         );
 
-        $this->dropForeignKey(
-            'fk-mission-city_id',
-            'mission'
-        );
 
         $this->dropForeignKey(
-            'fk-mission-iogv-org_id',
+            'fk-mission-org-org_id',
             'mission'
         );
     }

@@ -73,17 +73,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 ])
             ],
             [
-                'attribute'=>'iogv_id',
+                'attribute'=>'organization_id',
                 'vAlign'=>'middle',
                 'label' => 'ИОГВ',
                 'width'=>'300px',
                 'content' => function ($data) {
-                    return $data->iogv_id ? $data->iogv->name : "-";
+                    return $data->organization_id ? $data->organization->name : "-";
                 },
                 'format' => 'raw',
                 'filter' => Select2::widget([
                     'model'         => $searchModel,
-                    'attribute'     => 'iogv_id',
+                    'attribute'     => 'organization_id',
                     'data' => $iogvList,
                     'options' => ['placeholder' => 'Выберите ИОГВ ...'],
                     'pluginOptions' => [

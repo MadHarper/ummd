@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'link',
                 'content' => function($data){
-                    return "<a href='". Url::to(['/agreement/document/doc-download', 'documentId' => $data->id]) ."' target='_blank'>
+                    return "<a href='". $data->link ."' target='_blank'>
                                 <i class='fa fa-file-word-o' aria-hidden='true'></i>
                                 <span>Скачать</span>
                            </a>";

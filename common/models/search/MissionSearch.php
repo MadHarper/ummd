@@ -24,8 +24,8 @@ class MissionSearch extends Mission
     public function rules()
     {
         return [
-            [['id', 'country_id', 'region_id', 'city_id', 'iogv_id', 'duty_man_id'], 'integer'],
-            [['name', 'date_start', 'date_end', 'order', 'target', 'visible', 'created_at_range', 'ended_at_range', 'master_iogv_id'], 'safe'],
+            [['id', 'country_id', 'region_id', 'organization_id', 'duty_man_id'], 'integer'],
+            [['name', 'date_start', 'date_end', 'order', 'target', 'visible', 'created_at_range', 'ended_at_range', 'iogv_id'], 'safe'],
         ];
     }
 
@@ -73,14 +73,15 @@ class MissionSearch extends Mission
             //'date_end' => $this->date_end,
             'country_id' => $this->country_id,
             'region_id' => $this->region_id,
-            'city_id' => $this->city_id,
-            'iogv_id' => $this->iogv_id,
+            'organization_id' => $this->organization_id,
             'duty_man_id' => $this->duty_man_id,
+            'iogv_id' => $this->iogv_id,
         ]);
 
         $query->andFilterWhere(['ilike', 'name', $this->name])
             ->andFilterWhere(['ilike', 'order', $this->order])
-            ->andFilterWhere(['ilike', 'target', $this->target]);
+            ->andFilterWhere(['ilike', 'target', $this->target])
+            ->andFilterWhere(['ilike', 'city', $this->city]);
 
 
         if(!empty($this->created_at_range) && strpos($this->created_at_range, '-') !== false) {

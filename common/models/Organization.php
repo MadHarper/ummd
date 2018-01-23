@@ -68,12 +68,13 @@ class Organization extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Наименование',
-            'contact' => 'Контакт',
-            'country_id' => 'Страна',
-            'created_at' => 'Создано',
-            'updated_at' => 'Обновлено',
+            'id'            => 'ID',
+            'name'          => 'Наименование',
+            'contact'       => 'Контакт',
+            'country_id'    => 'Страна',
+            'created_at'    => 'Создано',
+            'updated_at'    => 'Обновлено',
+            'iogv'          => 'ИОГВ',
         ];
     }
 

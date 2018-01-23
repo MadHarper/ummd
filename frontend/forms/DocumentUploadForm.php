@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\agreement\forms;
+namespace frontend\forms;
 
 use common\models\Agreement;
 use Yii;
@@ -17,7 +17,7 @@ class DocumentUploadForm extends Model
     public function rules()
     {
         return [
-            [['documentFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'docx'],
+            [['documentFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'docx, jpeg, jpg, gif, png'],
         ];
     }
 
@@ -28,7 +28,8 @@ class DocumentUploadForm extends Model
             $ext = $this->documentFile->extension;
             $newName = uniqid();
 
-            if($this->documentFile->saveAs(Yii::getAlias('@common/seafile/docs/') . $newName . '.' . $ext)){
+            $uploadPathString = Yii::$app->params['sea']['upload_path'];
+            if($this->documentFile->saveAs(Yii::getAlias($uploadPathString) . $newName . '.' . $ext)){
                 return [
                    'base_name'  => $base_name,
                    'ext'        => $ext,

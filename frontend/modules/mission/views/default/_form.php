@@ -20,7 +20,7 @@ use common\models\Employee;
 
     <?= $form->field($model, 'name')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'iogv_id')->widget(Select2::classname(), [
+    <?= $form->field($model, 'organization_id')->widget(Select2::classname(), [
         'name' => 'iogv-select',
         'data' => $iogvList,
         'options' => ['placeholder' => 'Выберите ИОГВ ...'],
@@ -36,8 +36,8 @@ use common\models\Employee;
 
     <?php
     $arrEmployees = [];
-    if($model->iogv_id){
-        $all = Employee::find()->where(['organization_id' => $model->iogv_id])->all();
+    if($model->organization_id){
+        $all = Employee::find()->where(['organization_id' => $model->organization_id])->all();
         foreach ($all as $item){
             $arrEmployees[$item->id] = $item->fio . " - " . $item->position;
         }
@@ -86,7 +86,7 @@ use common\models\Employee;
 
     <?= $form->field($model, 'region_id')->textInput() ?>
 
-    <?= $form->field($model, 'city_id')->textInput() ?>
+    <?= $form->field($model, 'city')->textInput() ?>
 
     <?= $form->field($model, 'order')->textInput(['maxlength' => true]) ?>
 

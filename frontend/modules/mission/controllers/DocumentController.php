@@ -3,6 +3,7 @@
 namespace frontend\modules\mission\controllers;
 
 use common\models\UserToris;
+use common\services\jobs\PictureSaveJob;
 use Yii;
 use frontend\models\Document;
 use frontend\models\search\DocumentSearch;
@@ -10,7 +11,7 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Mission;
-use frontend\modules\agreement\forms\DocumentUploadForm;
+use frontend\forms\DocumentUploadForm;
 use yii\web\UploadedFile;
 use yii\helpers\Json;
 use yii\db\Expression;
@@ -86,7 +87,7 @@ class DocumentController extends \frontend\components\BaseController
 
             $mission = Mission::findOne(['id' => $missionId]);
             if(!$mission){
-                throw new NotFoundHttpException('The requested agreement model not found.');
+                throw new NotFoundHttpException('The mission model not found.');
             }
 
             $model = new DocumentUploadForm();
@@ -99,9 +100,7 @@ class DocumentController extends \frontend\components\BaseController
                 $document->model        = Mission::class;
                 $document->model_id     = $mission->id;
 
-                // $mission->iogv_id выбирается при создании Командировки, и может отличаться от iogv_id создавшего юзера
-                // поэтому у Командировки смотрим поле $mission->user_iogv_id.
-                $document->iogv_id      = $mission->master_iogv_id;
+                $document->iogv_id      = $mission->iogv_id;
 
                 $document->user_id      = Yii::$app->user->id;
                 $document->origin_name  = $res['base_name'];
@@ -113,13 +112,23 @@ class DocumentController extends \frontend\components\BaseController
                 // Помещаем документ в очередь
                 $uploadPath = Yii::$app->params['sea']['upload_path'];
 
-                Yii::$app->queue->push(new DocumentSaveJob([
-                    'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
-                    'document_id'       => $document->id,
-                    'newName'           => $res['newName'] . '.' . $res['ext'],
-                    'iogv_id'           => $mission->master_iogv_id,
-                    //'user_id'       => Yii::$app->user->id,
-                ]));
+                if($res['ext'] === 'docx'){
+                    Yii::$app->queue->push(new DocumentSaveJob([
+                        'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
+                        'document_id'       => $document->id,
+                        'newName'           => $res['newName'] . '.' . $res['ext'],
+                        'iogv_id'           => $mission->iogv_id,
+                        //'user_id'       => Yii::$app->user->id,
+                    ]));
+                }else{
+                    Yii::$app->queue->push(new PictureSaveJob([
+                        'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
+                        'document_id'       => $document->id,
+                        'newName'           => $res['newName'] . '.' . $res['ext'],
+                        'iogv_id'           => $mission->iogv_id,
+                    ]));
+                }
+
 
 
                 //отдаем json для виджета мультиаплоад

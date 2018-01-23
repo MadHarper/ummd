@@ -77,7 +77,7 @@ class DefaultController  extends \frontend\components\BaseController
     {
         $model = new Mission();
 
-        $model->master_iogv_id = Yii::$app->user->identity->iogv_id;
+        $model->iogv_id = Yii::$app->user->identity->iogv_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['update', 'id' => $model->id]);
         }
