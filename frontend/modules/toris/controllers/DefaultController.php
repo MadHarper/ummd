@@ -113,7 +113,7 @@ class DefaultController extends Controller
                         ];
                     }
 
-                    //$res = ['need_redirect' => false];
+                    $res = ['need_redirect' => false];
                 }
 
                 return $res;
