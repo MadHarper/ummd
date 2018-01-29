@@ -2,7 +2,7 @@
 
 namespace common\services;
 
-
+use Yii;
 
 class DocxReaderService
 {
@@ -13,6 +13,7 @@ class DocxReaderService
     }
 
     private function read_doc() {
+        /*
         $fileHandle = fopen($this->filename, "r");
         $line = @fread($fileHandle, filesize($this->filename));
         $lines = explode(chr(0x0D),$line);
@@ -28,6 +29,13 @@ class DocxReaderService
         }
         $outtext = preg_replace("/[^a-zA-Z0-9\s\,\.\-\n\r\t@\/\_\(\)]/","",$outtext);
         return $outtext;
+        */
+
+        $doc = new \common\services\convertor\Doc();
+        $doc->read($this->filename);
+        $text = $doc->parse();
+        //return mb_convert_encoding($text, "UTF-8", "auto");
+        return $text;
     }
 
     private function read_docx(){
