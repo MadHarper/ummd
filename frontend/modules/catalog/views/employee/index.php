@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'fio',
             'position',
-            'active:boolean',
+            //'active:boolean',
             [
                 'attribute' => 'organization_id',
                 'label' => 'Организация',

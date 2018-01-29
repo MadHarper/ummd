@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\Employee */
 
 $this->title = 'Редактировать должностное лицо: ' . $model->fio;
-$this->params['breadcrumbs'][] = ['label' => 'Employees', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Должностные лица', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->fio, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Редактировать';
 ?>
@@ -15,6 +15,7 @@ $this->params['breadcrumbs'][] = 'Редактировать';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'dataProvider' => $dataProvider,
     ]) ?>
 
 </div>

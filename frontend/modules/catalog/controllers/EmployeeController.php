@@ -66,8 +66,13 @@ class EmployeeController extends \frontend\components\BaseController
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $searchModel = new EmployeeSearch();
+        $dataProvider = $searchModel->searchWithEmployeeHistory(Yii::$app->request->queryParams, $id, $model->main_id);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -81,6 +86,8 @@ class EmployeeController extends \frontend\components\BaseController
         $model = new Employee();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->main_id = $model->id;
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -100,14 +107,49 @@ class EmployeeController extends \frontend\components\BaseController
     {
         $model = $this->findModel($id);
 
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $newModel = new Employee();
+            $newModel->fio              = $model->fio;
+            $newModel->position         = $model->position;
+            $newModel->organization_id  = $model->organization_id;
+            $newModel->prev_id          = $model->id;
+            $newModel->main_id          = $model->main_id;
+            $newModel->save();
+
+            $oldModel = $this->findModel($id);
+            $oldModel->history = true;
+            $oldModel->visible = false;
+            $oldModel->save();
+
+            return $this->redirect(['view', 'id' => $newModel->id]);
+        }
+
+        $searchModel = new EmployeeSearch();
+        $dataProvider = $searchModel->searchWithEmployeeHistory(Yii::$app->request->queryParams, $id, $model->main_id);
+
+        return $this->render('update', [
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    /*
+    public function actionUpdateHistroy($id)
+    {
+        $model = $this->findModel($id);
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        return $this->render('update-history', [
             'model' => $model,
         ]);
     }
+    */
+
 
     /**
      * Deletes an existing Employee model.
@@ -118,7 +160,11 @@ class EmployeeController extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        $model->visible = false;
+        $model->history = true;
+        $model->save();
 
         return $this->redirect(['index']);
     }
@@ -150,6 +196,7 @@ class EmployeeController extends \frontend\components\BaseController
             ->select(['id', 'name as text'])
             ->from('organization')
             ->where(['ilike','name',$q])
+            ->andWhere(['history' => false])
             ->limit(10)
             ->all());
 

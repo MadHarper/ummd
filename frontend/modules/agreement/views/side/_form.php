@@ -24,7 +24,7 @@ use common\models\Employee;
                 'allowClear' => false,
                 'minimumInputLength' => 3,
                 'ajax' => [
-                    'url' => '/catalog/employee/searchid',
+                    'url' => '/agreement/side/searchid',
                     'dataType' => 'json',
                     'data' => new JsExpression('function(params) { return {q:params.term}; }')
                 ],
@@ -41,7 +41,7 @@ use common\models\Employee;
     <?php
     $arrEmployees = [];
     if($model->org_id){
-        $all = Employee::find()->where(['organization_id' => $model->org_id])->all();
+        $all = Employee::find()->where(['organization_id' => $model->org_id, 'history' => false])->all();
         foreach ($all as $item){
             $arrEmployees[$item->id] = $item->fio . " - " . $item->position;
         }
@@ -57,7 +57,7 @@ use common\models\Employee;
     <?= $form->field($model, 'subdivision')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

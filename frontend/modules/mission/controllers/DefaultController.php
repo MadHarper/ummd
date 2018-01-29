@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use common\models\Organization;
 use common\models\Employee;
 use common\models\Country;
+use common\models\Agreement;
 
 /**
  * DefaultController implements the CRUD actions for Mission model.
@@ -82,10 +83,12 @@ class DefaultController  extends \frontend\components\BaseController
             return $this->redirect(['update', 'id' => $model->id]);
         }
         $iogvList = $this->getIogvList();
+        $missionAgreementArr = [];
 
         return $this->render('create', [
             'model' => $model,
             'iogvList' => $iogvList,
+            'missionAgreementArr' => $missionAgreementArr,
         ]);
     }
 
@@ -106,9 +109,16 @@ class DefaultController  extends \frontend\components\BaseController
 
         $iogvList = $this->getIogvList();
 
+        $missionAgreementArr = Agreement::find()
+                                ->where(['id' => $model->agreementsArray])
+                                ->select("name, id")
+                                ->orderBy("id")
+                                ->column();
+
         return $this->render('update', [
             'model' => $model,
             'iogvList' => $iogvList,
+            'missionAgreementArr' => $missionAgreementArr
         ]);
     }
 
@@ -166,7 +176,7 @@ class DefaultController  extends \frontend\components\BaseController
 
     public function actionList($id){
         $employees = Employee::find()
-                            ->where(['organization_id' => $id])
+                            ->where(['organization_id' => $id, 'history' => false])
                             ->orderBy('fio')
                             ->all();
 
@@ -182,7 +192,7 @@ class DefaultController  extends \frontend\components\BaseController
     {
         $objectList =  Organization::find()
             ->select(['name', 'id'])
-            ->where(['iogv' => true])
+            ->where(['iogv' => true, 'history' => false])
             ->indexBy('id')
             ->column();
 
@@ -199,6 +209,21 @@ class DefaultController  extends \frontend\components\BaseController
             ->select(['id', "CONCAT (fio, ' - ', position) as text"])
             ->from('employee')
             ->where(['ilike','fio',$q])
+            ->limit(10)
+            ->all());
+
+        return $out;
+    }
+
+    public function actionSearchAgreement($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['id', "name as text"])
+            ->from('agreement')
+            ->where(['ilike','name',$q])
             ->limit(10)
             ->all());
 

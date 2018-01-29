@@ -8,6 +8,7 @@ use common\models\search\OrganizationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\search\EmployeeSearch;
 
 /**
  * OrganizationController implements the CRUD actions for Organization model.
@@ -66,8 +67,13 @@ class OrganizationController extends \frontend\components\BaseController
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $searchModel = new OrganizationSearch();
+        $dataProvider = $searchModel->searchWithHistory(Yii::$app->request->queryParams, $id, $model->main_id);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -81,6 +87,8 @@ class OrganizationController extends \frontend\components\BaseController
         $model = new Organization();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->main_id = $model->id;
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -100,12 +108,31 @@ class OrganizationController extends \frontend\components\BaseController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $newModel = new Organization();
+            $newModel->name         = $model->name;
+            $newModel->contact      = $model->contact;
+            $newModel->country_id   = $model->country_id;
+            $newModel->iogv         = $model->iogv;
+            $newModel->history      = false;
+            $newModel->prev_id      = $model->id;
+            $newModel->main_id      = $model->main_id;
+            $newModel->save();
+
+            $oldModel = $this->findModel($id);
+            $oldModel->history = true;
+            $oldModel->save();
+
+            return $this->redirect(['view', 'id' => $newModel->id]);
         }
+
+        $searchModel = new EmployeeSearch();
+        $dataProvider = $searchModel->searchByOrganization(Yii::$app->request->queryParams, $model->id);
 
         return $this->render('update', [
             'model' => $model,
+            'dataProvider' => $dataProvider
         ]);
     }
 

@@ -34,6 +34,10 @@ use yii\db\ActiveRecord;
  */
 class Mission extends \yii\db\ActiveRecord
 {
+
+    public $_agreements;
+
+
     /**
      * @inheritdoc
      */
@@ -66,7 +70,7 @@ class Mission extends \yii\db\ActiveRecord
         return [
             [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end', 'organization_id', 'duty_man_id'], 'required'],
             [['name', 'target', 'iogv_id', 'city'], 'string'],
-            [['date_start', 'date_end'], 'safe'],
+            [['date_start', 'date_end', 'agreementsArray'], 'safe'],
             [['visible'], 'boolean'],
             [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['visible'], 'default', 'value' => true],
@@ -135,12 +139,10 @@ class Mission extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    /*
     public function getMissionAgreements()
     {
         return $this->hasMany(MissionAgreement::className(), ['mission_id' => 'id']);
     }
-    */
 
     /**
      * @return \yii\db\ActiveQuery
@@ -168,5 +170,55 @@ class Mission extends \yii\db\ActiveRecord
     public static function find()
     {
         return new MissionQuery(get_called_class());
+    }
+
+
+    public function getAgreementsArray()
+    {
+        if ($this->_agreements === null) {
+            $this->_agreements = $this->getMissionAgreements()
+                                        ->select('agreement_id')
+                                        ->where(['mission_id' => $this->id])
+                                        ->orderBy("agreement_id")
+                                        ->column();
+        }
+
+        return $this->_agreements;
+    }
+
+    public function setAgreementsArray($value)
+    {
+        $this->_agreements = (array)$value;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        $this->updateAgreements();
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+
+    private function updateAgreements()
+    {
+        $currentAgreementsIds = $this->getMissionAgreements()->select('agreement_id')->column();
+        $newAgreementsIds = $this->getAgreementsArray();
+
+        $new = [];
+        foreach ($newAgreementsIds as $item){
+            $new[] = (int)$item;
+        }
+
+        foreach (array_filter(array_diff($new, $currentAgreementsIds)) as $agId) {
+            if ($ag = Agreement::findOne($agId)) {
+                $missionAgreement = new MissionAgreement(['mission_id' => $this->id, 'agreement_id' => $agId]);
+                $missionAgreement->save();
+            }
+        }
+
+        foreach (array_filter(array_diff($currentAgreementsIds, $new)) as $agId) {
+            if($ma = MissionAgreement::find()->where(['mission_id' => $this->id, 'agreement_id' => $agId])->one()){
+                $ma->delete();
+            }
+        }
     }
 }

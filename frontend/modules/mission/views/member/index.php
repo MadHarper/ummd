@@ -80,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if($employee){
                         return Employee::find()
                             ->select(['fio', 'id'])
-                            ->where(['organization_id' => $employee->organization_id])
+                            ->where(['organization_id' => $employee->organization_id, 'history' => false])
                             ->indexBy('id')
                             ->column();
                     }

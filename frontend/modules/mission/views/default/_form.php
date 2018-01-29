@@ -21,9 +21,12 @@ use common\models\Employee;
     <?= $form->field($model, 'name')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'organization_id')->widget(Select2::classname(), [
-        'name' => 'iogv-select',
+//        'name' => 'iogv-select',
         'data' => $iogvList,
-        'options' => ['placeholder' => 'Выберите ИОГВ ...'],
+        'options' => [
+            'placeholder' => 'Выберите ИОГВ ...',
+            'id' => 'sss1',
+        ],
         'pluginOptions' => [
             'allowClear' => true
         ],
@@ -67,7 +70,7 @@ use common\models\Employee;
     echo $form->field($model, 'country_id')->widget(Select2::classname(),
         [
             'initValueText' => $model->country ? $model->country->name : '',
-            'options' => ['placeholder' => 'Выберите страну'],
+            'options' => ['placeholder' => 'Выберите страну', 'id' => 'sss2',],
             'pluginOptions' => [
                 'allowClear' => false,
                 'minimumInputLength' => 3,
@@ -92,8 +95,33 @@ use common\models\Employee;
 
     <?= $form->field($model, 'target')->textarea(['rows' => 6]) ?>
 
+
+    <?php
+    echo $form->field($model, 'agreementsArray')->widget(Select2::classname(),
+        [
+            'initValueText' => $missionAgreementArr,
+            'options' => ['placeholder' => 'Выберите соглашения',
+                          'multiple' => true, 'id' => 'agreementsArray3',
+                          //'value' => [5 => "name", 8 => "alex"],
+            ],
+            'pluginOptions' => [
+                'allowClear' => false,
+                'minimumInputLength' => 4,
+                'ajax' => [
+                    'url' => '/mission/default/search-agreement',
+                    'dataType' => 'json',
+                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                ],
+                'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                'templateResult' => new JsExpression('function(city) {  console.log(city); return city.text; }'),
+                'templateSelection' => new JsExpression('function (city) { console.log(city); return city.text;  }'),
+            ],
+        ])->label("Соглашения");
+    ?>
+
+
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

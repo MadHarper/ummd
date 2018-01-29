@@ -40,3 +40,18 @@
 .mission-update, .agreement-update{
     margin-top: 40px;
 }
+
+.select2-container .select2-selection--multiple .select2-selection__choice {
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.org-employee-list{
+    margin-top: 70px;
+}
+
+.employee-index-history{
+    margin-top: 70px;
+}

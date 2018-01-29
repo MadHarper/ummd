@@ -49,7 +49,7 @@ class MemberController extends \frontend\components\BaseController
 
         $model = new MissionMemberForm(['mission' => $mission, 'arr' => []]);
         $iogvList = Organization::find()->select(['name', 'id'])
-                                        ->where(['iogv' => true])
+                                        ->where(['iogv' => true, 'history' => false])
                                         ->indexBy('id')
                                         ->column();
 
@@ -73,7 +73,7 @@ class MemberController extends \frontend\components\BaseController
     {
         if(Yii::$app->request->isAjax){
             $employees = Employee::find()
-                            ->where(['organization_id' => $id])
+                            ->where(['organization_id' => $id, 'history' => false])
                             ->orderBy('fio')
                             ->all();
 

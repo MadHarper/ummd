@@ -55,8 +55,10 @@ class Organization extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['contact'], 'string'],
             [['country_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['country_id', 'created_at', 'updated_at'], 'integer'],
-            [['iogv'], 'boolean'],
+            [['country_id', 'created_at', 'updated_at', 'prev_id', 'main_id'], 'integer'],
+            [['history'], 'default', 'value' => false],
+            [['prev_id'], 'default', 'value' => null],
+            [['iogv', 'history'], 'boolean'],
             [['name'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];
@@ -75,6 +77,7 @@ class Organization extends \yii\db\ActiveRecord
             'created_at'    => 'Создано',
             'updated_at'    => 'Обновлено',
             'iogv'          => 'ИОГВ',
+            'history'       => 'Историческая'
         ];
     }
 

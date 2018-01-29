@@ -70,4 +70,19 @@ class OrganizationSearch extends Organization
 
         return $dataProvider;
     }
+
+
+    public function searchWithHistory($params, $id, $main_id)
+    {
+        $query = Organization::find()
+            ->andWhere(['main_id' => $main_id])
+            ->andWhere(['!=','id', $id])
+            ->orderBy('created_at DESC');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $dataProvider;
+    }
 }

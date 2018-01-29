@@ -18,9 +18,9 @@ class EmployeeSearch extends Employee
     public function rules()
     {
         return [
-            [['id', 'organization_id'], 'integer'],
-            [['fio', 'position'], 'safe'],
-            [['active'], 'boolean'],
+            [['id', 'organization_id', 'prev_id', 'main_id'], 'integer'],
+            [['fio', 'position', 'created_at', 'updated_at'], 'safe'],
+            [['active', 'visible', 'history'], 'boolean'],
         ];
     }
 
@@ -42,7 +42,7 @@ class EmployeeSearch extends Employee
      */
     public function search($params)
     {
-        $query = Employee::find();
+        $query = Employee::find()->andWhere(['visible' => true]);
 
         // add conditions that should always apply here
 
@@ -67,6 +67,32 @@ class EmployeeSearch extends Employee
 
         $query->andFilterWhere(['ilike', 'fio', $this->fio])
             ->andFilterWhere(['ilike', 'position', $this->position]);
+
+        return $dataProvider;
+    }
+
+
+    public function searchByOrganization($params, $orgId)
+    {
+        $query = Employee::find()->andWhere(['history' => false, 'organization_id' => $orgId]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $dataProvider;
+    }
+
+    public function searchWithEmployeeHistory($params, $id, $main_id)
+    {
+        $query = Employee::find()
+                    ->andWhere(['main_id' => $main_id])
+                    ->andWhere(['!=','id', $id])
+                    ->orderBy('created_at DESC');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
 
         return $dataProvider;
     }

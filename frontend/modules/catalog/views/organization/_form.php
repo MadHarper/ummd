@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use yii\grid\GridView;
+use yii\helpers\Url;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Organization */
@@ -41,9 +44,56 @@ use yii\web\JsExpression;
     <?= $form->field($model, 'iogv')->checkbox() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php if(!$model->isNewRecord): ?>
+    <div class="org-employee-list">
+        <h3>Сотрудники:</h3>
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            //'filterModel' => $searchModel,
+            //'layout' => "{items}\n{pager}",
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+
+                [
+                    'attribute' => 'fio',
+                    'filter' => false,
+
+                ],
+                [
+                    'attribute' => 'position',
+                    'filter' => false,
+
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{view} {update} {delete}',
+                    'urlCreator' => function ($action, $employee, $key, $index) {
+                        if ($action === 'view') {
+                            $url = Url::to(['/catalog/employee/view', 'id' => $employee->id]);
+                            return $url;
+                        }
+
+                        if ($action === 'update') {
+                            $url = Url::to(['/catalog/employee/update', 'id' => $employee->id]);
+                            return $url;
+                        }
+
+                        if ($action === 'delete') {
+                            $url = Url::to(['/catalog/employee/delete', 'id' => $employee->id]);
+                            return $url;
+                        }
+                    }
+                ],
+                //['class' => 'yii\grid\ActionColumn'],
+            ],
+        ]); ?>
+    </div>
+<?php endif;?>
+

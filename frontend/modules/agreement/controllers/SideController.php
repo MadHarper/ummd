@@ -183,8 +183,9 @@ class SideController extends \frontend\components\BaseController
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+
     public function actionList($id){
-        $employees = Employee::find()->where(['organization_id' => $id])->all();
+        $employees = Employee::find()->where(['organization_id' => $id, 'history' => false])->all();
 
         $list = "";
         foreach ($employees as $emp){
@@ -192,6 +193,24 @@ class SideController extends \frontend\components\BaseController
         }
 
         return $list;
+    }
+
+
+    public function actionSearchid($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['id', 'name as text'])
+            ->from('organization')
+            ->where(['ilike','name',$q])
+            ->andWhere(['history' => false])
+            ->limit(10)
+            ->all());
+
+        return $out;
     }
 
 }
