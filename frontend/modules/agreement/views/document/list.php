@@ -9,7 +9,6 @@ use yii\helpers\Url;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Документы';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="document-index">
 

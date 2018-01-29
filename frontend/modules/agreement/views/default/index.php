@@ -18,7 +18,6 @@ use common\models\Country;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Соглашения';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="agreement-index">
 
@@ -88,24 +87,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     ])
                 ],
                 [
-                    'attribute'=>'organization',
+                    'attribute'=>'organization_text',
                     'vAlign'=>'middle',
                     'label' => 'Организация',
                     'width'=>'300px',
-                    /*
-                    'content' => function ($data) {
-                        $str = '';
-                        if($data->sideAgrs){
-                            $n = 1;
-                            foreach ($data->sideAgrs as $side){
-                                $str .= '<span class="badge">' . $n .'</span>&nbsp&nbsp';
-                                $str .= '<span>' . $side->org->name . '</span><br/>';
-                                $n++;
-                            }
-                        }
-                        return $str;
-                    },
-                    */
                     'content' => function ($data) {
                         $str = '';
                         if($data->sideAgrs){
@@ -124,33 +109,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $str;
                     },
                     'format' => 'raw',
-                    'filter' => Select2::widget([
-                        'model'         => $searchModel,
-                        'attribute'     => 'organization',
-                        'initValueText' => $searchModel->organization ? Organization::find()
-                                                                                ->where(['id' => $searchModel->organization])
-                                                                                ->one()
-                                                                                ->name:
-                                                                                "",
-                        'pluginOptions' => [
-                            'allowClear'         => true,
-                            'minimumInputLength' => 3,
-                            'ajax'               => [
-                                'url'      => '/agreement/default/search-org',
-                                'dataType' => 'json',
-                                'data'     => new JsExpression('function(params) { return {q:params.term}; }')
-                            ],
-                            'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
-                            'templateResult'     => new JsExpression('function(city) {  return city.text; }'),
-                            'templateSelection'  => new JsExpression('function (city) { console.log(city); return  city.text; }'),
-                        ],
-                        'options'       => [
-                            'placeholder' => '',
-                        ]
-                    ]),
                 ],
                 [
-                    'attribute'=>'employee',
+                    'attribute'=>'employee_text',
                     'vAlign'=>'middle',
                     'label' => 'Сотрудники',
                     'width'=>'240px',
@@ -169,30 +130,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $str;
                     },
                     'format' => 'raw',
-                    'filter' => Select2::widget([
-                        'model'         => $searchModel,
-                        'attribute'     => 'employee',
-                        'initValueText' => $searchModel->employee ? Employee::find()
-                                                                    ->where(['id' => $searchModel->employee])
-                                                                    ->one()
-                                                                    ->fio:
-                                                                    "",
-                        'pluginOptions' => [
-                            'allowClear'         => true,
-                            'minimumInputLength' => 3,
-                            'ajax'               => [
-                                'url'      => '/agreement/default/search-employee',
-                                'dataType' => 'json',
-                                'data'     => new JsExpression('function(params) { return {q:params.term}; }')
-                            ],
-                            'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
-                            'templateResult'     => new JsExpression('function(city) {  return city.text; }'),
-                            'templateSelection'  => new JsExpression('function (city) { console.log(city); return  city.text; }'),
-                        ],
-                        'options'       => [
-                            'placeholder' => '',
-                        ]
-                    ]),
                 ],
                 [
                     'attribute'=>'country',

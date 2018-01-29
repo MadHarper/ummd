@@ -12,16 +12,14 @@ use yii\helpers\Url;
 
 
 
-$this->title = 'Missions';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Командировки';
 ?>
 <div class="mission-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Mission', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить командировку', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
@@ -73,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ])
             ],
             [
-                'attribute'=>'organization_id',
+                'attribute'=>'organization_text',
                 'vAlign'=>'middle',
                 'label' => 'ИОГВ',
                 'width'=>'300px',
@@ -81,17 +79,28 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->organization_id ? $data->organization->name : "-";
                 },
                 'format' => 'raw',
-                'filter' => Select2::widget([
-                    'model'         => $searchModel,
-                    'attribute'     => 'organization_id',
-                    'data' => $iogvList,
-                    'options' => ['placeholder' => 'Выберите ИОГВ ...'],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-                ]),
             ],
-
+            [
+                'attribute'=>'member_text',
+                'vAlign'=>'middle',
+                'label' => 'Участники',
+                'width'=>'300px',
+                'content' => function ($data) {
+                    $str = '';
+                    if($data->missionEmployees){
+                        $n = 1;
+                        foreach ($data->missionEmployees as $me){
+                            $str .= "<div class='intable_list'>";
+                            $str .= '<div><span class="badge">' . $n .'</span></div>';
+                            $str .= '<div>' . $me->employee->fio . '</div>';
+                            $str .= "</div>";
+                            $n++;
+                        }
+                    }
+                    return $str;
+                },
+                'format' => 'raw',
+            ],
            [
                'attribute'=>'duty_man_id',
                'vAlign'=>'middle',

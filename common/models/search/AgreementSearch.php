@@ -19,6 +19,9 @@ class AgreementSearch extends Agreement
     public $employee;
     public $country;
 
+    public $organization_text;
+    public $employee_text;
+
 
 
 
@@ -29,7 +32,7 @@ class AgreementSearch extends Agreement
     {
         return [
             [['id', 'status', 'created_at', 'updated_at', 'organization', 'employee', 'country'], 'integer'],
-            [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range', 'iogv_id'], 'safe'],
+            [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range', 'iogv_id', 'organization_text', 'employee_text'], 'safe'],
         ];
     }
 
@@ -64,7 +67,8 @@ class AgreementSearch extends Agreement
         $query = Agreement::find()
             ->join('LEFT JOIN','side_agr', 'side_agr.agreement_id = agreement.id')
             ->join('LEFT JOIN','organization', 'organization.id = side_agr.org_id')
-            ->join('LEFT JOIN','country', 'country.id = organization.country_id');
+            ->join('LEFT JOIN','country', 'country.id = organization.country_id')
+            ->join('LEFT JOIN','employee', 'side_agr.employee_id = employee.id');
 
 
         // add conditions that should always apply here
@@ -108,6 +112,14 @@ class AgreementSearch extends Agreement
             $query->andFilterWhere([
                 'side_agr.employee_id' => $this->employee,
             ]);
+        }
+
+        if(isset($this->employee_text)){
+            $query->andFilterWhere(['ilike', 'employee.fio', $this->employee_text]);
+        }
+
+        if(isset($this->organization_text)){
+            $query->andFilterWhere(['ilike', 'organization.name', $this->organization_text]);
         }
 
         $query->andFilterWhere(['ilike', 'agreement.name', $this->name])

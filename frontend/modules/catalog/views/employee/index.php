@@ -10,7 +10,6 @@ use yii\web\JsExpression;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Должностные лица';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="employee-index">
 
