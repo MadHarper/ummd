@@ -34,8 +34,9 @@ class DocxReaderService
         $doc = new \common\services\convertor\Doc();
         $doc->read($this->filename);
         $text = $doc->parse();
-        //return mb_convert_encoding($text, "UTF-8", "auto");
-        return $text;
+
+        //return $text;
+        return mb_convert_encoding($text, "UTF-8", "auto");
     }
 
     private function read_docx(){
