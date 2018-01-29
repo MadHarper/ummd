@@ -4,16 +4,18 @@ use yii\helpers\Html;
 use unclead\multipleinput\MultipleInput;
 use yii\bootstrap\ActiveForm;
 use kartik\select2\Select2;
-use yii\web\JsExpression;
 use common\models\Employee;
 use common\models\MissionEmployee;
+use yii\helpers\Url;
+
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\MissionEmployeeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Участники командировки';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = $mission->name . ': Участники командировки';
+$this->params['breadcrumbs'][] = ['label' => $mission->name, 'url'=> Url::to(['/mission/default/view', 'id' => $mission->id])];
+$this->params['breadcrumbs'][] = 'Участники командировки';
 ?>
 <div class="mission-employee-index">
 

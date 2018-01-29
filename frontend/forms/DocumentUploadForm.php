@@ -17,7 +17,7 @@ class DocumentUploadForm extends Model
     public function rules()
     {
         return [
-            [['documentFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'docx, jpeg, jpg, gif, png'],
+            [['documentFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'docx, doc, jpeg, jpg, gif, png'],
         ];
     }
 

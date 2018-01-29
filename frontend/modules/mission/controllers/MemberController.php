@@ -64,7 +64,9 @@ class MemberController extends \frontend\components\BaseController
 
         return $this->render('index', ['model' => $model,
                                             'iogvList' => $iogvList,
-                                            'errors' => $errors]
+                                            'errors' => $errors,
+                                            'mission' => $mission
+                                            ]
                             );
     }
 

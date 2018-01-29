@@ -112,7 +112,7 @@ class DocumentController extends \frontend\components\BaseController
                 // Помещаем документ в очередь
                 $uploadPath = Yii::$app->params['sea']['upload_path'];
 
-                if($res['ext'] === 'docx'){
+                if($res['ext'] === 'docx' || $res['ext'] === 'doc'){
                     Yii::$app->queue->push(new DocumentSaveJob([
                         'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
                         'document_id'       => $document->id,
