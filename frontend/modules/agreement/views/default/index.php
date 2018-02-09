@@ -120,11 +120,13 @@ $this->title = 'Соглашения';
                         if($data->sideAgrs){
                             $n = 1;
                             foreach ($data->sideAgrs as $side){
-                                $str .= "<div class='intable_list'>";
-                                $str .= '<div><span class="badge">' . $n .'</span></div>';
-                                $str .= '<div>' . $side->employee->fio . '</div>';
-                                $str .= "</div>";
-                                $n++;
+                                if($side->employee){
+                                    $str .= "<div class='intable_list'>";
+                                    $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                    $str .= '<div>' . $side->employee->fio . '</div>';
+                                    $str .= "</div>";
+                                    $n++;
+                                }
                             }
                         }
                         return $str;
