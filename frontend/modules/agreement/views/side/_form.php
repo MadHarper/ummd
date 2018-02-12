@@ -41,7 +41,11 @@ use common\models\Employee;
     <?php
     $arrEmployees = [];
     if($model->org_id){
-        $all = Employee::find()->where(['organization_id' => $model->org_id, 'history' => false])->all();
+        $all = Employee::find()
+                ->where(['organization_id' => $model->org_id, 'history' => false])
+                ->orderBy(['fio' => SORT_ASC, 'main_id' => SORT_ASC])
+                ->all();
+
         foreach ($all as $item){
             $arrEmployees[$item->id] = $item->fio . " - " . $item->position;
         }

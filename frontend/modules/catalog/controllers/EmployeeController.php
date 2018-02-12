@@ -7,6 +7,7 @@ use common\models\Employee;
 use common\models\search\EmployeeSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use frontend\modules\catalog\services\EmployeeUpdateService;
 
 /**
  * EmployeeController implements the CRUD actions for Employee model.
@@ -108,20 +109,8 @@ class EmployeeController extends \frontend\components\BaseController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-            $newModel = new Employee();
-            $newModel->fio              = $model->fio;
-            $newModel->position         = $model->position;
-            $newModel->organization_id  = $model->organization_id;
-            $newModel->prev_id          = $model->id;
-            $newModel->main_id          = $model->main_id;
-            $newModel->save();
-
-            $oldModel = $this->findModel($id);
-            $oldModel->history = true;
-            $oldModel->visible = false;
-            $oldModel->save();
-
+            $newModel = new EmployeeUpdateService($model);
+            $newModel = $newModel->update();
             return $this->redirect(['view', 'id' => $newModel->id]);
         }
 

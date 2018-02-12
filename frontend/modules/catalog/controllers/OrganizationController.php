@@ -2,6 +2,7 @@
 
 namespace frontend\modules\catalog\controllers;
 
+use frontend\modules\catalog\services\OrganizationUpdateService;
 use Yii;
 use common\models\Organization;
 use common\models\search\OrganizationSearch;
@@ -51,7 +52,7 @@ class OrganizationController extends \frontend\components\BaseController
     public function actionIndex()
     {
         $searchModel = new OrganizationSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchNonHistory(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -109,22 +110,9 @@ class OrganizationController extends \frontend\components\BaseController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-            $newModel = new Organization();
-            $newModel->name         = $model->name;
-            $newModel->contact      = $model->contact;
-            $newModel->country_id   = $model->country_id;
-            $newModel->iogv         = $model->iogv;
-            $newModel->history      = false;
-            $newModel->prev_id      = $model->id;
-            $newModel->main_id      = $model->main_id;
-            $newModel->save();
-
-            $oldModel = $this->findModel($id);
-            $oldModel->history = true;
-            $oldModel->save();
-
-            return $this->redirect(['view', 'id' => $newModel->id]);
+            $orgUpdateService = new OrganizationUpdateService($model);
+            $redirectId = $orgUpdateService->update();
+            return $this->redirect(['view', 'id' => $redirectId]);
         }
 
         $searchModel = new EmployeeSearch();

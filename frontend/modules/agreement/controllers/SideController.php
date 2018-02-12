@@ -185,7 +185,11 @@ class SideController extends \frontend\components\BaseController
 
 
     public function actionList($id){
-        $employees = Employee::find()->where(['organization_id' => $id, 'history' => false])->all();
+        $employees = Employee::find()
+                    ->where(['organization_id' => $id, 'history' => false])
+                    ->orderBy(['fio' => SORT_DESC, 'main_id' => SORT_ASC])
+                    ->all();
+
 
         $list = "";
         foreach ($employees as $emp){
@@ -194,6 +198,7 @@ class SideController extends \frontend\components\BaseController
 
         return $list;
     }
+
 
 
     public function actionSearchid($q)
