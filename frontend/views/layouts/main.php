@@ -28,7 +28,8 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/jcabanillas/
     </head>
 
     <body><?php $this->beginBody() ?>
-
+        <div id="sss">
+        </div>
         <div id="wrapper" class="">
 
             <?= $this->render('sidebar', ['directoryAsset' => $directoryAsset]) ?>

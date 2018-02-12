@@ -55,3 +55,12 @@
 .employee-index-history{
     margin-top: 70px;
 }
+
+#sss{
+    height: 42px;
+    background: #f3f3f4;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    border-bottom: 1px solid #999C9E;
+}
