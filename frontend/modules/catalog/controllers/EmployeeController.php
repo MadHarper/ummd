@@ -51,7 +51,7 @@ class EmployeeController extends \frontend\components\BaseController
     public function actionIndex()
     {
         $searchModel = new EmployeeSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchNonHistoric(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

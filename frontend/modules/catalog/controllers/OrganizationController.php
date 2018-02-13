@@ -52,7 +52,7 @@ class OrganizationController extends \frontend\components\BaseController
     public function actionIndex()
     {
         $searchModel = new OrganizationSearch();
-        $dataProvider = $searchModel->searchNonHistory(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchNonHistoric(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

@@ -72,7 +72,7 @@ class OrganizationSearch extends Organization
     }
 
 
-    public function searchNonHistory($params)
+    public function searchNonHistoric($params)
     {
         $query = Organization::find();
         $query->where(['history' => false]);

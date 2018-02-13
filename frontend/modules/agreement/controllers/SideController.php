@@ -184,16 +184,23 @@ class SideController extends \frontend\components\BaseController
     }
 
 
-    public function actionList($id){
-        $employees = Employee::find()
-                    ->where(['organization_id' => $id, 'history' => false])
-                    ->orderBy(['fio' => SORT_DESC, 'main_id' => SORT_ASC])
-                    ->all();
-
+    public function actionList($id, $history = 0){
+        if($history == 1){
+            $employees = Employee::find()
+                ->where(['organization_id' => $id])
+                ->orderBy(['fio' => SORT_ASC, 'main_id' => SORT_ASC])
+                ->all();
+        }else{
+            $employees = Employee::find()
+                ->where(['organization_id' => $id, 'history' => false])
+                ->orderBy(['fio' => SORT_ASC, 'main_id' => SORT_ASC])
+                ->all();
+        }
 
         $list = "";
         foreach ($employees as $emp){
-            $list .= '<option value="' . $emp->id . '">' . $emp->fio . " - " . $emp->position .'</option>';
+            $style = $emp->history ? 'class="historic_drop"' : '';
+            $list .= '<option value="' . $emp->id . '" '. $style .'>' . $emp->fio . " - " . $emp->position .'</option>';
         }
 
         return $list;
@@ -208,10 +215,26 @@ class SideController extends \frontend\components\BaseController
         $out = ['results' => ['id' => '', 'text' => '']];
 
         $out['results'] = array_values((new \yii\db\Query())
-            ->select(['id', 'name as text'])
+            ->select(['id', 'name as text', 'history'])
             ->from('organization')
             ->where(['ilike','name',$q])
             ->andWhere(['history' => false])
+            ->limit(10)
+            ->all());
+
+        return $out;
+    }
+
+    public function actionSearchidHistory($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['id', 'name as text'])
+            ->from('organization')
+            ->where(['ilike','name',$q])
             ->limit(10)
             ->all());
 

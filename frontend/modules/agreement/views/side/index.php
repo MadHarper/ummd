@@ -54,7 +54,11 @@ $this->params['breadcrumbs'][] = 'Стороны соглашения';
                 'filter' => false,
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {delete}',
+            ],
         ],
     ]); ?>
 </div>
