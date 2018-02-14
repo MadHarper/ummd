@@ -129,11 +129,13 @@ use common\models\Organization;
 
 
     <?php
-    echo $form->field($model, 'agreementsArray')->widget(Select2::classname(),
+        /*
+        echo $form->field($model, 'agreementsArray')->widget(Select2::classname(),
         [
-            'initValueText' => $missionAgreementArr,
+            'initValueText' => $missionAgreementArr ? $missionAgreementArr : '',
             'options' => ['placeholder' => 'Выберите соглашения',
-                          'multiple' => true, 'id' => 'agreementsArray3',
+                          'multiple' => true,
+                           'id' => 'agreementsArray3',
                           //'value' => [5 => "name", 8 => "alex"],
             ],
             'pluginOptions' => [
@@ -149,6 +151,7 @@ use common\models\Organization;
                 'templateSelection' => new JsExpression('function (city) { console.log(city); return city.text;  }'),
             ],
         ])->label("Соглашения");
+        */
     ?>
 
 
