@@ -217,7 +217,7 @@ class Mission extends \yii\db\ActiveRecord
             }
         }
 
-        foreach ($a = array_filter(array_diff($currentAgreementsIds, $new)) as $oldId) {
+        foreach (array_filter(array_diff($currentAgreementsIds, $new)) as $oldId) {
             if($ma = MissionAgreement::find()->where(['mission_id' => $this->id, 'agreement_id' => $oldId])->one()){
                 $ma->delete();
             }
