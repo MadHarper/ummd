@@ -118,10 +118,11 @@ class DefaultController  extends \frontend\components\BaseController
         $nonHistoryOrgOptions = $this->getNonHistoryOrgOptions();
         $historyOrgOptions = $this->getHistoryOrgOptions();
 
+
         $missionAgreementArr = Agreement::find()
                                 ->where(['id' => $model->agreementsArray])
                                 ->select("name, id")
-                                ->orderBy("id")
+                                ->indexBy("id")
                                 ->column();
 
         return $this->render('update', [

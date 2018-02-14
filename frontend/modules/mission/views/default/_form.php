@@ -128,15 +128,14 @@ use common\models\Organization;
     <?= $form->field($model, 'target')->textarea(['rows' => 6]) ?>
 
 
+
     <?php
-        /*
-        echo $form->field($model, 'agreementsArray')->widget(Select2::classname(),
+    echo $form->field($model, 'agreementsArray')->widget(Select2::classname(),
         [
-            'initValueText' => $missionAgreementArr ? $missionAgreementArr : '',
+            'initValueText' => $missionAgreementArr,
             'options' => ['placeholder' => 'Выберите соглашения',
-                          'multiple' => true,
-                           'id' => 'agreementsArray3',
-                          //'value' => [5 => "name", 8 => "alex"],
+                          'multiple' => true, 'id' => 'agreementsArray3',
+                          //'value' => $missionAgreementArr,
             ],
             'pluginOptions' => [
                 'allowClear' => false,
@@ -151,7 +150,6 @@ use common\models\Organization;
                 'templateSelection' => new JsExpression('function (city) { console.log(city); return city.text;  }'),
             ],
         ])->label("Соглашения");
-        */
     ?>
 
 

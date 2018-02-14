@@ -208,6 +208,8 @@ class Mission extends \yii\db\ActiveRecord
             $new[] = (int)$item;
         }
 
+
+
         foreach (array_filter(array_diff($new, $currentAgreementsIds)) as $agId) {
             if ($ag = Agreement::findOne($agId)) {
                 $missionAgreement = new MissionAgreement(['mission_id' => $this->id, 'agreement_id' => $agId]);
@@ -215,8 +217,9 @@ class Mission extends \yii\db\ActiveRecord
             }
         }
 
-        foreach (array_filter(array_diff($currentAgreementsIds, $new)) as $agId) {
-            if($ma = MissionAgreement::find()->where(['mission_id' => $this->id, 'agreement_id' => $agId])->one()){
+        foreach ($a = array_filter(array_diff($currentAgreementsIds, $new)) as $oldId) {
+            var_dump($a);
+            if($ma = MissionAgreement::find()->where(['mission_id' => $this->id, 'agreement_id' => $oldId])->one()){
                 $ma->delete();
             }
         }
