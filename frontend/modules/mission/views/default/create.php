@@ -15,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form', [
         'model' => $model,
         'iogvList' => $iogvList,
-        'missionAgreementArr' => $missionAgreementArr
+        'missionAgreementArr' => $missionAgreementArr,
+        'historyOrgOptions' => $historyOrgOptions,
+        'nonHistoryOrgOptions' => $nonHistoryOrgOptions
     ]) ?>
 
 </div>

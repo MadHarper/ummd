@@ -10,6 +10,7 @@ use common\models\search\SideAgrSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use frontend\services\EmployeeOptionsGenerator;
 
 /**
  * SideController implements the CRUD actions for SideAgr model.
@@ -184,25 +185,10 @@ class SideController extends \frontend\components\BaseController
     }
 
 
-    public function actionList($id, $history = 0){
-        if($history == 1){
-            $employees = Employee::find()
-                ->where(['organization_id' => $id])
-                ->orderBy(['fio' => SORT_ASC, 'main_id' => SORT_ASC])
-                ->all();
-        }else{
-            $employees = Employee::find()
-                ->where(['organization_id' => $id, 'history' => false])
-                ->orderBy(['fio' => SORT_ASC, 'main_id' => SORT_ASC])
-                ->all();
-        }
+    public function actionList($id, $historic = 0){
 
-        $list = "";
-        foreach ($employees as $emp){
-            $style = $emp->history ? 'class="historic_drop"' : '';
-            $list .= '<option value="' . $emp->id . '" '. $style .'>' . $emp->fio . " - " . $emp->position .'</option>';
-        }
-
+        $generator = new EmployeeOptionsGenerator();
+        $list = $generator->generateOptions($id, $historic);
         return $list;
     }
 

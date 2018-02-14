@@ -92,11 +92,11 @@ $script = <<< JS
 
     function loadEmployee(orgId){
         var carSelect = $('select[name="SideAgr[employee_id]"]');
-        var history = $("#with_historic").is(":checked") ? 1 : 0;
+        var historic = $("#with_historic").is(":checked") ? 1 : 0;
         console.log($("#with_historic").attr("checked"));
         $.get('/agreement/side/list', {
             id: orgId,
-            history: history
+            historic: historic
         }, function(res){
             carSelect.html('');
             carSelect.append(res);      

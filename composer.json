@@ -29,7 +29,8 @@
         "rsd/seafile-php-sdk": "dev-master",
         "2amigos/yii2-file-upload-widget": "~1.0",
         "yiisoft/yii2-queue": "^2.0",
-        "kartik-v/yii2-mpdf": "*"
+        "kartik-v/yii2-mpdf": "*",
+        "yii2mod/yii2-chosen-select": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

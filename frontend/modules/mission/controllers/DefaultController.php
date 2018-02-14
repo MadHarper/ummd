@@ -12,6 +12,7 @@ use common\models\Organization;
 use common\models\Employee;
 use common\models\Country;
 use common\models\Agreement;
+use frontend\services\EmployeeOptionsGenerator;
 
 /**
  * DefaultController implements the CRUD actions for Mission model.
@@ -85,10 +86,15 @@ class DefaultController  extends \frontend\components\BaseController
         $iogvList = $this->getIogvList();
         $missionAgreementArr = [];
 
+        $nonHistoryOrgOptions = $this->getNonHistoryOrgOptions();
+        $historyOrgOptions = $this->getHistoryOrgOptions();
+
         return $this->render('create', [
             'model' => $model,
             'iogvList' => $iogvList,
             'missionAgreementArr' => $missionAgreementArr,
+            'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
+            'historyOrgOptions' => $historyOrgOptions
         ]);
     }
 
@@ -107,7 +113,10 @@ class DefaultController  extends \frontend\components\BaseController
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $iogvList = $this->getIogvList();
+        $iogvList = $this->getIogvList($model->organization_id);
+
+        $nonHistoryOrgOptions = $this->getNonHistoryOrgOptions();
+        $historyOrgOptions = $this->getHistoryOrgOptions();
 
         $missionAgreementArr = Agreement::find()
                                 ->where(['id' => $model->agreementsArray])
@@ -118,7 +127,9 @@ class DefaultController  extends \frontend\components\BaseController
         return $this->render('update', [
             'model' => $model,
             'iogvList' => $iogvList,
-            'missionAgreementArr' => $missionAgreementArr
+            'missionAgreementArr' => $missionAgreementArr,
+            'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
+            'historyOrgOptions' => $historyOrgOptions
         ]);
     }
 
@@ -174,30 +185,29 @@ class DefaultController  extends \frontend\components\BaseController
     }
 
 
-    public function actionList($id){
-        $employees = Employee::find()
-                            ->where(['organization_id' => $id, 'history' => false])
-                            ->orderBy('fio')
-                            ->all();
+    public function actionList($id, $historic = 0){
 
-        $list = "";
-        foreach ($employees as $emp){
-            $list .= '<option value="' . $emp->id . '">' . $emp->fio . " - " . $emp->position .'</option>';
-        }
-
+        $generator = new EmployeeOptionsGenerator();
+        $list = $generator->generateOptions($id, $historic);
         return $list;
     }
 
-    private function getIogvList()
+    private function getIogvList($orgId = null)
     {
-        $objectList =  Organization::find()
+        $query =  Organization::find()
             ->select(['name', 'id'])
-            ->where(['iogv' => true, 'history' => false])
-            ->indexBy('id')
-            ->column();
+            ->where(['iogv' => true]);
 
-        return $objectList;
+        if($orgId){
+            $query->andWhere(['or', ['id'=> $orgId], ['history' => false]]);
+        }else{
+            $query->andWhere([ 'history' => false]);
+        }
+        $query->indexBy('id');
+
+        return $query->column();
     }
+
 
     public function actionSearchEmployee($q)
     {
@@ -230,5 +240,27 @@ class DefaultController  extends \frontend\components\BaseController
         return $out;
     }
 
+    public function getHistoryOrgOptions()
+    {
+        $objectList =  Organization::find()->where(['iogv' => true])->all();
+        $res = '';
+        foreach ($objectList as $o){
+            $style = $o->history ? 'class="historic_drop"' : '';
+            $res .= "<option value='" . $o->id . "' " . $style .">" . $o->name . "</option>";
+        }
+
+        return $res;
+    }
+
+    public function getNonHistoryOrgOptions()
+    {
+        $objectList =  Organization::find()->where(['iogv' => true, 'history' => false])->all();
+        $res = '';
+        foreach ($objectList as $o){
+            $res .= "<option value='" . $o->id . "'>" . $o->name . "</option>";
+        }
+
+        return $res;
+    }
 
 }
