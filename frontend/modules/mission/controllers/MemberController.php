@@ -4,6 +4,7 @@ namespace frontend\modules\mission\controllers;
 
 use common\models\Employee;
 use common\models\Organization;
+use frontend\modules\mission\forms\MissionMemberAjaxForm;
 use frontend\modules\mission\forms\MissionMemberForm;
 use Yii;
 use common\models\MissionEmployee;
@@ -24,14 +25,18 @@ class MemberController extends \frontend\components\BaseController
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
                 ],
             ],
         ];
     }
+
 
 
 
@@ -47,28 +52,68 @@ class MemberController extends \frontend\components\BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $model = new MissionMemberForm(['mission' => $mission, 'arr' => []]);
         $iogvList = Organization::find()->select(['name', 'id'])
-                                        ->where(['iogv' => true, 'history' => false])
-                                        ->indexBy('id')
-                                        ->column();
+            ->where(['iogv' => true, 'history' => false])
+            ->indexBy('id')
+            ->column();
 
-        $errors = [];
+        $searchModel = new MissionEmployeeSearch();
+        $dataProvider = $searchModel->searchForMission($missionId);
 
-        if(Yii::$app->request->isPost){
-            $errors = $model->upload(Yii::$app->request->post('MissionMemberForm', []));
-            if(!$errors){
-                return $this->redirect(['index', 'missionId' => $missionId]);
-            }
+        $ajaxForm = new MissionMemberAjaxForm();
+
+        return $this->render('index', ['iogvList' => $iogvList,
+                                            'mission' => $mission,
+                                            'dataProvider' => $dataProvider,
+                                            'ajaxForm' => $ajaxForm]);
+    }
+
+
+    public function actionDelete()
+    {
+        $id = Yii::$app->request->get('id');
+        if(!$id){
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        return $this->render('index', ['model' => $model,
-                                            'iogvList' => $iogvList,
-                                            'errors' => $errors,
-                                            'mission' => $mission
-                                            ]
-                            );
+        $missionEmployee = MissionEmployee::findOne($id);
+        if(!$missionEmployee){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $mission = Mission::findOne($missionEmployee->mission_id);
+        if(!$mission){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $missionEmployee->delete();
+
+        return $this->redirect(['index', 'missionId' => $mission->id]);
     }
+
+
+    public function actionAddEmployee()
+    {
+        if(Yii::$app->request->isAjax){
+
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $form = new MissionMemberAjaxForm();
+
+            if($form->load(Yii::$app->request->post())){
+
+                $errors = $form->save();
+
+                if(!$errors){
+                    return ['result' => 'success'];
+                }
+
+                return ['result' => 'error', 'errors' => $errors];
+            }
+            return ['result' => 'error', 'errors' => 'Ошибка сохранения'];
+        }
+    }
+
 
 
     public function actionList($id)

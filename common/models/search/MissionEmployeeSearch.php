@@ -66,4 +66,17 @@ class MissionEmployeeSearch extends MissionEmployee
 
         return $dataProvider;
     }
+
+
+
+    public function searchForMission($missionId)
+    {
+        $query = MissionEmployee::find()->where(['mission_id' => $missionId]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $dataProvider;
+    }
 }

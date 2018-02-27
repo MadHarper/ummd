@@ -68,3 +68,20 @@
 .historic_drop{
     background-color: #ebefd5;
 }
+
+.toast-top-right {
+    top: 52px !important;
+    right: 12px;
+}
+
+#mission_emp_grid{
+    margin-top: 80px;
+}
+
+.form-group.field-missionmemberajaxform-iogv{
+    margin-bottom: 0;
+}
+
+.form-group.field-missionmemberajaxform-iogv .help-block.help-block-error{
+    margin-bottom: 0;
+}
