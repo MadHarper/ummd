@@ -21,6 +21,10 @@ use yii\db\ActiveRecord;
  * @property bool $visible
  * @property int $created_at
  * @property int $updated_at
+ * @property int $doc_type_id
+ * @property int $doc_date
+ * @property int $name
+ * @property int $note
  */
 class Document extends \yii\db\ActiveRecord
 {
@@ -60,10 +64,11 @@ class Document extends \yii\db\ActiveRecord
         return [
             [['model', 'model_id'], 'required'],
             [['model_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['model_id', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['content', 'description', 'iogv_id', 'type'], 'string'],
+            [['model_id', 'created_at', 'updated_at', 'status', 'doc_type_id'], 'integer'],
+            [['content', 'description', 'iogv_id', 'type', 'name', 'note'], 'string'],
             [['visible'], 'boolean'],
             [['model', 'origin_name', 'sea_name', 'link'], 'string', 'max' => 255],
+            [['doc_date'], 'safe'],
         ];
     }
 
@@ -99,4 +104,9 @@ class Document extends \yii\db\ActiveRecord
 
     }
 
+
+    public function getType()
+    {
+        return $this->hasOne(DocumentType::className(), ['id' => 'doc_type_id']);
+    }
 }
