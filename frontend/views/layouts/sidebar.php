@@ -17,6 +17,7 @@
                         ['label' => 'Страны', 'icon' => 'fa fa-globe', 'url' => ['/catalog/country/index'], 'visible' => true],
                         ['label' => 'Организации', 'icon' => 'fa fa-university', 'url' => ['/catalog/organization/index'], 'visible' => true],
                         ['label' => 'Должностные лица', 'icon' => 'fa fa-address-book-o', 'url' => ['/catalog/employee/index'], 'visible' => true],
+                        ['label' => 'Типы документов', 'icon' => 'fa fa-address-book-o', 'url' => ['/catalog/document-type/index'], 'visible' => true],
                     ]],
                     ['label' => 'Соглашения', 'icon' => 'fa fa-handshake-o', 'url' => ['/agreement/default/index'], 'visible' => true],
                     ['label' => 'Документы', 'icon' => 'fa fa-file-word-o', 'url' => ['/agreement/document/list'], 'visible' => true],
