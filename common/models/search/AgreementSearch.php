@@ -31,7 +31,7 @@ class AgreementSearch extends Agreement
     public function rules()
     {
         return [
-            [['id', 'status', 'created_at', 'updated_at', 'organization', 'employee', 'country'], 'integer'],
+            [['id', 'status', 'state', 'created_at', 'updated_at', 'organization', 'employee', 'country'], 'integer'],
             [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range', 'iogv_id', 'organization_text', 'employee_text'], 'safe'],
         ];
     }
@@ -89,6 +89,7 @@ class AgreementSearch extends Agreement
         $query->andFilterWhere([
             'agreement.id' => $this->id,
             'agreement.status' => $this->status,
+            'agreement.state' => $this->state,
             //'date_start' => $this->date_start,
             //'date_end' => $this->date_end,
             'agreement.iogv_id' => $this->iogv_id,

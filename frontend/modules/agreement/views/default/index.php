@@ -51,6 +51,15 @@ $this->title = 'Соглашения';
                     //'order'=>DynaGrid::ORDER_FIX_LEFT
                 ],
                 [
+                    'attribute'=>'state',
+                    'vAlign'=>'middle',
+                    'width'=>'150px',
+                    'content' => function($data){
+                        return $data->getStateToString();
+                    },
+                    'filter' => \common\models\Agreement::getStateList(),
+                ],
+                [
                     'attribute' => 'date_start',
                     'value' => function($data){
                         return date("d.m.Y", strtotime($data->date_start));

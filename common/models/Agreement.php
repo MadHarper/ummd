@@ -13,6 +13,7 @@ use yii\helpers\Url;
  *
  * @property int $id
  * @property int $status
+ * @property int $state
  * @property string $name
  * @property string $date_start
  * @property string $date_end
@@ -29,6 +30,9 @@ class Agreement extends ActiveRecord
 
     const STATUS_PROJECT = 1;
     const STATUS_DONE = 2;
+
+    const STATE_ACTIVE = 1;
+    const STATE_SUSPENDED = 2;
 
 
 
@@ -63,7 +67,7 @@ class Agreement extends ActiveRecord
             ['status', 'default', 'value' => self::STATUS_PROJECT],
             [['name'], 'required'],
             [['status', 'iogv_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'state'], 'integer'],
             [['name', 'desc', 'iogv_id',], 'string'],
             [['date_start', 'date_end'], 'safe'],
             ['status', 'filter', 'filter' => 'intval'],
@@ -85,6 +89,7 @@ class Agreement extends ActiveRecord
             'desc' => 'Служебные пометки',
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
+            'state' => 'Состояние'
         ];
     }
 
@@ -153,5 +158,20 @@ class Agreement extends ActiveRecord
         }
 
         parent::afterSave($insert, $changedAttributes);
+    }
+
+
+    public static function getStateList()
+    {
+        return [
+            self::STATE_ACTIVE      => "Действующее соглашение",
+            self::STATE_SUSPENDED   => "Соглашение приостановлено"
+        ];
+    }
+
+    public function getStateToString()
+    {
+        $arr = self::getStateList();
+        return $arr[$this->state];
     }
 }

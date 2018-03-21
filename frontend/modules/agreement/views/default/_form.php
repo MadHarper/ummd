@@ -38,6 +38,8 @@ use common\models\Agreement;
     ]) ?>
 
 
+    <?= $form->field($model, 'state')->dropDownList(Agreement::getStateList()) ?>
+
     <?= $form->field($model, 'desc')->textarea(['rows' => 6]) ?>
 
 
