@@ -3,24 +3,73 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
+use kartik\file\FileInput;
+use kartik\date\DatePicker;
+use yii\helpers\ArrayHelper;
+use common\models\DocumentType;
+use frontend\core\helpers\DocTypeHelper;
+
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\DocumentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $agreement->shortName . ': Стороны соглашения';
+$this->title = $agreement->shortName . ': Документы';
 $this->params['breadcrumbs'][] = ['label' => $agreement->shortName, 'url'=> Url::to(['/agreement/default/view', 'id' => $agreement->id])];
 $this->params['breadcrumbs'][] = 'Документы';
 ?>
-<div class="document-index">
+<div class="document-index" id="document-upload-index" data-url="<?= Url::to(['/agreement/document/ajax-upload', 'agreementId' => $agreement->id])?>">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addDocModal">
-            Добавить документ
-        </button>
-    </p>
+    <div id="add_document">
+        <?php $form = ActiveForm::begin(['options' => [
+            'enctype' => 'multipart/form-data',
+            'name' => 'doc_upload',
+            'id' => 'ajax_doc_form',
+            //'enableAjaxValidation' => false,
+            //'enableClientValidation' => true,
+            //'action' => Url::to(['upload/ajax-upload', 'modelId' => 5])
+        ]]);?>
+
+
+        <?php
+
+
+
+            echo $form->field($model, 'document')->widget(FileInput::classname(), [
+                'pluginOptions' => [
+                    //'previewFileType' => 'any',
+                    'showPreview' => false,
+                    'showCaption' => true,
+                    'showUpload' => false,
+                    //'showRemove' => false,
+                ]
+            ]);
+
+            echo $form->field($model, 'name')->textInput();
+
+            echo $form->field($model, 'type')->dropDownList(DocumentType::find()->select('name')->where(['visible' => true])->indexBy('id')->column(), []);
+
+            echo $form->field($model, 'date')->widget(DatePicker::classname(), [
+                //'options' => ['placeholder' => 'Enter birth date ...'],
+                'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                'pluginOptions' => [
+                    'autoclose'=>true
+                ]
+            ]);
+
+            echo $form->field($model, 'note')->textInput();
+        ?>
+
+
+
+        <div class="form-group">
+            <?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary', 'name' => 'upload-button']) ?>
+        </div>
+
+        <?php ActiveForm::end(); ?>
+    </div>
 
 
     <?php
@@ -41,24 +90,11 @@ $this->params['breadcrumbs'][] = 'Документы';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'origin_name',
-            /*
+            'name',
             [
                 'attribute'=>'link',
                 'content' => function($data){
-                    return "<a href='". Url::to(['/agreement/document/doc-download', 'documentId' => $data->id]) ."' target='_blank' data-pjax='0'>
-                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
-                                <span>Скачать</span>
-                           </a>";
-                },
-                'filter' => false,
-                'format' => 'html'
-            ],
-            */
-            [
-                'attribute'=>'link',
-                'content' => function($data){
-                    if($data->type === "docx"){
+                    if(in_array($data->type, DocTypeHelper::PARSING_EXTENTION)){
                         return "<a href='". $data->link ."' target='_blank'>
                                 <i class='fa fa-file-word-o' aria-hidden='true'></i>
                                 <span>Скачать</span>
@@ -105,53 +141,6 @@ $this->params['breadcrumbs'][] = 'Документы';
             ],
         ],
     ]); ?>
-</div>
-
-
-<div class="modal fade bd-example-modal-lg" id="addDocModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Выберите документы формата .docx</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <?= dosamigos\fileupload\FileUploadUI::widget([
-                    'model' => $model,
-                    //'name' => 'somefile',
-                    'attribute' => 'documentFile',
-                    //'url' => ['scene/scene-upload', 'tour_id' => $tour_id],
-                    'url' => ['/agreement/document/upload', 'agreementId' => $agreement->id],
-                    'gallery' => false,
-
-                    'fieldOptions' => [
-                        'accept' => 'file/docx'
-                    ],
-                    'clientOptions' => [
-                        'maxFileSize' => 45000000
-                    ],
-
-                    'clientEvents' => [
-                        'fileuploaddone' => 'function(e, data) {
-                                                $(".btn-upload-close").addClass("uploaded");
-                                                console.log(e);
-                                                console.log(data);
-                                            }',
-                        'fileuploadfail' => 'function(e, data) {
-                                                console.log(e);
-                                                console.log(data);
-                                            }',
-                    ],
-                ]);
-                ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?php

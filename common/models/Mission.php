@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use frontend\core\interfaces\WithDocumentInterface;
 
 
 /**
@@ -32,7 +33,7 @@ use yii\db\ActiveRecord;
  * @property MissionAgreement[] $missionAgreements
  * @property MissionEmployee[] $missionEmployees
  */
-class Mission extends \yii\db\ActiveRecord
+class Mission extends \yii\db\ActiveRecord implements WithDocumentInterface
 {
 
     public $_agreements;
@@ -222,5 +223,11 @@ class Mission extends \yii\db\ActiveRecord
                 $ma->delete();
             }
         }
+    }
+
+
+    public function getIogvId()
+    {
+        return $this->iogv_id;
     }
 }

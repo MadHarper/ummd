@@ -25,6 +25,9 @@ use yii\db\ActiveRecord;
  * @property int $doc_date
  * @property int $name
  * @property int $note
+ * @property int $type
+ * @property int $iogv_id
+ * @property int $user_id
  */
 class Document extends \yii\db\ActiveRecord
 {
@@ -83,14 +86,18 @@ class Document extends \yii\db\ActiveRecord
             'model_id' => 'Model ID',
             'content' => 'Контент',
             'description' => 'Описание',
-            'origin_name' => 'Название',
+            'origin_name' => 'Название файла',
             'sea_name' => 'Sea Name',
             'link' => 'Ссылка',
             'visible' => 'Доступен',
             'created_at' => 'Создан',
             'updated_at' => 'Обновлен',
             'status' => 'Статус',
-            'iogv_id' => 'ID подразделения'
+            'iogv_id' => 'ID подразделения',
+            'name' => 'Имя',
+            'doc_type_id' => 'Тип документа',
+            'doc_date' => 'Дата документа',
+            'note' => 'Примечание'
         ];
     }
 

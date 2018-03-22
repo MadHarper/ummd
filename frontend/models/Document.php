@@ -3,7 +3,7 @@
 namespace frontend\models;
 
 use common\models\Agreement;
-
+use frontend\core\helpers\DocTypeHelper;
 
 /**
  * This is the model class for table "document".
@@ -19,6 +19,10 @@ use common\models\Agreement;
  * @property bool $visible
  * @property int $created_at
  * @property int $updated_at
+ * @property int $doc_type_id
+ * @property int $doc_date
+ * @property int $name
+ * @property int $note
  */
 class Document extends \common\models\Document
 {
@@ -38,18 +42,23 @@ class Document extends \common\models\Document
     {
         return [
             'id' => 'ID',
-            'model' => $this->model === Agreement::class ? 'Соглашение' : '',
+            //'model' => $this->model === Agreement::class ? 'Соглашение' : '',
+            'model' => DocTypeHelper::getTypeNameByClass($this->model),
             'model_id' => 'Model ID',
             'content' => 'Контент',
             'description' => 'Описание',
-            'origin_name' => 'Название',
+            'origin_name' => 'Название файла',
             'sea_name' => 'Sea Name',
             'link' => 'Ссылка',
             'visible' => 'Доступен',
             'created_at' => 'Создан',
             'updated_at' => 'Обновлен',
             'status' => 'Статус',
-            'iogv_id' => 'ID подразделения'
+            'iogv_id' => 'ID подразделения',
+            'name' => 'Имя',
+            'doc_type_id' => 'Тип документа',
+            'doc_date' => 'Дата документа',
+            'note' => 'Примечание'
         ];
     }
 

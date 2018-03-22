@@ -10,11 +10,17 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Agreement;
+
 use frontend\forms\DocumentUploadForm;
+
+use frontend\core\forms\DocUploadForm;
 use yii\web\UploadedFile;
 use yii\helpers\Json;
 use yii\db\Expression;
 use yii\db\Query;
+
+use frontend\services\DocPrepareSaveService;
+
 use common\services\jobs\DocumentSaveJob;
 use common\services\jobs\FileRemoveJob;
 use common\services\jobs\PictureSaveJob;
@@ -63,7 +69,7 @@ class DocumentController extends \frontend\components\BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $model = new DocumentUploadForm();
+        $model = new DocUploadForm();
         $searchModel = new DocumentSearch();
         $dataProvider = $searchModel->searchByMasterModel(Yii::$app->request->queryParams, $agreement);
 
@@ -77,6 +83,45 @@ class DocumentController extends \frontend\components\BaseController
 
 
 
+    public function actionAjaxUpload($agreementId)
+    {
+        if(Yii::$app->request->isAjax && Yii::$app->request->isPost){
+
+            $agreement = Agreement::findOne(['id' => $agreementId]);
+            if(!$agreement){
+                throw new NotFoundHttpException('The requested agreement model not found.');
+            }
+
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $form = new DocUploadForm();
+            //$form->document= UploadedFile::getInstance($form, 'document');
+
+            if($form->load(Yii::$app->request->post())){
+
+                $form->document = UploadedFile::getInstance($form, 'document');
+                if ($form->upload()) {
+                    $saveService = new DocPrepareSaveService($agreement,
+                        Yii::$app->user->id,
+                        Yii::$app->params['sea']['upload_path'],
+                        $form);
+
+                    if($saveService->doPrepare()){
+                        return [
+                            'result' => true
+                        ];
+                    }
+                }
+            }
+
+            return [
+                'result' => false
+            ];
+        }
+    }
+
+
+    //старый контроллер для мультиаплоад виджета
     public function actionUpload($agreementId)
     {
         if(Yii::$app->request->isAjax && Yii::$app->request->isPost){
@@ -174,6 +219,9 @@ class DocumentController extends \frontend\components\BaseController
     public function actionDelete($id)
     {
         $document = $this->findModel($id);
+
+        //ToDo: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //ToDo: Разные типы документов!!! Принадлежат не обязательно Agreement!!!!!!!!!!!!
         $agreement = Agreement::findOne(['id' => $document->model_id]);
         if(!$agreement){
             throw new NotFoundHttpException('The requested page does not exist.');

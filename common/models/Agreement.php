@@ -7,6 +7,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\services\jobs\TorisAgreementMessageJob;
 use yii\helpers\Url;
+use frontend\core\interfaces\WithDocumentInterface;
 
 /**
  * This is the model class for table "agreement".
@@ -24,7 +25,7 @@ use yii\helpers\Url;
  *
  * @property SideAgr[] $sideAgrs
  */
-class Agreement extends ActiveRecord
+class Agreement extends ActiveRecord implements WithDocumentInterface
 {
 
 
@@ -173,5 +174,10 @@ class Agreement extends ActiveRecord
     {
         $arr = self::getStateList();
         return $arr[$this->state];
+    }
+
+    public function getIogvId()
+    {
+        return $this->iogv_id;
     }
 }
