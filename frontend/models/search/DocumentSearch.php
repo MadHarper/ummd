@@ -23,8 +23,8 @@ class DocumentSearch extends Document
     public function rules()
     {
         return [
-            [['id', 'model_id', 'created_at', 'updated_at'], 'integer'],
-            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link', 'parsed_content', 'iogv_id'], 'safe'],
+            [['id', 'model_id', 'created_at', 'updated_at', 'doc_type_id'], 'integer'],
+            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link', 'parsed_content', 'iogv_id', 'name', 'doc_type_id', 'doc_date'], 'safe'],
             [['visible'], 'boolean'],
         ];
     }
@@ -137,6 +137,8 @@ class DocumentSearch extends Document
     {
         $query = Document::find()->andWhere(['visible' => true]);
 
+
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -147,28 +149,37 @@ class DocumentSearch extends Document
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['ilike', 'origin_name', $this->origin_name]);
 
         if(isset($this->parsed_content) && !empty($this->parsed_content)){
             $queryString = $this->prepareQuery($this->parsed_content);
 
             $query->select([
                 '{{%document}}.id',
-                '{{%document}}.origin_name',
+                '{{%document}}.name',
                 '{{%document}}.link',
-                '{{%document}}.status',
-                '{{%document}}.created_at',
+                '{{%document}}.doc_date',
+                '{{%document}}.doc_type_id',
+
+                //'{{%document}}.status',
+                //'{{%document}}.created_at',
                 new Expression('ts_rank({{%document}}.fts,to_tsquery(:q)) as rank'),
             ])
                 ->andWhere(new Expression("{{%document}}.fts  @@ to_tsquery(:q)", [':q' => $queryString]));
 
-
-            if (!\Yii::$app->user->can('changeAllAgrements')) {
-                $iogv = \Yii::$app->user->identity->iogv_id;
-                $query->andWhere(['{{%document}}.iogv_id' => $iogv]);
-            }
+            $query->andFilterWhere(['ilike', '{{%document}}.name', $this->name]);
+            $query->andFilterWhere(['{{%document}}.doc_type_id' => $this->doc_type_id]);
 
             $query->orderBy(['rank' => SORT_DESC]);
+
+        }else{
+            $query->andFilterWhere(['ilike', '{{%document}}.name', $this->name]);
+            $query->andFilterWhere(['{{%document}}.doc_type_id' => $this->doc_type_id]);
+            $query->orderBy(['created_at' => SORT_DESC]);
+        }
+
+        if (!\Yii::$app->user->can('changeAllAgrements')) {
+            $iogv = \Yii::$app->user->identity->iogv_id;
+            $query->andWhere(['{{%document}}.iogv_id' => $iogv]);
         }
 
         return $dataProvider;

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\DocumentType;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\search\DocumentSearch */
@@ -28,6 +29,15 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'origin_name') ?>
 
     <?php echo $form->field($model, 'parsed_content')->label('Содержание') ?>
+
+    <?php echo $form->field($model, 'name') ?>
+
+    <?php echo $form->field($model, 'doc_type_id')
+                    ->dropDownList(DocumentType::find()
+                                                ->select('name')
+                                                ->where(['visible' => true])
+                                                ->indexBy('id')
+                                                ->column(), ['prompt' => '...']) ?>
 
     <?php // echo $form->field($model, 'sea_name') ?>
 

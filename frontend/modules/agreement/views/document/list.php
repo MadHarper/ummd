@@ -29,6 +29,23 @@ $this->title = 'Документы';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
+
+            //'name',
+            [
+                'attribute'=>'name',
+                'filter' => false,
+            ],
+            [
+                'attribute'=>'doc_type_id',
+                'content' => function($data){
+                    if($data->doc_type_id){
+                        return $data->docType->name;
+                    }
+                    return "";
+                },
+                'filter' => false,
+            ],
+            /*
             [
                 'attribute'=>'origin_name',
                 'content' => function($data){
@@ -36,6 +53,7 @@ $this->title = 'Документы';
                 },
                 'filter' => false,
             ],
+            */
             [
                 'attribute'=>'link',
                 'content' => function($data){
@@ -53,6 +71,16 @@ $this->title = 'Документы';
                 },
                 'filter' => false,
                 'format' => 'html'
+            ],
+            [
+                'attribute'=>'doc_date',
+                'content' => function($data){
+                    if($data->doc_date){
+                        return date('d.m.Y', strtotime($data->doc_date));
+                    }
+                    return "";
+                },
+                'filter' => false,
             ],
             [
                 'attribute'=>'status',

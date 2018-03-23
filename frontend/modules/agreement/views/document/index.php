@@ -90,7 +90,10 @@ $this->params['breadcrumbs'][] = 'Документы';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'name',
+            [
+                'attribute'=>'name',
+                'filter' => false,
+            ],
             [
                 'attribute'=>'link',
                 'content' => function($data){
@@ -124,17 +127,29 @@ $this->params['breadcrumbs'][] = 'Документы';
                 'filter' => false,
                 'format' => 'html'
             ],
-            //'created_at',
-            //'updated_at',
+            [
+                'attribute'=>'doc_date',
+                'content' => function($data){
+                    if($data->doc_date){
+                        return date('d.m.Y', strtotime($data->doc_date));
+                    }
+                    return "";
+                },
+                'filter' => false,
+            ],
+            [
+                'attribute'=>'note',
+                'filter' => false,
+            ],
+            /*
             [
                 'attribute'=>'created_at',
                 'content' => function($data){
                     return date('d.m.Y', $data->created_at);
                 },
                 'filter' => false,
-                //'format' => 'html'
             ],
-
+            */
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template'=>'{delete}',

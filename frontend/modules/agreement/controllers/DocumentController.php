@@ -10,17 +10,13 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Agreement;
-
 use frontend\forms\DocumentUploadForm;
-
 use frontend\core\forms\DocUploadForm;
 use yii\web\UploadedFile;
 use yii\helpers\Json;
 use yii\db\Expression;
 use yii\db\Query;
-
-use frontend\services\DocPrepareSaveService;
-
+use frontend\core\services\DocPrepareSaveService;
 use common\services\jobs\DocumentSaveJob;
 use common\services\jobs\FileRemoveJob;
 use common\services\jobs\PictureSaveJob;
@@ -121,78 +117,6 @@ class DocumentController extends \frontend\components\BaseController
     }
 
 
-    //старый контроллер для мультиаплоад виджета
-    public function actionUpload($agreementId)
-    {
-        if(Yii::$app->request->isAjax && Yii::$app->request->isPost){
-            //$agreement = Agreement::find()->where(['id' => $agreementId])->one();
-            $agreement = Agreement::findOne(['id' => $agreementId]);
-            if(!$agreement){
-                throw new NotFoundHttpException('The requested agreement model not found.');
-            }
-
-            $model = new DocumentUploadForm();
-
-            $model->documentFile = UploadedFile::getInstance($model, 'documentFile');
-            if ($res = $model->upload()) {
-
-                //Создаем новую модель документа, с пока не распарсенным текстом и пока безз ссылки на seafile
-                $document               = new Document();
-                $document->model        = Agreement::class;
-                $document->model_id     = $agreement->id;
-                $document->iogv_id      = $agreement->iogv_id;
-                $document->user_id      = Yii::$app->user->id;
-                $document->origin_name   = $res['base_name'];
-                $document->sea_name     = $res['newName'];
-                $document->status       = Document::STATUS_NOT_PROCESSED;
-                $document->type         = $res['ext'];
-                $document->save();
-
-                // Помещаем документ в очередь
-                $uploadPath = Yii::$app->params['sea']['upload_path'];
-
-
-                if($res['ext'] === 'docx'){
-                    Yii::$app->queue->push(new DocumentSaveJob([
-                        'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
-                        'document_id'       => $document->id,
-                        'newName'           => $res['newName'] . '.' . $res['ext'],
-                        'iogv_id'           => $agreement->iogv_id,
-                        //'user_id'       => Yii::$app->user->id,
-                    ]));
-                }else{
-                    Yii::$app->queue->push(new PictureSaveJob([
-                        'tempPath'          => Yii::getAlias($uploadPath) . $res['newName'] . '.' . $res['ext'],
-                        'document_id'       => $document->id,
-                        'newName'           => $res['newName'] . '.' . $res['ext'],
-                        'iogv_id'           => $agreement->iogv_id,
-                    ]));
-                }
-
-
-
-                //отдаем json для виджета мультиаплоад
-                return Json::encode([
-                    'files' => [
-                        [
-                            'name' => $res['base_name'] . '.' . $res['ext'],
-                            'size' => '',
-                            'url' => '/',
-                            'thumbnailUrl' => false,
-                            'deleteUrl' => 'image-delete?name=',
-                            'deleteType' => 'POST',
-                        ],
-                    ],
-                ]);
-            }
-
-            return Json::encode([
-                                    'files' => [[
-                                        'error' => "Неверный формат файла",
-                                    ]]
-                                ]);
-        }
-    }
 
     /**
      * Displays a single Document model.
@@ -273,23 +197,6 @@ class DocumentController extends \frontend\components\BaseController
     public function findSuggest(string $query, int $cat = null): array
     {
 
-        /*
-        $query = $this->prepareQuery($query);
-        $tQuery = (new Query())->from('{{%document}}')
-            ->select([
-                '{{%tovar}}.id',
-                '{{%tovar}}.origin_name',
-                new Expression('ts_rank({{%tovar}}.fts,to_tsquery(:q)) as rank'),
-            ])
-            ->leftJoin('{{%category}}','{{%tovar}}.category_id={{%category}}.id')
-            ->where(new Expression("{{%tovar}}.fts  @@ to_tsquery(:q)", [':q' => $query]))
-            ->limit(10)
-            ->orderBy(['rank' => SORT_DESC]);
-        if($cat > 0){
-            $tQuery->andWhere(['{{%tovar}}.category_id'=>$cat]);
-        }
-        return $tQuery->all();
-        */
 
         $query = $this->prepareQuery($query);
         $tQuery = (new Query())->from('{{%document}}')
@@ -319,29 +226,6 @@ class DocumentController extends \frontend\components\BaseController
     }
 
 
-    /*
-    public function actionDocDownload($documentId)
-    {
-        $document = Document::find()->where(['id' => $documentId, 'visible' => true])->one();
-        try{
-            if(!$document){
-                throw new NotFoundHttpException('Document does not found.');
-            }
-
-            $seaFileService = Yii::$app->seaFileService;
-            $seaFileService->download($document->iogv_id,
-                                      $document->sea_name,
-                                      $document->origin_name,
-                                      $document->type);
-
-            Yii::$app->response->sendFile(Yii::getAlias('@frontend/web/docs/' . $document->origin_name . "." . $document->type));
-            //unlink(Yii::getAlias('@frontend/web/docs/' . 'yep1.docx'));
-        }catch (\Exception $e){
-            Yii::error("Ошибка скачивания документа " . $e->getMessage());
-            return $this->redirect(Yii::$app->request->referrer);
-        }
-    }
-    */
 
     public function actionDocDownload($documentId)
     {

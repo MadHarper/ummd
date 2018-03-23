@@ -90,7 +90,7 @@ class Document extends \yii\db\ActiveRecord
             'sea_name' => 'Sea Name',
             'link' => 'Ссылка',
             'visible' => 'Доступен',
-            'created_at' => 'Создан',
+            'created_at' => 'Добавлен',
             'updated_at' => 'Обновлен',
             'status' => 'Статус',
             'iogv_id' => 'ID подразделения',
@@ -107,12 +107,14 @@ class Document extends \yii\db\ActiveRecord
         switch ($this->model) {
             case Agreement::class:
                 return $this->hasOne(Agreement::className(), ['id' => 'model_id']);
+            case Mission::class:
+                return $this->hasOne(Mission::className(), ['id' => 'model_id']);
         }
 
     }
 
 
-    public function getType()
+    public function getDocType()
     {
         return $this->hasOne(DocumentType::className(), ['id' => 'doc_type_id']);
     }

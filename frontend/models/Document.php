@@ -51,7 +51,7 @@ class Document extends \common\models\Document
             'sea_name' => 'Sea Name',
             'link' => 'Ссылка',
             'visible' => 'Доступен',
-            'created_at' => 'Создан',
+            'created_at' => 'Добавлен',
             'updated_at' => 'Обновлен',
             'status' => 'Статус',
             'iogv_id' => 'ID подразделения',
