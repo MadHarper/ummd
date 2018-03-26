@@ -15,6 +15,7 @@ class DocumentSearch extends Document
 {
 
     public $parsed_content;
+    public $doc_date_range;
 
 
     /**
@@ -24,7 +25,7 @@ class DocumentSearch extends Document
     {
         return [
             [['id', 'model_id', 'created_at', 'updated_at', 'doc_type_id'], 'integer'],
-            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link', 'parsed_content', 'iogv_id', 'name', 'doc_type_id', 'doc_date'], 'safe'],
+            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link', 'parsed_content', 'iogv_id', 'name', 'doc_type_id', 'doc_date', 'doc_date_range'], 'safe'],
             [['visible'], 'boolean'],
         ];
     }
@@ -174,7 +175,14 @@ class DocumentSearch extends Document
         }else{
             $query->andFilterWhere(['ilike', '{{%document}}.name', $this->name]);
             $query->andFilterWhere(['{{%document}}.doc_type_id' => $this->doc_type_id]);
+
+            if(!empty($this->doc_date_range) && strpos($this->doc_date_range, '-') !== false) {
+                list($from_date_start, $to_date_start) = explode(' - ', $this->doc_date_range);
+                $query->andFilterWhere(['between', '{{%document}}.doc_date', $from_date_start, $to_date_start]);
+            }
+
             $query->orderBy(['created_at' => SORT_DESC]);
+
         }
 
         if (!\Yii::$app->user->can('changeAllAgrements')) {

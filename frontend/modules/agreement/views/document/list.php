@@ -55,24 +55,6 @@ $this->title = 'Документы';
             ],
             */
             [
-                'attribute'=>'link',
-                'content' => function($data){
-                    if($data->type === "docx"){
-                        return "<a href='". $data->link ."' target='_blank'>
-                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
-                                <span>Скачать</span>
-                           </a>";
-                    }
-
-                    return "<a href='". $data->link ."' target='_blank'>
-                                <i class='fa fa-file-image-o' aria-hidden='true'></i>
-                                <span>Скачать</span>
-                           </a>";
-                },
-                'filter' => false,
-                'format' => 'html'
-            ],
-            [
                 'attribute'=>'doc_date',
                 'content' => function($data){
                     if($data->doc_date){
@@ -98,18 +80,36 @@ $this->title = 'Документы';
                 'format' => 'html'
             ],
             [
+                'attribute'=>'note',
+                'filter' => false,
+            ],
+            [
+                'attribute'=>'link',
+                'content' => function($data){
+                    if($data->type === "docx"){
+                        return "<a href='". $data->link ."' target='_blank'>
+                                <i class='fa fa-file-word-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                    }
+
+                    return "<a href='". $data->link ."' target='_blank'>
+                                <i class='fa fa-file-image-o' aria-hidden='true'></i>
+                                <span>Скачать</span>
+                           </a>";
+                },
+                'filter' => false,
+                'format' => 'html'
+            ],
+            /*
+            [
                 'attribute'=>'created_at',
                 'content' => function($data){
                     return date('d.m.Y', $data->created_at);
                 },
                 'filter' => false,
-                //'format' => 'html'
             ],
-            //'model',
-            //'model_id',
-            //'description:ntext',
-            //'updated_at',
-            //'sea_name',
+            */
 
             [
                 'class' => 'yii\grid\ActionColumn',

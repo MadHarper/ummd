@@ -70,10 +70,13 @@ $this->title = 'Соглашения';
                         'attribute' => 'created_at_range',
                         'pluginOptions' => [
                             'locale' => [
-                                'cancelLabel' => 'Clear',
+                                'cancelLabel' => 'Очистить',
                                 'format' => 'Y-m-d',
                             ],
                             'opens' => 'left',
+                        ],
+                        'pluginEvents'=>[
+                            "cancel.daterangepicker" => "function() {\$('#agreementsearch-created_at_range').val(''); $('.grid-view').yiiGridView('applyFilter');}",
                         ]
                     ])
                 ],
@@ -88,10 +91,13 @@ $this->title = 'Соглашения';
                         'attribute' => 'ended_at_range',
                         'pluginOptions' => [
                             'locale' => [
-                                'cancelLabel' => 'Clear',
+                                'cancelLabel' => 'Очистить',
                                 'format' => 'Y-m-d',
                             ],
                             'opens' => 'left',
+                        ],
+                        'pluginEvents'=>[
+                            "cancel.daterangepicker" => "function() {\$('#agreementsearch-ended_at_range').val(''); $('.grid-view').yiiGridView('applyFilter');}",
                         ]
                     ])
                 ],
@@ -244,5 +250,6 @@ $this->title = 'Соглашения';
         DynaGrid::end();
 
     ?>
-
 </div>
+
+

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\DocumentType;
+use kartik\daterange\DateRangePicker;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\search\DocumentSearch */
@@ -31,6 +32,17 @@ use common\models\DocumentType;
     <?php echo $form->field($model, 'parsed_content')->label('Содержание') ?>
 
     <?php echo $form->field($model, 'name') ?>
+
+    <?php echo $form->field($model, 'doc_date_range', [])->widget(DateRangePicker::classname(), [
+                            'attribute' => 'doc_date_range',
+                            'convertFormat'=>true,
+                            'pluginOptions' => [
+                                'locale' => [
+                                    'cancelLabel' => 'Clear',
+                                    'format' => 'Y-m-d',
+                                ],
+                            ],
+                        ])->label("Дата документа");?>
 
     <?php echo $form->field($model, 'doc_type_id')
                     ->dropDownList(DocumentType::find()
