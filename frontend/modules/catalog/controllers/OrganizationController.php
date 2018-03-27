@@ -141,7 +141,6 @@ class OrganizationController extends \frontend\components\BaseController
                    }
             }
 
-
             $orgUpdateService = new OrganizationUpdateService($model);
             $redirectId = $orgUpdateService->update();
             return $this->redirect(['view', 'id' => $redirectId]);
@@ -216,7 +215,7 @@ class OrganizationController extends \frontend\components\BaseController
         return $cityList;
     }
 
-
+/*
     private function checkOrAddCity($cityName)
     {
         $id = false;
@@ -230,6 +229,25 @@ class OrganizationController extends \frontend\components\BaseController
                     return $id;
                 }
             }
+        }
+
+        $newCity = new City();
+        $newCity->name = $cityName;
+        if($newCity->save()){
+            return $newCity->id;
+        }
+
+        return $id;
+    }
+*/
+
+    private function checkOrAddCity($cityName)
+    {
+        $id = false;
+        $baseCity = City::find()->where(['ilike', 'name', $cityName, false])->one();
+
+        if($baseCity){
+            return $baseCity->id;
         }
 
         $newCity = new City();

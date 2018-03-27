@@ -45,7 +45,7 @@ use common\models\Employee;
                 'templateSelection' => new JsExpression('function (city) { console.log(city.text); return  city.text; }'),
             ],
             'pluginEvents' => [
-                "change" => "function() { if(this.value){loadEmployee(this.value);}}",
+                "change" => "function() { if(this.value){loadEmployee(this.value); loadAnother(this.value)}}",
             ]
         ])->label("");
     ?>
@@ -102,6 +102,11 @@ $script = <<< JS
             carSelect.append(res);      
         });
 }
+
+    function loadAnother(orgId){
+        console.log("ЗНАЧЕНИЕ ----- " + orgId);
+    }
+
 
     $('#with_historic').change(function(){
          $('#kukaracha').trigger('change');
