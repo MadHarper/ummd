@@ -40,6 +40,7 @@ class OrganizationUpdateService
         $newModel->history      = false;
         $newModel->prev_id      = $this->oldOrganization->id;
         $newModel->main_id      = $this->oldOrganization->main_id;
+        $newModel->city_id      = $this->oldOrganization->city_id;
         $newModel->save();
 
         $oldModel = Organization::findOne($this->oldOrganization->id);

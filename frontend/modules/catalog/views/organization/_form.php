@@ -6,12 +6,16 @@ use kartik\select2\Select2;
 use yii\web\JsExpression;
 use yii\grid\GridView;
 use yii\helpers\Url;
+use yii\jui\AutoComplete;
 
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Organization */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+
+
+
 
 <div class="organization-form">
 
@@ -39,6 +43,17 @@ use yii\helpers\Url;
                 'templateSelection' => new JsExpression('function (city) { console.log(city.text); return  city.text; }'),
             ],
         ]);
+    ?>
+
+    <?= $form->field($model, 'city')->widget(
+        AutoComplete::className(), [
+        'clientOptions' => [
+            'source' => $cityList,
+        ],
+        'options'=>[
+            'class'=>'form-control'
+        ]
+    ])->label('Город');
     ?>
 
     <?= $form->field($model, 'iogv')->checkbox() ?>

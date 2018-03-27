@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\search\EmployeeSearch;
+use common\models\City;
 
 /**
  * OrganizationController implements the CRUD actions for Organization model.
@@ -78,6 +79,10 @@ class OrganizationController extends \frontend\components\BaseController
         ]);
     }
 
+
+
+
+
     /**
      * Creates a new Organization model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -88,13 +93,24 @@ class OrganizationController extends \frontend\components\BaseController
         $model = new Organization();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            if($model->city){
+               $city_id = $this->checkOrAddCity($model->city);
+                   if($city_id){
+                        $model->city_id = $city_id;
+                   }
+            }
+
             $model->main_id = $model->id;
             $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $cityList = $this->getCitiesList();
+
         return $this->render('create', [
             'model' => $model,
+            'cityList' => $cityList
         ]);
     }
 
@@ -109,7 +125,23 @@ class OrganizationController extends \frontend\components\BaseController
     {
         $model = $this->findModel($id);
 
+        if($model->city_id){
+            $currentCity = City::find()->where(['id' => $model->city_id])->one();
+            if($currentCity){
+                $model->city = $currentCity->name;
+            }
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            if($model->city){
+                $city_id = $this->checkOrAddCity($model->city);
+                   if($city_id){
+                       $model->city_id = $city_id;
+                   }
+            }
+
+
             $orgUpdateService = new OrganizationUpdateService($model);
             $redirectId = $orgUpdateService->update();
             return $this->redirect(['view', 'id' => $redirectId]);
@@ -118,9 +150,12 @@ class OrganizationController extends \frontend\components\BaseController
         $searchModel = new EmployeeSearch();
         $dataProvider = $searchModel->searchByOrganization(Yii::$app->request->queryParams, $model->id);
 
+        $cityList = $this->getCitiesList();
+
         return $this->render('update', [
             'model' => $model,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'cityList' => $cityList
         ]);
     }
 
@@ -169,4 +204,41 @@ class OrganizationController extends \frontend\components\BaseController
 
         return $out;
     }
+
+
+    private function getCitiesList()
+    {
+        $cityList = City::find()
+            ->select(['name as value', 'name as label'])
+            ->asArray()
+            ->all();
+
+        return $cityList;
+    }
+
+
+    private function checkOrAddCity($cityName)
+    {
+        $id = false;
+        $cases = City::find()->where(['ilike', 'name', $cityName])->all();
+
+        if($cases){
+            foreach ($cases as $case){
+                if(mb_strtolower($case->name) == mb_strtolower($cityName))
+                {
+                    $id = $case->id;
+                    return $id;
+                }
+            }
+        }
+
+        $newCity = new City();
+        $newCity->name = $cityName;
+        if($newCity->save()){
+            return $newCity->id;
+        }
+
+        return $id;
+    }
+
 }

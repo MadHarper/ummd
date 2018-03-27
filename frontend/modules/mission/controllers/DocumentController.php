@@ -18,6 +18,9 @@ use yii\db\Expression;
 use yii\db\Query;
 use common\services\jobs\DocumentSaveJob;
 use common\services\jobs\FileRemoveJob;
+use frontend\core\forms\DocUploadForm;
+use frontend\core\services\DocPrepareSaveService;
+
 
 
 
@@ -67,7 +70,7 @@ class DocumentController extends \frontend\components\BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $model = new DocumentUploadForm();
+        $model = new DocUploadForm();
         $searchModel = new DocumentSearch();
         $dataProvider = $searchModel->searchByMasterModel(Yii::$app->request->queryParams, $mission);
 
@@ -81,6 +84,41 @@ class DocumentController extends \frontend\components\BaseController
 
 
 
+    public function actionAjaxUpload($missionId)
+    {
+        if(Yii::$app->request->isAjax && Yii::$app->request->isPost){
+
+            $mission = Mission::findOne(['id' => $missionId]);
+            if(!$mission){
+                throw new NotFoundHttpException('The requested agreement model not found.');
+            }
+
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $form = new DocUploadForm();
+
+            if($form->load(Yii::$app->request->post())){
+
+                $form->document = UploadedFile::getInstance($form, 'document');
+                if ($form->upload()) {
+                    $saveService = new DocPrepareSaveService($mission,
+                                                            Yii::$app->user->id,
+                                                            Yii::$app->params['sea']['upload_path'],
+                                                            $form);
+
+                    if($saveService->doPrepare()){
+                        return ['result' => true];
+                    }
+                }
+            }
+
+            return ['result' => false];
+        }
+    }
+
+
+
+    /*
     public function actionUpload($missionId)
     {
         if(Yii::$app->request->isAjax && Yii::$app->request->isPost){
@@ -153,6 +191,7 @@ class DocumentController extends \frontend\components\BaseController
             ]);
         }
     }
+    */
 
     /**
      * Displays a single Document model.

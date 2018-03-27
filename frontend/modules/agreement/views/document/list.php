@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
+use common\models\Agreement;
+use common\models\Mission;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\DocumentSearch */
@@ -29,8 +31,6 @@ $this->title = 'Документы';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-
-            //'name',
             [
                 'attribute'=>'name',
                 'filter' => false,
@@ -45,15 +45,6 @@ $this->title = 'Документы';
                 },
                 'filter' => false,
             ],
-            /*
-            [
-                'attribute'=>'origin_name',
-                'content' => function($data){
-                    return $data->origin_name . "." . $data->type;
-                },
-                'filter' => false,
-            ],
-            */
             [
                 'attribute'=>'doc_date',
                 'content' => function($data){
@@ -101,19 +92,31 @@ $this->title = 'Документы';
                 'filter' => false,
                 'format' => 'html'
             ],
-            /*
-            [
-                'attribute'=>'created_at',
-                'content' => function($data){
-                    return date('d.m.Y', $data->created_at);
-                },
-                'filter' => false,
-            ],
-            */
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template'=>'{view}{delete}',
+                'template' => '{view} {delete}',
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view') {
+                        switch ($model->model) {
+                            case Agreement::class :
+                                $urlView = '/agreement/document/view';
+                                break;
+                            case Mission::class :
+                                $urlView = '/mission/document/view';
+                                break;
+                            default:
+                                $urlView = '/agreement/document/view';
+                        }
+                        $url = Url::to([$urlView, 'id' => $model->id]);
+                        return $url;
+                    }
+
+                    if ($action === 'delete') {
+                        $url = Url::to(['/agreement/document/delete-list', 'id' => $model->id]);
+                        return $url;
+                    }
+                }
             ],
         ],
     ]); ?>

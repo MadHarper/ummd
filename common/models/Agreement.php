@@ -8,6 +8,7 @@ use yii\db\ActiveRecord;
 use common\services\jobs\TorisAgreementMessageJob;
 use yii\helpers\Url;
 use frontend\core\interfaces\WithDocumentInterface;
+use common\models\AgreementState;
 
 /**
  * This is the model class for table "agreement".
@@ -68,7 +69,7 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
             ['status', 'default', 'value' => self::STATUS_PROJECT],
             [['name'], 'required'],
             [['status', 'iogv_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['status', 'created_at', 'updated_at', 'state'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'state', 'agr_state_id'], 'integer'],
             [['name', 'desc', 'iogv_id',], 'string'],
             [['date_start', 'date_end'], 'safe'],
             ['status', 'filter', 'filter' => 'intval'],
@@ -180,4 +181,5 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
     {
         return $this->iogv_id;
     }
+
 }

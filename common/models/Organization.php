@@ -16,13 +16,18 @@ use yii\db\ActiveRecord;
  * @property int $country_id
  * @property int $created_at
  * @property int $updated_at
- *
+ * @property int $city_id
  * @property Employee[] $employees
  * @property Country $country
  * @property SideAgr[] $sideAgrs
  */
 class Organization extends \yii\db\ActiveRecord
 {
+
+    public $city;
+
+
+
     /**
      * @inheritdoc
      */
@@ -53,9 +58,9 @@ class Organization extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['contact'], 'string'],
+            [['contact', 'city'], 'string'],
             [['country_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['country_id', 'created_at', 'updated_at', 'prev_id', 'main_id'], 'integer'],
+            [['country_id', 'created_at', 'updated_at', 'prev_id', 'main_id', 'city_id'], 'integer'],
             [['history'], 'default', 'value' => false],
             [['prev_id'], 'default', 'value' => null],
             [['iogv', 'history'], 'boolean'],
@@ -77,7 +82,8 @@ class Organization extends \yii\db\ActiveRecord
             'created_at'    => 'Создано',
             'updated_at'    => 'Обновлено',
             'iogv'          => 'ИОГВ',
-            'history'       => 'Историческая'
+            'history'       => 'Историческая',
+            'city_id'       => 'Город'
         ];
     }
 

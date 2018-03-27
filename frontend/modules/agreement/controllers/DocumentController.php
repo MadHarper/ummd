@@ -10,6 +10,7 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Agreement;
+use common\models\Mission;
 use frontend\forms\DocumentUploadForm;
 use frontend\core\forms\DocUploadForm;
 use yii\web\UploadedFile;
@@ -117,6 +118,7 @@ class DocumentController extends \frontend\components\BaseController
 
 
     //старый контроллер для мультиаплоад виджета
+    /*
     public function actionUpload($agreementId)
     {
         if(Yii::$app->request->isAjax && Yii::$app->request->isPost){
@@ -188,6 +190,7 @@ class DocumentController extends \frontend\components\BaseController
                                 ]);
         }
     }
+*/
 
     /**
      * Displays a single Document model.
@@ -215,8 +218,6 @@ class DocumentController extends \frontend\components\BaseController
     {
         $document = $this->findModel($id);
 
-        //ToDo: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //ToDo: Разные типы документов!!! Принадлежат не обязательно Agreement!!!!!!!!!!!!
         $agreement = Agreement::findOne(['id' => $document->model_id]);
         if(!$agreement){
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -227,6 +228,36 @@ class DocumentController extends \frontend\components\BaseController
 
         return $this->redirect(['index', 'agreementId' => $agreement->id]);
     }
+
+
+
+
+
+    public function actionDeleteList($id)
+    {
+        $document = $this->findModel($id);
+
+        $masterModel = false;
+
+        switch ($document->model) {
+            case Agreement::class :
+                $masterModel = Agreement::find()->where(['id' => $document->model_id])->one();
+                break;
+            case Mission::class :
+                $masterModel = Mission::find()->where(['id' => $document->model_id])->one();
+                break;
+        }
+
+        if(!$masterModel){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $document->visible = false;
+        $document->save();
+
+        return $this->redirect(['list']);
+    }
+
 
     /**
      * Finds the Document model based on its primary key value.

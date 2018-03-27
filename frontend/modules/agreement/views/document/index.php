@@ -22,14 +22,11 @@ $this->params['breadcrumbs'][] = 'Документы';
 <div class="document-index" id="document-upload-index" data-url="<?= Url::to(['/agreement/document/ajax-upload', 'agreementId' => $agreement->id])?>">
 
 
-    <div id="add_document">
+    <div id="add_agr_document">
         <?php $form = ActiveForm::begin(['options' => [
             'enctype' => 'multipart/form-data',
             'name' => 'doc_upload',
             'id' => 'ajax_doc_form',
-            //'enableAjaxValidation' => false,
-            //'enableClientValidation' => true,
-            //'action' => Url::to(['upload/ajax-upload', 'modelId' => 5])
         ]]);?>
 
 
@@ -157,17 +154,6 @@ $this->params['breadcrumbs'][] = 'Документы';
         ],
     ]); ?>
 </div>
-
-<?php
-
-$script = <<< JS
-    $('#addDocModal').on('hidden.bs.modal', function (e) {
-          $.pjax.reload({container:"#agreement_docs"});
-}) 
-JS;
-$this->registerJs($script, yii\web\View::POS_READY);
-
-?>
 
 
 <?php \yii\widgets\Pjax::end(); ?>

@@ -4,17 +4,18 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\search\CountrySearch */
+/* @var $searchModel common\models\search\CitySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Страны';
+$this->title = 'Города';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="country-index">
+<div class="city-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Добавить страну', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить город', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Country */
+/* @var $model common\models\City */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Страны', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Города', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="country-view">
+<div class="city-view">
 
 
     <p>
