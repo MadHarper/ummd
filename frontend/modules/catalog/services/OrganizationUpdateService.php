@@ -23,6 +23,13 @@ class OrganizationUpdateService
 
     public function update()
     {
+        //Если изменился только контакт не создаем историю
+        $dirtyAttr = $this->oldOrganization->dirtyAttributes;
+        if( 1 === count($dirtyAttr) && array_key_exists('contact', $dirtyAttr)){
+            $this->oldOrganization->save();
+            return $this->oldOrganization->id;
+        }
+
         $this->updateOrganization();
         $this->updateLinkedEmployee();
 
@@ -41,6 +48,7 @@ class OrganizationUpdateService
         $newModel->prev_id      = $this->oldOrganization->id;
         $newModel->main_id      = $this->oldOrganization->main_id;
         $newModel->city_id      = $this->oldOrganization->city_id;
+        $newModel->subject_rf   = $this->oldOrganization->subject_rf;
         $newModel->save();
 
         $oldModel = Organization::findOne($this->oldOrganization->id);

@@ -58,6 +58,8 @@ use yii\jui\AutoComplete;
 
     <?= $form->field($model, 'iogv')->checkbox() ?>
 
+    <?= $form->field($model, 'subject_rf')->checkbox() ?>
+
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>

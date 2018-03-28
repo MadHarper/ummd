@@ -4,6 +4,7 @@ namespace frontend\modules\agreement\controllers;
 
 use common\models\Agreement;
 use common\models\Employee;
+use common\models\Organization;
 use Yii;
 use common\models\SideAgr;
 use common\models\search\SideAgrSearch;
@@ -194,6 +195,25 @@ class SideController extends \frontend\components\BaseController
 
 
 
+//    public function actionSearchid($q)
+//    {
+//        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//
+//        $out = ['results' => ['id' => '', 'text' => '']];
+//
+//        $out['results'] = array_values((new \yii\db\Query())
+//            ->select(['id', 'name as text', 'history'])
+//            ->from('organization')
+//            ->where(['ilike','name',$q])
+//            ->andWhere(['history' => false])
+//            ->limit(10)
+//            ->all());
+//
+//        return $out;
+//    }
+
+
+
     public function actionSearchid($q)
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -201,16 +221,19 @@ class SideController extends \frontend\components\BaseController
         $out = ['results' => ['id' => '', 'text' => '']];
 
         $out['results'] = array_values((new \yii\db\Query())
-            ->select(['id', 'name as text', 'history'])
+            ->select(['organization.id', "CONCAT (organization.name, ', ', country.name, ', ', city.name) as text", 'organization.history'])
             ->from('organization')
-            ->where(['ilike','name',$q])
-            ->andWhere(['history' => false])
+            ->join('LEFT JOIN', 'country', 'organization.country_id = country.id')
+            ->join('LEFT JOIN', 'city', 'organization.city_id = city.id')
+            ->where(['ilike','organization.name',$q])
+            ->andWhere(['organization.history' => false])
             ->limit(10)
             ->all());
 
         return $out;
     }
 
+    /*
     public function actionSearchidHistory($q)
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -225,6 +248,56 @@ class SideController extends \frontend\components\BaseController
             ->all());
 
         return $out;
+    }
+    */
+
+    public function actionSearchidHistory($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['organization.id', "CONCAT (organization.name, ', ', country.name, ', ', city.name) as text", 'organization.history'])
+            ->from('organization')
+            ->join('LEFT JOIN', 'country', 'organization.country_id = country.id')
+            ->join('LEFT JOIN', 'city', 'organization.city_id = city.id')
+            ->where(['ilike','organization.name',$q])
+            ->limit(10)
+            ->all());
+
+        return $out;
+    }
+
+
+
+    public function actionOrgInfo($id)
+    {
+        if(Yii::$app->request->isAjax){
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $org = Organization::find()->where(['id' => $id])->with(['country', 'cityModel'])->one();
+
+            if(!$org){
+                return [
+                    'res' => false
+                ];
+            }
+
+            $country        = isset($org->country) ? $org->country->name : " ";
+            $city           = isset($org->cityModel) ? $org->cityModel->name : " ";
+            $iogv           = $org->iogv;
+            $subject_rf     = $org->subject_rf;
+
+            return [
+                'res' => true,
+                'data' => [
+                    'country'       => $country,
+                    'city'          => $city,
+                    'subject_rf'    => $subject_rf,
+                    'iogv'          => $iogv
+                ]
+            ];
+        }
     }
 
 }

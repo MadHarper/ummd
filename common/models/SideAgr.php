@@ -20,6 +20,11 @@ use Yii;
  */
 class SideAgr extends \yii\db\ActiveRecord
 {
+
+    public $org_country;
+    public $org_city;
+    public $subject_rf;
+
     /**
      * @inheritdoc
      */
@@ -41,6 +46,7 @@ class SideAgr extends \yii\db\ActiveRecord
             [['agreement_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agreement::className(), 'targetAttribute' => ['agreement_id' => 'id']],
             [['employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['employee_id' => 'id']],
             [['org_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['org_id' => 'id']],
+            [['org_country', 'org_city', 'subject_rf'], 'safe']
         ];
     }
 
@@ -56,6 +62,9 @@ class SideAgr extends \yii\db\ActiveRecord
             'agreement_id' => 'Соглашение',
             'org_id' => 'Наименование организации',
             'employee_id' => 'ФИО представителя организации',
+            'org_country' => 'Страна',
+            'org_city' => 'Город',
+            'subject_rf' => 'Субъект РФ'
         ];
     }
 

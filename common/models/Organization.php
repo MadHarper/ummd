@@ -63,9 +63,11 @@ class Organization extends \yii\db\ActiveRecord
             [['country_id', 'created_at', 'updated_at', 'prev_id', 'main_id', 'city_id'], 'integer'],
             [['history'], 'default', 'value' => false],
             [['prev_id'], 'default', 'value' => null],
-            [['iogv', 'history'], 'boolean'],
+            [['iogv', 'history', 'subject_rf'], 'boolean'],
             [['name'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
+            [['country_id', 'city_id'], 'filter', 'filter' => 'intval'],
+            [['iogv', 'subject_rf'], 'filter', 'filter' => 'boolval'],
         ];
     }
 
@@ -83,7 +85,8 @@ class Organization extends \yii\db\ActiveRecord
             'updated_at'    => 'Обновлено',
             'iogv'          => 'ИОГВ',
             'history'       => 'Историческая',
-            'city_id'       => 'Город'
+            'city_id'       => 'Город',
+            'subject_rf'    => 'Субъект РФ'
         ];
     }
 
@@ -101,6 +104,11 @@ class Organization extends \yii\db\ActiveRecord
     public function getCountry()
     {
         return $this->hasOne(Country::className(), ['id' => 'country_id']);
+    }
+
+    public function getCityModel()
+    {
+        return $this->hasOne(City::className(), ['id' => 'city_id']);
     }
 
     /**

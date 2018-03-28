@@ -15,7 +15,8 @@ class AppAsset extends AssetBundle
         'css/table.css',
     ];
     public $js = [
-        'js/doc_upload.js'
+        'js/doc_upload.js',
+        'js/side_agr.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

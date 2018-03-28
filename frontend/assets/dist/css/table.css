@@ -85,3 +85,7 @@
 .form-group.field-missionmemberajaxform-iogv .help-block.help-block-error{
     margin-bottom: 0;
 }
+
+.unvisible_field{
+    display: none;
+}

@@ -50,6 +50,10 @@ use common\models\Employee;
         ])->label("");
     ?>
 
+    <?= $form->field($model, 'org_country')->textInput(['readonly' => true]) ?>
+
+    <?= $form->field($model, 'org_city')->textInput(['readonly' => true]) ?>
+
     <div style="position:relative; top:14px;">
         <label class="control-label" for="kukaracha">ФИО представителя организации</label>
         <div>
@@ -78,6 +82,9 @@ use common\models\Employee;
 
     <?= $form->field($model, 'subdivision')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'subject_rf')->checkbox(['disabled' => true]) ?>
+
+
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
@@ -89,24 +96,6 @@ use common\models\Employee;
 <?php
 $script = <<< JS
     var org_id;
-
-    function loadEmployee(orgId){
-        var carSelect = $('select[name="SideAgr[employee_id]"]');
-        var historic = $("#with_historic").is(":checked") ? 1 : 0;
-        console.log($("#with_historic").attr("checked"));
-        $.get('/agreement/side/list', {
-            id: orgId,
-            historic: historic
-        }, function(res){
-            carSelect.html('');
-            carSelect.append(res);      
-        });
-}
-
-    function loadAnother(orgId){
-        console.log("ЗНАЧЕНИЕ ----- " + orgId);
-    }
-
 
     $('#with_historic').change(function(){
          $('#kukaracha').trigger('change');
