@@ -2,6 +2,8 @@
 
 namespace frontend\core\services;
 
+use common\models\Agreement;
+use common\models\DocumentType;
 use Yii;
 use frontend\models\Document;
 use frontend\core\interfaces\WithDocumentInterface;
@@ -51,6 +53,10 @@ class DocPrepareSaveService
             return false;
         }
 
+        if( DocumentType::TYPE_MEROPRIYATIE === $document->doc_type_id  && Agreement::className() === $document->model ){
+            $this->changeAgreementPlan();
+        }
+
 
         // и помещаем в очередь в зависимости от раширения (будем парсить текст или нет)
         if( in_array($document->type, DocTypeHelper::PARSING_EXTENTION) ){
@@ -73,5 +79,13 @@ class DocPrepareSaveService
         }
 
         return true;
+    }
+
+
+    // изменяет признак наличия плана у соглашение (поле plan)
+    private function changeAgreementPlan()
+    {
+        $this->model->meropriatie = true;
+        $this->model->save();
     }
 }

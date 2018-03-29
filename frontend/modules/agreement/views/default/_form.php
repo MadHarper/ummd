@@ -42,6 +42,7 @@ use common\models\Agreement;
 
     <?= $form->field($model, 'desc')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'meropriatie')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

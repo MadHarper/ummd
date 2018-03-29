@@ -35,6 +35,7 @@ $this->title = 'Соглашения';
                 ['class'=>'kartik\grid\CheckboxColumn', 'order'=>DynaGrid::ORDER_FIX_LEFT],
 
                 //['class'=>'kartik\grid\SerialColumn', 'order'=>DynaGrid::ORDER_FIX_LEFT],
+
                 [
                     'attribute'=>'name',
                     'vAlign'=>'middle',
@@ -58,6 +59,28 @@ $this->title = 'Соглашения';
                         return $data->getStateToString();
                     },
                     'filter' => \common\models\Agreement::getStateList(),
+                ],
+                [
+                    'attribute'=>'doc_name',
+                    'label' => 'Название документа',
+                    'vAlign'=>'middle',
+                    'content' => function($data){
+                        $str = '';
+                        if($data->docs){
+                            $n = 1;
+                            foreach ($data->docs as $doc){
+                                if(!$doc->name){
+                                    continue;
+                                }
+                                $str .= "<div class='intable_list'>";
+                                $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                $str .= '<div>' . $doc->name . '</div>';
+                                $str .= "</div>";
+                                $n++;
+                            }
+                        }
+                        return $str;
+                    },
                 ],
                 [
                     'attribute' => 'date_start',
@@ -149,6 +172,36 @@ $this->title = 'Соглашения';
                     'format' => 'raw',
                 ],
                 [
+                    'attribute'=>'mission',
+                    'vAlign'=>'middle',
+                    'label' => 'Командировки',
+                    'content' => function ($data) {
+                        $str = '';
+                        if($data->missions){
+                            $n = 1;
+                            foreach ($data->missions as $mission){
+                                if($mission->name){
+                                    $str .= "<div class='intable_list'>";
+                                    $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                    $str .= '<div>' . $mission->name . '</div>';
+                                    $str .= "</div>";
+                                    $n++;
+                                }
+                            }
+                        }
+                        return $str;
+                    },
+                    'format' => 'raw',
+                ],
+                [
+                    'attribute'=>'meropriatie',
+                    'vAlign'=>'middle',
+                    'content' => function($data){
+                        return $data->meropriatie ? "Есть" : "Нет";
+                    },
+                    'filter' => [0 => "Нет", 1 => "Есть"]
+                ],
+                [
                     'attribute'=>'country',
                     'vAlign'=>'middle',
                     'label' => 'Страны',
@@ -192,6 +245,25 @@ $this->title = 'Соглашения';
                             'placeholder' => '',
                         ]
                     ]),
+                ],
+                [
+                    'attribute'=>'cities',
+                    'label' => 'Города',
+                    'vAlign'=>'middle',
+                    'content' => function($data){
+                        $str = '';
+                        if($cities = $data->cities){
+                            $n = 1;
+                            foreach ($cities as $city){
+                                $str .= "<div class='intable_list'>";
+                                $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                $str .= '<div>' . $city->name . '</div>';
+                                $str .= "</div>";
+                                $n++;
+                            }
+                        }
+                        return $str;
+                    },
                 ],
                 [
                     'class'=>'kartik\grid\ActionColumn',

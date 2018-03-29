@@ -33,9 +33,11 @@
     display: none;
 }
 
+/*
 .agreement-index .summary{
     display: none;
 }
+*/
 
 .mission-update, .agreement-update{
     margin-top: 40px;

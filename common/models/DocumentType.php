@@ -15,6 +15,11 @@ use Yii;
  */
 class DocumentType extends \yii\db\ActiveRecord
 {
+    // при развертывании приложения создается запись "План мероприятия" под id == 1
+    const TYPE_MEROPRIYATIE = 1;
+
+
+
     /**
      * {@inheritdoc}
      */

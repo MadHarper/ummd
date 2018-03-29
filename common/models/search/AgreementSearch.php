@@ -22,7 +22,10 @@ class AgreementSearch extends Agreement
     public $organization_text;
     public $employee_text;
 
-
+    public $doc_name;
+    public $mission;
+    public $cities;
+    public $subject_rf;
 
 
     /**
@@ -32,9 +35,11 @@ class AgreementSearch extends Agreement
     {
         return [
             [['id', 'status', 'state', 'created_at', 'updated_at', 'organization', 'employee', 'country'], 'integer'],
-            [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range', 'iogv_id', 'organization_text', 'employee_text'], 'safe'],
+            [['name', 'date_start', 'date_end', 'desc', 'created_at_range', 'ended_at_range', 'iogv_id', 'organization_text', 'employee_text', 'doc_name', 'meropriatie', 'mission', 'cities', 'subject_rf'], 'safe'],
         ];
     }
+
+
 
     /**
      * @inheritdoc
@@ -68,8 +73,12 @@ class AgreementSearch extends Agreement
             ->join('LEFT JOIN','side_agr', 'side_agr.agreement_id = agreement.id')
             ->join('LEFT JOIN','organization', 'organization.id = side_agr.org_id')
             ->join('LEFT JOIN','country', 'country.id = organization.country_id')
-            ->join('LEFT JOIN','employee', 'side_agr.employee_id = employee.id');
-
+            ->join('LEFT JOIN','city', 'city.id = organization.city_id')
+            ->join('LEFT JOIN','employee', 'side_agr.employee_id = employee.id')
+            ->join('LEFT JOIN','mission_agreement', 'mission_agreement.agreement_id = agreement.id')
+            ->join('LEFT JOIN','mission', 'mission_agreement.mission_id = mission.id')
+            ->join('LEFT JOIN','document', 'document.model_id = agreement.id AND document.model = \'' . Agreement::className() . '\' AND document.visible = true')
+            ->distinct();
 
         // add conditions that should always apply here
 
@@ -109,10 +118,20 @@ class AgreementSearch extends Agreement
             ]);
         }
 
+        if(isset($this->meropriatie)){
+            $query->andFilterWhere([
+                'agreement.meropriatie' => $this->meropriatie,
+            ]);
+        }
+
         if(isset($this->employee)){
             $query->andFilterWhere([
                 'side_agr.employee_id' => $this->employee,
             ]);
+        }
+
+        if(isset($this->mission)){
+            $query->andFilterWhere(['ilike', 'mission.name', $this->mission]);
         }
 
         if(isset($this->employee_text)){
@@ -122,6 +141,15 @@ class AgreementSearch extends Agreement
         if(isset($this->organization_text)){
             $query->andFilterWhere(['ilike', 'organization.name', $this->organization_text]);
         }
+
+        if(isset($this->doc_name)){
+            $query->andFilterWhere(['ilike', 'document.name', $this->doc_name]);
+        }
+
+        if(isset($this->cities)){
+            $query->andFilterWhere(['ilike', 'city.name', $this->cities]);
+        }
+
 
         $query->andFilterWhere(['ilike', 'agreement.name', $this->name])
             ->andFilterWhere(['ilike', 'agreement.desc', $this->desc]);

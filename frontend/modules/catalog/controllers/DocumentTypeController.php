@@ -2,6 +2,7 @@
 
 namespace frontend\modules\catalog\controllers;
 
+use common\models\Document;
 use Yii;
 use common\models\DocumentType;
 use common\models\search\DocumentTypeSearch;
@@ -113,9 +114,19 @@ class DocumentTypeController extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+        $docs = Document::find()->where(['doc_type_id' => $id, 'visible' => true])->all();
+        if($docs){
+            \Yii::$app->session->setFlash('error', 'Нельзя удалить тип документа. Есть связи с документами');
+            return $this->redirect(['index']);
+        }
 
-        //ToDo: если есть связанные документы, то visible = false. Если нет , то удалять
-        $this->findModel($id)->delete();
+        if(DocumentType::TYPE_MEROPRIYATIE === $model->id){
+            \Yii::$app->session->setFlash('error', 'Эту запись удалить нельзя');
+            return $this->redirect(['index']);
+        }
+
+        $model->delete();
 
         return $this->redirect(['index']);
     }

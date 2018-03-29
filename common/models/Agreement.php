@@ -8,7 +8,6 @@ use yii\db\ActiveRecord;
 use common\services\jobs\TorisAgreementMessageJob;
 use yii\helpers\Url;
 use frontend\core\interfaces\WithDocumentInterface;
-use common\models\AgreementState;
 
 /**
  * This is the model class for table "agreement".
@@ -69,9 +68,10 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
             ['status', 'default', 'value' => self::STATUS_PROJECT],
             [['name'], 'required'],
             [['status', 'iogv_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['status', 'created_at', 'updated_at', 'state', 'agr_state_id'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'state'], 'integer'],
             [['name', 'desc', 'iogv_id',], 'string'],
             [['date_start', 'date_end'], 'safe'],
+            [['meropriatie'], 'boolean'],
             ['status', 'filter', 'filter' => 'intval'],
         ];
     }
@@ -91,7 +91,8 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
             'desc' => 'Служебные пометки',
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
-            'state' => 'Состояние'
+            'state' => 'Состояние',
+            'meropriatie' => 'План мероприятий'
         ];
     }
 
@@ -124,6 +125,15 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
         return $this->hasMany(SideAgr::className(), ['agreement_id' => 'id']);
     }
 
+
+    public function getDocs()
+    {
+        //return $this->hasMany(Document::className(), ['model_id' => 'id', 'model' => Agreement::className()]);
+
+        return Document::find()->where(['model_id' => $this->id, 'model' => Agreement::className(), 'visible' => true])->all();
+    }
+
+
     public function getCountries(){
 
         if($sides = $this->sideAgrs){
@@ -138,6 +148,20 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
         return false;
     }
 
+
+    public function getCities(){
+
+        if($sides = $this->sideAgrs){
+            $result = [];
+            foreach ($sides as $side){
+                $result[] = $side->org->cityModel;
+            }
+
+            return $result;
+        }
+
+        return false;
+    }
 
     public function getShortName(){
         $short = $this->name;
@@ -182,4 +206,10 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
         return $this->iogv_id;
     }
 
+
+    public function getMissions()
+    {
+        return $this->hasMany(Mission::className(), ['id' => 'mission_id'])
+            ->viaTable('mission_agreement', ['agreement_id' => 'id']);
+    }
 }
