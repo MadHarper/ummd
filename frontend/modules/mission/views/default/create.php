@@ -17,7 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'iogvList' => $iogvList,
         'missionAgreementArr' => $missionAgreementArr,
         'historyOrgOptions' => $historyOrgOptions,
-        'nonHistoryOrgOptions' => $nonHistoryOrgOptions
+        'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
+        'regions' => $regions,
+        'cityList' => $cityList
     ]) ?>
 
 </div>

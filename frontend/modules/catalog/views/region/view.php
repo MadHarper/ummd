@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Mission */
+/* @var $model common\models\Region */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Командировки', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Субъекты РФ', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mission-view">
+<div class="region-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,26 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'name:ntext',
-            [
-                'attribute'=>'organization_id',
-                'value' => function($model){
-                    return $model->organization->name;
-                },
-            ],
-            'date_start',
-            'date_end',
-            [
-                'attribute'=>'country_id',
-                'value' => function($model){
-                    return $model->country->name;
-                },
-            ],
-            'region_id',
-            'city',
-            'order',
-            'target:ntext',
-            'duty_man_id',
+            'name',
         ],
     ]) ?>
 

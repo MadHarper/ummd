@@ -12,6 +12,7 @@ class m180117_082924_create_fk extends Migration
      */
     public function safeUp()
     {
+        /*
         $this->addForeignKey(
             'fk-mission-region_id',
             'mission',
@@ -31,6 +32,7 @@ class m180117_082924_create_fk extends Migration
             'id',
             'RESTRICT'
         );
+        */
     }
 
     /**
@@ -38,6 +40,7 @@ class m180117_082924_create_fk extends Migration
      */
     public function safeDown()
     {
+        /*
         $this->dropForeignKey(
             'fk-mission-region_id',
             'mission'
@@ -48,6 +51,7 @@ class m180117_082924_create_fk extends Migration
             'fk-mission-org-org_id',
             'mission'
         );
+        */
     }
 
     /*

@@ -2,6 +2,7 @@
 
 namespace frontend\modules\mission\controllers;
 
+use common\models\Region;
 use Yii;
 use common\models\Mission;
 use common\models\search\MissionSearch;
@@ -13,6 +14,8 @@ use common\models\Employee;
 use common\models\Country;
 use common\models\Agreement;
 use frontend\services\EmployeeOptionsGenerator;
+use common\models\City;
+use frontend\core\services\CheckOrAddCityService;
 
 /**
  * DefaultController implements the CRUD actions for Mission model.
@@ -89,12 +92,15 @@ class DefaultController  extends \frontend\components\BaseController
         $model = new Mission();
 
         $model->iogv_id = Yii::$app->user->identity->iogv_id;
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['update', 'id' => $model->id]);
         }
+
+        $regions = Region::find()->select('name')->indexBy('id')->orderBy('name')->column();
+        $cityList = $this->getCitiesList();
         $iogvList = $this->getIogvList();
         $missionAgreementArr = [];
-
         $nonHistoryOrgOptions = $this->getNonHistoryOrgOptions();
         $historyOrgOptions = $this->getHistoryOrgOptions();
 
@@ -103,7 +109,9 @@ class DefaultController  extends \frontend\components\BaseController
             'iogvList' => $iogvList,
             'missionAgreementArr' => $missionAgreementArr,
             'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
-            'historyOrgOptions' => $historyOrgOptions
+            'historyOrgOptions' => $historyOrgOptions,
+            'regions' => $regions,
+            'cityList' => $cityList
         ]);
     }
 
@@ -118,15 +126,16 @@ class DefaultController  extends \frontend\components\BaseController
     {
         $model = $this->findModel($id);
 
+
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $regions = Region::find()->select('name')->indexBy('id')->column();
         $iogvList = $this->getIogvList($model->organization_id);
-
         $nonHistoryOrgOptions = $this->getNonHistoryOrgOptions();
         $historyOrgOptions = $this->getHistoryOrgOptions();
-
 
         $missionAgreementArr = Agreement::find()
                                 ->where(['id' => $model->agreementsArray])
@@ -134,12 +143,16 @@ class DefaultController  extends \frontend\components\BaseController
                                 ->indexBy("id")
                                 ->column();
 
+        $cityList = $this->getCitiesList();
+
         return $this->render('update', [
             'model' => $model,
             'iogvList' => $iogvList,
             'missionAgreementArr' => $missionAgreementArr,
             'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
-            'historyOrgOptions' => $historyOrgOptions
+            'historyOrgOptions' => $historyOrgOptions,
+            'regions' => $regions,
+            'cityList' => $cityList
         ]);
     }
 
@@ -152,7 +165,6 @@ class DefaultController  extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
-
         $model = $this->findModel($id);
         $model->visible = false;
         $model->save();
@@ -271,6 +283,17 @@ class DefaultController  extends \frontend\components\BaseController
         }
 
         return $res;
+    }
+
+
+    private function getCitiesList()
+    {
+        $cityList = City::find()
+            ->select(['name as value', 'name as label'])
+            ->asArray()
+            ->all();
+
+        return $cityList;
     }
 
 }

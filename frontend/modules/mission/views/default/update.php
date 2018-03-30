@@ -65,7 +65,9 @@ $this->params['breadcrumbs'][] = 'Редактировать';
         'iogvList' => $iogvList,
         'missionAgreementArr' => $missionAgreementArr,
         'historyOrgOptions' => $historyOrgOptions,
-        'nonHistoryOrgOptions' => $nonHistoryOrgOptions
+        'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
+        'regions' => $regions,
+        'cityList' => $cityList
     ]) ?>
 
 </div>

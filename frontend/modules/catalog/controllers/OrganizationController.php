@@ -2,6 +2,7 @@
 
 namespace frontend\modules\catalog\controllers;
 
+use frontend\core\services\CheckOrAddCityService;
 use frontend\modules\catalog\services\OrganizationUpdateService;
 use Yii;
 use common\models\Organization;
@@ -95,7 +96,8 @@ class OrganizationController extends \frontend\components\BaseController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
             if($model->city){
-               $city_id = $this->checkOrAddCity($model->city);
+                $checkCityService = new CheckOrAddCityService();
+                $city_id = $checkCityService->check($model->city);
                    if($city_id){
                         $model->city_id = $city_id;
                    }
@@ -135,7 +137,8 @@ class OrganizationController extends \frontend\components\BaseController
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
             if($model->city){
-                $city_id = $this->checkOrAddCity($model->city);
+                $checkCityService = new CheckOrAddCityService();
+                $city_id = $checkCityService->check($model->city);
                    if($city_id){
                        $model->city_id = $city_id;
                    }
@@ -216,22 +219,5 @@ class OrganizationController extends \frontend\components\BaseController
     }
 
 
-    private function checkOrAddCity($cityName)
-    {
-        $id = false;
-        $baseCity = City::find()->where(['ilike', 'name', $cityName, false])->one();
-
-        if($baseCity){
-            return $baseCity->id;
-        }
-
-        $newCity = new City();
-        $newCity->name = $cityName;
-        if($newCity->save()){
-            return $newCity->id;
-        }
-
-        return $id;
-    }
 
 }

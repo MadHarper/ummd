@@ -7,6 +7,8 @@ use yii\web\JsExpression;
 use kartik\date\DatePicker;
 use common\models\Employee;
 use common\models\Organization;
+use common\models\Country;
+use yii\jui\AutoComplete;
 
 
 
@@ -15,7 +17,7 @@ use common\models\Organization;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="mission-form" id="missform" data-nonhistory="<?= preg_replace('#(\"+)#' , '\'', $nonHistoryOrgOptions);?>" data-history="<?= preg_replace('#(\"+)#' , '\'', $historyOrgOptions);?>">
+<div class="mission-form" id="missform" data-nonhistory="<?= preg_replace('#(\"+)#' , '\'', $nonHistoryOrgOptions);?>" data-history="<?= preg_replace('#(\"+)#' , '\'', $historyOrgOptions);?>" data-russia_id="<?= Country::RUSSIA_ID;?>">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -115,17 +117,41 @@ use common\models\Organization;
                 'templateResult' => new JsExpression('function(city) {  return city.text; }'),
                 'templateSelection' => new JsExpression('function (city) { console.log(city.text); return  city.text; }'),
             ],
+            'pluginEvents' => [
+                "change" => "function() { if(this.value){seeRegion(this.value);}}",
+            ]
         ]);
     ?>
 
+    <?php if(!$model->isNewRecord && isset($model->country_id) && $model->country_id === Country::RUSSIA_ID): ?>
+        <div class="region_form_area">
+    <?php else: ?>
+        <div class="region_form_area unvisible_field">
+    <?php endif; ?>
 
-    <?= $form->field($model, 'region_id')->textInput() ?>
+        <?=
+            $form->field($model, 'region_id')->widget(\yii2mod\chosen\ChosenSelect::className(),[
+                'items' => $regions,
+            ])->label("Регион");
+        ?>
 
-    <?= $form->field($model, 'city')->textInput() ?>
+        </div>
+
+    <?= $form->field($model, 'cityName')->widget(
+        AutoComplete::className(), [
+        'clientOptions' => [
+            'source' => $cityList,
+        ],
+        'options'=>[
+            'class'=>'form-control'
+        ]
+    ])->label('Город');
+    ?>
 
     <?= $form->field($model, 'order')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'target')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'notes')->textarea(['rows' => 6]) ?>
 
 
 

@@ -10,8 +10,14 @@ class TypeController extends Controller
 
     public function actionIndex()
     {
-         $dt = new DocumentType();
+         $dt = DocumentType::find()->where(['id' => 1])->one();
+
+         if(!$dt){
+             $dt = new DocumentType();
+         }
+
          $dt->name = "План Мероприятий";
+         $dt->visible = true;
          $dt->save();
     }
 }

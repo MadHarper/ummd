@@ -6,7 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use frontend\core\interfaces\WithDocumentInterface;
-
+use frontend\core\services\CheckOrAddCityService;
 
 /**
  * This is the model class for table "mission".
@@ -38,6 +38,7 @@ class Mission extends \yii\db\ActiveRecord implements WithDocumentInterface
 
     public $_agreements;
 
+    public $cityName;
 
     /**
      * @inheritdoc
@@ -70,12 +71,12 @@ class Mission extends \yii\db\ActiveRecord implements WithDocumentInterface
     {
         return [
             [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end', 'organization_id', 'duty_man_id'], 'required'],
-            [['name', 'target', 'iogv_id', 'city'], 'string'],
+            [['name', 'target', 'iogv_id', 'city', 'cityName', 'notes'], 'string'],
             [['date_start', 'date_end', 'agreementsArray'], 'safe'],
             [['visible'], 'boolean'],
             [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['visible'], 'default', 'value' => true],
-            [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at', 'organization_id'], 'integer'],
+            [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at', 'organization_id', 'city_id'], 'integer'],
             [['order'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
             [['duty_man_id'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['duty_man_id' => 'id']],
@@ -101,7 +102,44 @@ class Mission extends \yii\db\ActiveRecord implements WithDocumentInterface
             'target' => 'Цель',
             'organization_id' => 'ИОГВ',
             'duty_man_id' => 'Ответственный за предоставление отчета',
+            'cityName' => 'Город',
+            'city_id' => 'Город',
+            'notes' => 'Служебные пометки'
         ];
+    }
+
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+
+            if($this->country_id != Country::RUSSIA_ID){
+                $this->region_id = NULL;
+            }
+
+            if(isset($this->cityName)){
+                $checkCityService = new CheckOrAddCityService();
+                $city_id = $checkCityService->check($this->cityName);
+                if($city_id){
+                    $this->city_id = $city_id;
+                }
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+
+    public function afterFind(){
+        parent::afterFind();
+
+        if(isset($this->city_id)){
+            $c = City::find()->where(['id' => $this->city_id])->one();
+            if($c){
+                $this->cityName = $c->name;
+            }
+        }
     }
 
 
