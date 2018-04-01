@@ -7,6 +7,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use frontend\core\interfaces\WithDocumentInterface;
 use frontend\core\services\CheckOrAddCityService;
+use frontend\core\services\MissionStatusService;
 
 /**
  * This is the model class for table "mission".
@@ -33,90 +34,26 @@ use frontend\core\services\CheckOrAddCityService;
  * @property MissionAgreement[] $missionAgreements
  * @property MissionEmployee[] $missionEmployees
  */
-class Mission extends \yii\db\ActiveRecord implements WithDocumentInterface
+class Mission extends \common\models\base\MissionBase implements WithDocumentInterface
 {
 
     public $_agreements;
 
     public $cityName;
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'mission';
-    }
-
-
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => TimestampBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
-                ],
-                'value' => function() { return date('U'); },
-            ],
-        ];
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end', 'organization_id', 'duty_man_id'], 'required'],
-            [['name', 'target', 'iogv_id', 'city', 'cityName', 'notes'], 'string'],
-            [['date_start', 'date_end', 'agreementsArray'], 'safe'],
-            [['visible'], 'boolean'],
-            [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['visible'], 'default', 'value' => true],
-            [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at', 'organization_id', 'city_id'], 'integer'],
-            [['order'], 'string', 'max' => 255],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
-            [['duty_man_id'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['duty_man_id' => 'id']],
-            [['organization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['organization_id' => 'id']],
-            [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'id']],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'name' => 'Наименование',
-            'date_start' => 'Дата начала',
-            'date_end' => 'Дата окончания',
-            'country_id' => 'Страна',
-            'region_id' => 'Регион',
-            'city' => 'Город',
-            'order' => 'Номер приказа',
-            'target' => 'Цель',
-            'organization_id' => 'ИОГВ',
-            'duty_man_id' => 'Ответственный за предоставление отчета',
-            'cityName' => 'Город',
-            'city_id' => 'Город',
-            'notes' => 'Служебные пометки'
-        ];
-    }
 
 
     public function beforeSave($insert)
     {
+
         if (parent::beforeSave($insert)) {
 
+            // если страна не Россия, то удалим регион
             if($this->country_id != Country::RUSSIA_ID){
                 $this->region_id = NULL;
             }
 
+            // если пришел текстовое поле имя города, то проверим или добавим его в справочник городов
             if(isset($this->cityName)){
                 $checkCityService = new CheckOrAddCityService();
                 $city_id = $checkCityService->check($this->cityName);
@@ -227,7 +164,11 @@ class Mission extends \yii\db\ActiveRecord implements WithDocumentInterface
 
     public function setAgreementsArray($value)
     {
-        $this->_agreements = (array)$value;
+        if(empty($value)){
+            $this->_agreements = [];
+        }else{
+            $this->_agreements = (array)$value;
+        }
     }
 
     public function afterSave($insert, $changedAttributes)
@@ -246,8 +187,6 @@ class Mission extends \yii\db\ActiveRecord implements WithDocumentInterface
         foreach ($newAgreementsIds as $item){
             $new[] = (int)$item;
         }
-
-
 
         foreach (array_filter(array_diff($new, $currentAgreementsIds)) as $agId) {
             if ($ag = Agreement::findOne($agId)) {

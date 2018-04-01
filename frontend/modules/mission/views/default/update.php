@@ -67,7 +67,8 @@ $this->params['breadcrumbs'][] = 'Редактировать';
         'historyOrgOptions' => $historyOrgOptions,
         'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
         'regions' => $regions,
-        'cityList' => $cityList
+        'cityList' => $cityList,
+        'availableStatuses' => $availableStatuses
     ]) ?>
 
 </div>

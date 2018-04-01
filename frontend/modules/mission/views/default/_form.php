@@ -77,11 +77,7 @@ use yii\jui\AutoComplete;
         ])->label("");
     ?>
 
-    <?php
-        /*
-        echo $form->field($model, 'duty_man_id')->dropDownList($arrEmployees)->label("");
-        */
-     ?>
+
 
 
     <?= $form->field($model, 'date_start')->widget(DatePicker::class, [
@@ -153,7 +149,9 @@ use yii\jui\AutoComplete;
     <?= $form->field($model, 'target')->textarea(['rows' => 6]) ?>
     <?= $form->field($model, 'notes')->textarea(['rows' => 6]) ?>
 
-
+    <?php if(!$model->isNewRecord): ?>
+        <?= $form->field($model, 'status')->dropDownList($availableStatuses); ?>
+    <?php endif ;?>
 
     <?php
     echo $form->field($model, 'agreementsArray')->widget(Select2::classname(),

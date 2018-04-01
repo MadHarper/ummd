@@ -15,7 +15,7 @@ use common\models\Country;
 use common\models\Agreement;
 use frontend\services\EmployeeOptionsGenerator;
 use common\models\City;
-use frontend\core\services\CheckOrAddCityService;
+use frontend\core\services\MissionStatusService;
 
 /**
  * DefaultController implements the CRUD actions for Mission model.
@@ -94,13 +94,17 @@ class DefaultController  extends \frontend\components\BaseController
         $model->iogv_id = Yii::$app->user->identity->iogv_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['update', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         $regions = Region::find()->select('name')->indexBy('id')->orderBy('name')->column();
         $cityList = $this->getCitiesList();
         $iogvList = $this->getIogvList();
+
+
         $missionAgreementArr = [];
+        $model->_agreements = null;
+
         $nonHistoryOrgOptions = $this->getNonHistoryOrgOptions();
         $historyOrgOptions = $this->getHistoryOrgOptions();
 
@@ -111,7 +115,7 @@ class DefaultController  extends \frontend\components\BaseController
             'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
             'historyOrgOptions' => $historyOrgOptions,
             'regions' => $regions,
-            'cityList' => $cityList
+            'cityList' => $cityList,
         ]);
     }
 
@@ -125,11 +129,17 @@ class DefaultController  extends \frontend\components\BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $statusService = new MissionStatusService();
 
-
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            try{
+                $statusService->checkNewStatus($model);
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }catch (\DomainException $exception){
+                \Yii::$app->session->setFlash('error', $exception->getMessage());
+                return $this->redirect(['update', 'id' => $model->id]);
+            }
         }
 
         $regions = Region::find()->select('name')->indexBy('id')->column();
@@ -138,12 +148,16 @@ class DefaultController  extends \frontend\components\BaseController
         $historyOrgOptions = $this->getHistoryOrgOptions();
 
         $missionAgreementArr = Agreement::find()
-                                ->where(['id' => $model->agreementsArray])
-                                ->select("name, id")
-                                ->indexBy("id")
-                                ->column();
+            ->where(['id' => $model->agreementsArray])
+            ->select("name, id")
+            ->indexBy("id")
+            ->orderBy("id")
+            ->column();
+
 
         $cityList = $this->getCitiesList();
+
+        $availableStatuses = $statusService->getStatusListFromCurrent($model->status);
 
         return $this->render('update', [
             'model' => $model,
@@ -152,7 +166,8 @@ class DefaultController  extends \frontend\components\BaseController
             'nonHistoryOrgOptions' => $nonHistoryOrgOptions,
             'historyOrgOptions' => $historyOrgOptions,
             'regions' => $regions,
-            'cityList' => $cityList
+            'cityList' => $cityList,
+            'availableStatuses' => $availableStatuses
         ]);
     }
 
