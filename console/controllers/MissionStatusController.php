@@ -24,8 +24,6 @@ class MissionStatusController extends Controller
             $mission->save(false);
         }
 
-        $missions = [];
-
         $missions = MissionBase::find()
                         ->andWhere(['<', 'date_end', $today])
                         ->andWhere(['status' => MissionStatusService::STATUS_IN_ACTION])
