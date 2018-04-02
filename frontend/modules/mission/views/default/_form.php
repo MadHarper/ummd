@@ -78,8 +78,6 @@ use yii\jui\AutoComplete;
     ?>
 
 
-
-
     <?= $form->field($model, 'date_start')->widget(DatePicker::class, [
         'type' => DatePicker::TYPE_INPUT,
         'pluginOptions' => [
@@ -89,6 +87,14 @@ use yii\jui\AutoComplete;
     ]) ?>
 
     <?= $form->field($model, 'date_end')->widget(DatePicker::class, [
+        'type' => DatePicker::TYPE_INPUT,
+        'pluginOptions' => [
+            'autoclose' => true,
+            'format'    => 'yyyy-mm-dd'
+        ]
+    ]) ?>
+
+    <?= $form->field($model, 'report_date')->widget(DatePicker::class, [
         'type' => DatePicker::TYPE_INPUT,
         'pluginOptions' => [
             'autoclose' => true,

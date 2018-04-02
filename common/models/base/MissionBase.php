@@ -72,7 +72,7 @@ class MissionBase extends \yii\db\ActiveRecord
             ['status', 'filter', 'filter' => 'intval'],
             [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end', 'organization_id', 'duty_man_id'], 'required'],
             [['name', 'target', 'iogv_id', 'city', 'cityName', 'notes'], 'string'],
-            [['date_start', 'date_end', 'agreementsArray'], 'safe'],
+            [['date_start', 'date_end', 'report_date', 'agreementsArray'], 'safe'],
             [['visible'], 'boolean'],
             [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['visible'], 'default', 'value' => true],
@@ -116,7 +116,8 @@ class MissionBase extends \yii\db\ActiveRecord
             'cityName' => 'Город',
             'city_id' => 'Город',
             'notes' => 'Служебные пометки',
-            'status' => 'Статус командировки'
+            'status' => 'Статус командировки',
+            'report_date' => 'Дата предоставления отчета'
         ];
     }
 

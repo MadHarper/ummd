@@ -39,6 +39,8 @@ class MissionEmployee extends \yii\db\ActiveRecord
         return [
             [['mission_id', 'employee_id', 'role'], 'required'],
             [['mission_id', 'employee_id', 'role'], 'integer'],
+            ['boss', 'boolean'],
+            [['boss'], 'default', 'value' => false],
             [['employee_id'], 'unique', 'targetAttribute' => ['employee_id', 'mission_id'], 'message' => 'Повторное добавление сотрудника.'],
             [['employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['employee_id' => 'id']],
             [['mission_id'], 'exist', 'skipOnError' => true, 'targetClass' => Mission::className(), 'targetAttribute' => ['mission_id' => 'id']],
@@ -55,6 +57,7 @@ class MissionEmployee extends \yii\db\ActiveRecord
             'mission_id' => 'Командировка',
             'employee_id' => 'Сотрудник',
             'role' => 'Роль',
+            'boss' => 'Глава ИОГВ'
         ];
     }
 

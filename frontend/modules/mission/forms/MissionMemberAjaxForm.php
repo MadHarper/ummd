@@ -15,12 +15,14 @@ class MissionMemberAjaxForm extends Model
     public $employee;
     public $role;
     public $mission_id;
+    public $boss;
 
     public function rules()
     {
         return [
             [['employee', 'role', 'mission_id'], 'required'],
-            [['employee', 'role', 'iogv', 'mission_id'], 'integer']
+            [['employee', 'role', 'iogv', 'mission_id'], 'integer'],
+            ['boss', 'boolean'],
         ];
     }
 
@@ -31,6 +33,7 @@ class MissionMemberAjaxForm extends Model
             'iogv' => 'ИОГВ',
             'employee' => 'Сотрудник',
             'role' => 'Роль',
+            'boss' => 'Глава ИОГВ'
         ];
     }
 
@@ -45,6 +48,7 @@ class MissionMemberAjaxForm extends Model
             $employee->mission_id = $this->mission_id;
             $employee->employee_id = $this->employee;
             $employee->role = $this->role;
+            $employee->boss = $this->boss;
 
             if($employee->save()){
                 return null;

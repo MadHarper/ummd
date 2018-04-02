@@ -41,6 +41,13 @@ use yii\grid\GridView;
                 },
                 'filter' => false,
             ],
+            [
+                'attribute'=>'boss',
+                'value' => function($data){
+                    return $data->boss ? "Да" : "Нет";
+                },
+                'filter' => false,
+            ],
 
 
             [

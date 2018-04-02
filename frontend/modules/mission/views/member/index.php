@@ -60,9 +60,10 @@ $this->params['breadcrumbs'][] = 'Участники командировки';
         ?>
 
         <?= $form->field($ajaxForm, 'role')->dropDownList(MissionEmployee::getMissionRolesList()) ?>
+        <?= $form->field($ajaxForm, 'boss')->checkbox() ?>
 
 
-    <?= Html::submitButton('Добавить', ['class' => 'btn btn-success']);?>
+<?= Html::submitButton('Добавить', ['class' => 'btn btn-success']);?>
     <?php ActiveForm::end();?>
 
 
