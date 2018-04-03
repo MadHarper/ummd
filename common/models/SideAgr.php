@@ -24,6 +24,7 @@ class SideAgr extends \yii\db\ActiveRecord
     public $org_country;
     public $org_city;
     public $subject_rf;
+    public $iogv;
 
     /**
      * @inheritdoc
@@ -46,7 +47,7 @@ class SideAgr extends \yii\db\ActiveRecord
             [['agreement_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agreement::className(), 'targetAttribute' => ['agreement_id' => 'id']],
             [['employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['employee_id' => 'id']],
             [['org_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['org_id' => 'id']],
-            [['org_country', 'org_city', 'subject_rf'], 'safe']
+            [['org_country', 'org_city', 'subject_rf', 'iogv'], 'safe']
         ];
     }
 
@@ -64,7 +65,8 @@ class SideAgr extends \yii\db\ActiveRecord
             'employee_id' => 'ФИО представителя организации',
             'org_country' => 'Страна',
             'org_city' => 'Город',
-            'subject_rf' => 'Субъект РФ'
+            'subject_rf' => 'Субъект РФ',
+            'iogv' => 'ИОГВ'
         ];
     }
 

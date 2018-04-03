@@ -32,6 +32,12 @@ function loadAnother(orgId){
             }else{
                 $('#sideagr-subject_rf').prop('checked',false);
             }
+
+            if(res.data.iogv){
+                $('#sideagr-iogv').prop('checked',true);
+            }else{
+                $('#sideagr-iogv').prop('checked',false);
+            }
         }
     });
 }

@@ -23,7 +23,8 @@ use common\models\Region;
  * @property string $target
  * @property string $iogv_id        // iogv_id пользователя, создавшего Командировку
  * @property int $duty_man_id
- * @property int $organization_id
+ * @property string $contol_date
+ * @property string $report_date
 
  *
  * @property Country $country
@@ -72,8 +73,8 @@ class MissionBase extends \yii\db\ActiveRecord
             ['status', 'filter', 'filter' => 'intval'],
             [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end', 'organization_id', 'duty_man_id'], 'required'],
             [['name', 'target', 'iogv_id', 'city', 'cityName', 'notes'], 'string'],
-            [['date_start', 'date_end', 'report_date', 'agreementsArray'], 'safe'],
-            [['visible'], 'boolean'],
+            [['date_start', 'date_end', 'report_date', 'contol_date', 'agreementsArray'], 'safe'],
+            [['visible', 'with_boss'], 'boolean'],
             [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['visible'], 'default', 'value' => true],
             [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at', 'organization_id', 'city_id', 'status'], 'integer'],
@@ -117,7 +118,9 @@ class MissionBase extends \yii\db\ActiveRecord
             'city_id' => 'Город',
             'notes' => 'Служебные пометки',
             'status' => 'Статус командировки',
-            'report_date' => 'Дата предоставления отчета'
+            'report_date' => 'Дата предоставления отчета',
+            'contol_date' => 'Контрольный срок',
+            'with_boss' => 'С участием главы ИОГВ'
         ];
     }
 

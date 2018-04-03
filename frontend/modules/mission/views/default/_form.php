@@ -94,6 +94,10 @@ use yii\jui\AutoComplete;
         ]
     ]) ?>
 
+    <?php if(!$model->isNewRecord): ?>
+        <?= $form->field($model, 'contol_date')->textInput(['readonly' => true]); ?>
+    <?php endif ;?>
+
     <?= $form->field($model, 'report_date')->widget(DatePicker::class, [
         'type' => DatePicker::TYPE_INPUT,
         'pluginOptions' => [

@@ -62,6 +62,11 @@ class MissionSearch extends Mission
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            /*
+            'sort' => [
+                'defaultOrder' => ['created_at' => SORT_DESC],
+            ]
+            */
         ]);
 
         $this->load($params);
@@ -111,6 +116,8 @@ class MissionSearch extends Mission
         if(isset($this->member_text)){
             $query->andFilterWhere(['ilike', 'employee.fio', $this->member_text]);
         }
+
+        $query->orderBy(['mission.created_at' => SORT_DESC]);
 
         return $dataProvider;
     }

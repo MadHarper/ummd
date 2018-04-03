@@ -9,6 +9,7 @@ use yii\web\JsExpression;
 use common\models\Employee;
 use common\models\Country;
 use yii\helpers\Url;
+use frontend\core\services\CheckMissionControlDate;
 
 
 
@@ -194,6 +195,14 @@ $this->title = 'Командировки';
         'gridOptions'=>[
             'dataProvider'=>$dataProvider,
             'filterModel'=>$searchModel,
+            'rowOptions' => function ($model, $key, $index, $grid)
+            {
+                $checkMissionControlDate = new CheckMissionControlDate($model->id);
+                if($style = $checkMissionControlDate->checkForGrid($model))
+                {
+                   return $style;
+                }
+            },
             'showPageSummary'=>true,
             'floatHeader'=>false,
             'pjax'=>false,

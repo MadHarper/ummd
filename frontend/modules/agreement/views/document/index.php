@@ -52,7 +52,8 @@ $this->params['breadcrumbs'][] = 'Документы';
                 //'options' => ['placeholder' => 'Enter birth date ...'],
                 'type' => DatePicker::TYPE_COMPONENT_APPEND,
                 'pluginOptions' => [
-                    'autoclose'=>true
+                    'autoclose'=>true,
+                    'format'    => 'yyyy-mm-dd'
                 ]
             ]);
 

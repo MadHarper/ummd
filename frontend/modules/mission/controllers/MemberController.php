@@ -13,6 +13,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Mission;
+use frontend\core\services\CheckMissionControlDate;
 
 /**
  * MemberController implements the CRUD actions for MissionEmployee model.
@@ -87,6 +88,8 @@ class MemberController extends \frontend\components\BaseController
         }
 
         $missionEmployee->delete();
+        $checkControlDate = new CheckMissionControlDate($mission->id);
+        $checkControlDate->check();
 
         return $this->redirect(['index', 'missionId' => $mission->id]);
     }
@@ -102,9 +105,16 @@ class MemberController extends \frontend\components\BaseController
 
             if($form->load(Yii::$app->request->post())){
 
+                $mission = Mission::find()->where(['id' => $form->mission_id])->one();
+                if(!$mission){
+                    return ['result' => 'error', 'errors' => 'Командировка не найдена или вы не имеете прав'];
+                }
+
                 $errors = $form->save();
 
                 if(!$errors){
+                    $checkControlDate = new CheckMissionControlDate($form->mission_id);
+                    $checkControlDate->check();
                     return ['result' => 'success'];
                 }
 

@@ -16,6 +16,7 @@ use common\models\Agreement;
 use frontend\services\EmployeeOptionsGenerator;
 use common\models\City;
 use frontend\core\services\MissionStatusService;
+use frontend\core\services\CheckMissionControlDate;
 
 /**
  * DefaultController implements the CRUD actions for Mission model.
@@ -94,6 +95,8 @@ class DefaultController  extends \frontend\components\BaseController
         $model->iogv_id = Yii::$app->user->identity->iogv_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $checkControlDate = new CheckMissionControlDate($model->id);
+            $checkControlDate->check();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -135,6 +138,8 @@ class DefaultController  extends \frontend\components\BaseController
             try{
                 $statusService->checkNewStatus($model);
                 $model->save();
+                $checkControlDate = new CheckMissionControlDate($model->id);
+                $checkControlDate->check();
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch (\DomainException $exception){
                 \Yii::$app->session->setFlash('error', $exception->getMessage());

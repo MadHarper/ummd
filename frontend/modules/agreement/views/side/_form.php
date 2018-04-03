@@ -84,6 +84,8 @@ use common\models\Employee;
 
     <?= $form->field($model, 'subject_rf')->checkbox(['disabled' => true]) ?>
 
+    <?= $form->field($model, 'iogv')->checkbox(['disabled' => true]) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
