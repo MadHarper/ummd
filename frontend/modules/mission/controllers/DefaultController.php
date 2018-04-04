@@ -138,8 +138,15 @@ class DefaultController  extends \frontend\components\BaseController
             try{
                 $statusService->checkNewStatus($model);
                 $model->save();
+
+                // проверяем контрольную дату
                 $checkControlDate = new CheckMissionControlDate($model->id);
                 $checkControlDate->check();
+
+                // проверяем статус командировки
+                $missionStatusSerice = new MissionStatusService();
+                $missionStatusSerice->checkAndChangeStatus($model);
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch (\DomainException $exception){
                 \Yii::$app->session->setFlash('error', $exception->getMessage());

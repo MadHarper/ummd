@@ -94,6 +94,25 @@ class MissionStatusService
 
          return true;
     }
+
+
+    public function checkAndChangeStatus(Mission $model)
+    {
+        $today = date('Y-m-d');
+
+        if($model->date_end > $today && MissionStatusService::STATUS_IN_ACTION === $model->status ){
+            $model->status = MissionStatusService::STATUS_DONE;
+            $model->save();
+            return;
+        }
+
+        if($model->date_start >= $today && $today <= $model->date_end && MissionStatusService::STATUS_AGREDD === $model->status ){
+            $model->status = MissionStatusService::STATUS_IN_ACTION;
+            $model->save();
+        }
+
+        return;
+    }
 }
 
 
