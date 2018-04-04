@@ -2,12 +2,15 @@
 
 namespace frontend\modules\mission\controllers;
 
+use common\models\Document;
+use common\models\Mission;
+use common\models\MissionEmployee;
 use Yii;
 use yii\filters\VerbFilter;
-use yii2tech\spreadsheet\Spreadsheet;
 use yii\web\NotFoundHttpException;
-use yii\data\ArrayDataProvider;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 /**
  * DefaultController implements the CRUD actions for Mission model.
@@ -40,92 +43,126 @@ class ExcellController  extends \frontend\components\BaseController
 
 
 
-    public function actionIndex()
-    {
-        $exporter = (new Spreadsheet([
-            'title' => 'Sheet 1',
-            'dataProvider' => new ArrayDataProvider([
-                'allModels' => [
-                    [
-                        'column1' => '1.1',
-                        'column2' => '1.2',
-                        'column3' => '1.3',
-                        'column4' => '1.4',
-                        'column5' => '1.5',
-                        'column6' => '1.6',
-                        'column7' => '1.7',
-                    ],
-                    [
-                        'column1' => '2.1',
-                        'column2' => '2.2',
-                        'column3' => '2.3',
-                        'column4' => '2.4',
-                        'column5' => '2.5',
-                        'column6' => '2.6',
-                        'column7' => '2.7',
-                    ],
-                ],
-            ]),
-            'headerColumnUnions' => [
-                [
-                    'header' => 'Skip 1 column and group 2 next',
-                    'offset' => 1,
-                    'length' => 2,
-                ],
-                [
-                    'header' => 'Skip 2 columns and group 2 next',
-                    'offset' => 2,
-                    'length' => 2,
-                ],
-            ],
-        ]))->render();
+
+
+    public function actionDownload($missionId){
+        if(!$mission = Mission::find()->where(['id' => $missionId])->one()){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+
+        $spreadsheet = new Spreadsheet();
+
+        $spreadsheet->getProperties()->setCreator('PhpOffice')
+            ->setLastModifiedBy('PhpOffice')
+            ->setTitle('Командировка - ' . $mission->name)
+            ->setSubject('Командировка - ' . $mission->name)
+            ->setDescription('')
+            ->setKeywords('')
+            ->setCategory('');
+
+
+        // Вкладка командировка
+        $activeSheet = $spreadsheet->getActiveSheet();
+        $activeSheet->setTitle("Командировка");
+
+        $spreadsheet->setActiveSheetIndex(0);
+        $activeSheet = $spreadsheet->getActiveSheet();
+
+        $activeSheet->getDefaultColumnDimension()->setWidth(16);
+        $activeSheet->setCellValue('A1', "Наименование")->getStyle('A1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('A2', $mission->name);
+        $activeSheet->setCellValue('B1', "Дата начала")->getStyle('B1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('B2', $mission->date_start);
+        $activeSheet->setCellValue('C1', "Дата окончания")->getStyle('C1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('C2', $mission->date_end);
+        $activeSheet->setCellValue('D1', "Страна")->getStyle('D1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('D2', $mission->country->name);
+
+
+        $region = isset($mission->region_id) ? $mission->region->name : " - ";
+        $activeSheet->setCellValue('E1', "Регион")->getStyle('E1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('E2', $region);
+
+        $city = isset($mission->city_id) ? $mission->town->name : " - ";
+        $activeSheet->setCellValue('F1', "Город")->getStyle('F1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('F2', $city);
+
+        $activeSheet->setCellValue('G1', "Приказ")->getStyle('G1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('G2', $mission->order);
+        $activeSheet->setCellValue('H1', "Организация")->getStyle('H1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('H2', $mission->organization->name);
+        $activeSheet->setCellValue('I1', "Отв. за отчет")->getStyle('I1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('I2', $mission->dutyMan->fio);
+        $activeSheet->setCellValue('J1', "Служ. пометки")->getStyle('J1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('J2', $mission->notes);
+        $activeSheet->setCellValue('K1', "Дата предоставления отчета")->getStyle('K1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('K2', $mission->report_date);
+        $activeSheet->setCellValue('L1', "Контрольный срок")->getStyle('L1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('L2', $mission->contol_date);
 
 
 
-        $exporter->configure([
-            'title' => 'Sheet2',
-            'dataProvider' => new ArrayDataProvider([
-                'allModels' => [
-                    [
-                        'column1' => 'Wee',
-                        'column2' => 'sdfsdf',
-                        'column3' => 'sdfsdf',
-                        'column4' => 'sdf',
-                        'column5' => 'sdf',
-                        'column6' => 'sdf',
-                        'column7' => 'sdf',
-                    ],
-                    [
-                        'column1' => 'sdf',
-                        'column2' => 'sdf',
-                        'column3' => 'sdf',
-                        'column4' => 'sdf',
-                        'column5' => 'sdf',
-                        'column6' => 'sdf',
-                        'column7' => 'asdasdasd',
-                    ],
-                ],
-            ]),
-            'headerColumnUnions' => [
-                [
-                    'header' => 'Skip 1 column and group 2 next',
-                    'offset' => 1,
-                    'length' => 2,
-                ],
-                [
-                    'header' => 'Skip 2 columns and group 2 next',
-                    'offset' => 2,
-                    'length' => 2,
-                ],
-            ],
-        ])->render();
 
-        //return $exporter->send('name.xlsx');
+        // Вкладка Участники
+        $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex(1);
+        $activeSheet = $spreadsheet->getActiveSheet();
+        $activeSheet->getDefaultColumnDimension()->setWidth(30);
+        $activeSheet->setTitle("Участники");
 
-        //Использовать таймштамп для имени
-        $path = \Yii::getAlias('@common/excel/file.xlsx');
-        //$exporter->save($path);
-        return $exporter->send('items.xlsx');
+        $employess = $mission->employesEntity;
+
+        $activeSheet->setCellValue('A1', "Ф.И.О")->getStyle('A1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('B1', "Должность")->getStyle('B1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('C1', "Организация")->getStyle('C1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('D1', "Роль")->getStyle('D1')->getFont()->setBold(true);;
+
+
+        $cnt = 2;
+        foreach($employess as $emp){
+
+            $activeSheet->setCellValue("A$cnt", $emp->fio);
+            $activeSheet->setCellValue("B$cnt", $emp->position);
+            $activeSheet->setCellValue("C$cnt", $emp->organization->name);
+
+            $me = MissionEmployee::find()->where(['mission_id' => $mission->id, 'employee_id' => $emp->id])->one();
+            $activeSheet->setCellValue("D$cnt", $me->memberMissionRole);
+
+            $cnt++;
+        }
+
+        // Вкладка Документы
+        $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex(2);
+        $activeSheet = $spreadsheet->getActiveSheet();
+        $activeSheet->getDefaultColumnDimension()->setWidth(30);
+        $activeSheet->setTitle("Документы");
+
+        $activeSheet->setCellValue('A1', "Наименование документа")->getStyle('A1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('B1', "Дата документа")->getStyle('B1')->getFont()->setBold(true);;
+        $activeSheet->setCellValue('C1', "Тип документа")->getStyle('C1')->getFont()->setBold(true);;
+
+        $docs = Document::find()->where(['visible' => true, 'model' => Mission::className(), 'model_id' => $mission->id])->all();
+        $cnt = 2;
+        foreach($docs as $doc){
+            $activeSheet->setCellValue("A$cnt", $doc->name);
+            $activeSheet->setCellValue("B$cnt", $doc->doc_date);
+
+            if($doc->docType){
+                $activeSheet->setCellValue("C$cnt", $doc->docType->name);
+            }else{
+                $activeSheet->setCellValue("C$cnt", " - ");
+            }
+            $cnt++;
+        }
+
+
+        $path = \Yii::getAlias('@common/excel/komandirovka.xlsx');
+
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save($path);
 
         if(file_exists($path)){
             return \Yii::$app->response->sendFile($path);

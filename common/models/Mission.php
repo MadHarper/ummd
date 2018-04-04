@@ -112,6 +112,12 @@ class Mission extends \common\models\base\MissionBase implements WithDocumentInt
         return $this->hasOne(Region::className(), ['id' => 'region_id']);
     }
 
+    public function getTown()
+    {
+        return $this->hasOne(City::className(), ['id' => 'city_id']);
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -206,5 +212,11 @@ class Mission extends \common\models\base\MissionBase implements WithDocumentInt
     public function getIogvId()
     {
         return $this->iogv_id;
+    }
+
+    public function getEmployesEntity()
+    {
+        return $this->hasMany(Employee::className(), ['id' => 'employee_id'])
+            ->viaTable('mission_employee', ['mission_id' => 'id']);
     }
 }

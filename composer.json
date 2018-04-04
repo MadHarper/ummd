@@ -33,7 +33,7 @@
         "yii2mod/yii2-chosen-select": "*",
         "lavrentiev/yii2-toastr": "dev-master",
         "kartik-v/yii2-widget-fileinput": "@dev",
-        "yii2tech/spreadsheet": "^1.0@dev"
+        "moonlandsoft/yii2-phpexcel": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -22,7 +22,7 @@ class DocUploadForm extends Model
     public function rules()
     {
         return [
-            [['document'], 'file', 'skipOnEmpty' => false, 'extensions' => 'docx, doc, jpeg, jpg, gif, png'],
+            [['document'], 'file', 'skipOnEmpty' => false, 'extensions' => 'docx, doc, jpeg, jpg, gif, png, pdf'],
             [['type', 'name'], 'required'],
             [['type'], 'integer'],
             [['name', 'note'], 'string'],

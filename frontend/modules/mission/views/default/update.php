@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = 'Редактировать';
             <button id="w10" class="btn btn-default dropdown-toggle" title="Экспорт" data-toggle="dropdown" aria-expanded="true"><i class="glyphicon glyphicon-export"></i>  <span class="caret"></span></button>
 
             <ul id="w11" class="dropdown-menu dropdown-menu-right"><li role="presentation" class="dropdown-header">Экспорт данных с текущей страницы</li>
-                <li title="Microsoft Excel 95+"><a class="export-xls" href="#" tabindex="-1"><i class="text-success glyphicon glyphicon-floppy-remove"></i> Excel</a></li>
+                <li title="Microsoft Excel 95+"><a class="export-xls" href="<?= Url::to(['/mission/excell/download', 'missionId' => $model->id]);?>" target="_blank" tabindex="-1"><i class="text-success glyphicon glyphicon-floppy-remove"></i> Excel</a></li>
             </ul>
         </div>
     </div>
