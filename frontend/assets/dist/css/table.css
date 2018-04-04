@@ -91,3 +91,7 @@
 .unvisible_field{
     display: none;
 }
+
+.excell_entity_export{
+    margin-top: 8px;
+}

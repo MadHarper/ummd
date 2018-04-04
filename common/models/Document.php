@@ -94,7 +94,7 @@ class Document extends \yii\db\ActiveRecord
             'updated_at' => 'Обновлен',
             'status' => 'Статус',
             'iogv_id' => 'ID подразделения',
-            'name' => 'Имя',
+            'name' => 'Название документа',
             'doc_type_id' => 'Тип документа',
             'doc_date' => 'Дата документа',
             'note' => 'Примечание'

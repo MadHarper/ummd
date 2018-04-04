@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = 'Редактировать';
 ?>
 
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-5">
     </div>
 
     <div class="col-lg-3">
@@ -54,8 +54,18 @@ $this->params['breadcrumbs'][] = 'Редактировать';
             </div>
         </a>
     </div>
+    <div class="col-lg-1">
+        <div class="btn-group excell_entity_export">
+            <button id="w10" class="btn btn-default dropdown-toggle" title="Экспорт" data-toggle="dropdown" aria-expanded="true"><i class="glyphicon glyphicon-export"></i>  <span class="caret"></span></button>
 
+            <ul id="w11" class="dropdown-menu dropdown-menu-right"><li role="presentation" class="dropdown-header">Экспорт данных с текущей страницы</li>
+                <li title="Microsoft Excel 95+"><a class="export-xls" href="#" tabindex="-1"><i class="text-success glyphicon glyphicon-floppy-remove"></i> Excel</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
+
+
 
 
 <div class="mission-update">
