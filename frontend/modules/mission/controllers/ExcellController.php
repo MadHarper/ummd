@@ -43,9 +43,53 @@ class ExcellController  extends \frontend\components\BaseController
 
 
 
+    public function actionIndex($missionId)
+    {
+        if(!$mission = Mission::find()->where(['id' => $missionId])->one()){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
 
 
-    public function actionDownload($missionId){
+
+        $spreadsheet = new Spreadsheet();  /*----Spreadsheet object-----*/
+        $Excel_writer = new Xls($spreadsheet);
+
+
+        $spreadsheet->setActiveSheetIndex(0);
+        $activeSheet = $spreadsheet->getActiveSheet();
+
+        $activeSheet->setTitle("Shitttt");
+        $activeSheet->setCellValue('A1' , 'New file content')->getStyle('A1')->getFont()->setBold(true);
+
+
+
+        $spreadsheet->setActiveSheetIndex(1);
+        $activeSheet = $spreadsheet->getActiveSheet();
+        $activeSheet->setCellValue('B1' , 'Another')->getStyle('B1')->getFont()->setBold(true);
+
+
+
+        //header('Content-Type: application/vnd.ms-excel');
+        //header('Content-Disposition: attachment;filename="'. 'экспорт' .'.xls"'); /*-- $filename is  xsl filename ---*/
+        //header('Cache-Control: max-age=0');
+
+//        $Excel_writer->save('php://output');
+//        exit;
+
+        $path = \Yii::getAlias('@common/excel/file.xls');
+        $Excel_writer->save($path);
+        //return $exporter->send('items.xlsx');
+
+        if(file_exists($path)){
+            return \Yii::$app->response->sendFile($path);
+        }else{
+            throw new NotFoundHttpException('Такого файла не существует ');
+        }
+    }
+
+
+
+    public function actionSecond($missionId){
         if(!$mission = Mission::find()->where(['id' => $missionId])->one()){
             throw new NotFoundHttpException('The requested page does not exist.');
         }
@@ -53,19 +97,21 @@ class ExcellController  extends \frontend\components\BaseController
 
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('PhpOffice')
-            ->setLastModifiedBy('PhpOffice')
-            ->setTitle('Командировка - ' . $mission->name)
-            ->setSubject('Командировка - ' . $mission->name)
-            ->setDescription('')
-            ->setKeywords('')
-            ->setCategory('');
+//        $spreadsheet->getProperties()->setCreator('PhpOffice')
+//            ->setLastModifiedBy('PhpOffice')
+//            ->setTitle('Office 2007 XLSX Test Document')
+//            ->setSubject('Office 2007 XLSX Test Document')
+//            ->setDescription('PhpOffice')
+//            ->setKeywords('PhpOffice')
+//            ->setCategory('PhpOffice');
 
 
         // Вкладка командировка
-        $spreadsheet->setActiveSheetIndex(0);
         $activeSheet = $spreadsheet->getActiveSheet();
         $activeSheet->setTitle("Командировка");
+
+        $spreadsheet->setActiveSheetIndex(0);
+        $activeSheet = $spreadsheet->getActiveSheet();
 
         $activeSheet->getDefaultColumnDimension()->setWidth(16);
         $activeSheet->setCellValue('A1', "Наименование")->getStyle('A1')->getFont()->setBold(true);;
@@ -78,7 +124,12 @@ class ExcellController  extends \frontend\components\BaseController
         $activeSheet->setCellValue('D2', $mission->country->name);
 
 
-        $region = isset($mission->region_id) ? $mission->region->name : " - ";
+        if(isset($mission->region_id) && $mission->region){
+            $region = $mission->region->name;
+        }else{
+            $region = "";
+        }
+
         $activeSheet->setCellValue('E1', "Регион")->getStyle('E1')->getFont()->setBold(true);;
         $activeSheet->setCellValue('E2', $region);
 
@@ -156,7 +207,7 @@ class ExcellController  extends \frontend\components\BaseController
         }
 
 
-        $path = \Yii::getAlias('@common/excel/komandirovka.xlsx');
+        $path = \Yii::getAlias('@common/excel/file.xlsx');
 
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
