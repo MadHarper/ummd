@@ -141,6 +141,8 @@ class TorisAuthService
             }
         }
 
+        //@session_regenerate_id(true);
+
         Yii::$app->user->login($user, 3600 * 24 * 30);
 
         return true;

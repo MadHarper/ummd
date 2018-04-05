@@ -35,6 +35,15 @@ class Document extends \yii\db\ActiveRecord
     const STATUS_NOT_PROCESSED = 1;
     const STATUS_YES_PROCESSED = 2;
 
+    const AGREEMENT_ENTITY = 1;
+    const MISSION_ENTITY = 2;
+    const TALK_ENTITY = 3;
+
+    const LINKED_ENTYTIES = [
+        self::AGREEMENT_ENTITY  => 'Соглашения',
+        self::MISSION_ENTITY    => 'Командировки',
+        //self::TALK_ENTITY       => 'Беседы',
+    ];
 
 
     /**
@@ -118,4 +127,23 @@ class Document extends \yii\db\ActiveRecord
     {
         return $this->hasOne(DocumentType::className(), ['id' => 'doc_type_id']);
     }
+
+    public static function likedEntitieName(int $number)
+    {
+        if(isset(self::LINKED_ENTYTIES[$number])){
+            return self::LINKED_ENTYTIES[$number];
+        }
+
+        return "";
+    }
+
+    public static function linkedModels()
+    {
+        return [
+            self::AGREEMENT_ENTITY  => Agreement::className(),
+            self::MISSION_ENTITY    => Mission::className(),
+            //self::TALK_ENTITY     => 'Беседы',
+        ];
+    }
+
 }

@@ -2,6 +2,8 @@
 
 namespace frontend\models\search;
 
+use common\models\Agreement;
+use common\models\Mission;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -16,6 +18,7 @@ class DocumentSearch extends Document
 
     public $parsed_content;
     public $doc_date_range;
+    public $entity_type;
 
 
     /**
@@ -25,7 +28,7 @@ class DocumentSearch extends Document
     {
         return [
             [['id', 'model_id', 'created_at', 'updated_at', 'doc_type_id'], 'integer'],
-            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link', 'parsed_content', 'iogv_id', 'name', 'doc_type_id', 'doc_date', 'doc_date_range'], 'safe'],
+            [['model', 'content', 'description', 'origin_name', 'sea_name', 'link', 'parsed_content', 'iogv_id', 'name', 'doc_type_id', 'doc_date', 'doc_date_range', 'entity_type'], 'safe'],
             [['visible'], 'boolean'],
         ];
     }
@@ -170,6 +173,22 @@ class DocumentSearch extends Document
             $query->andFilterWhere(['ilike', '{{%document}}.name', $this->name]);
             $query->andFilterWhere(['{{%document}}.doc_type_id' => $this->doc_type_id]);
 
+            if(!empty($this->doc_date_range) && strpos($this->doc_date_range, '-') !== false) {
+                list($from_date_start, $to_date_start) = explode(' - ', $this->doc_date_range);
+                $query->andFilterWhere(['between', '{{%document}}.doc_date', $from_date_start, $to_date_start]);
+            }
+
+            if(isset($this->entity_type)){
+                switch ($this->entity_type) {
+                    case Document::AGREEMENT_ENTITY :
+                        $query->andFilterWhere(['{{%document}}.model' => Agreement::className()]);
+                        break;
+                    case Document::MISSION_ENTITY :
+                        $query->andFilterWhere(['{{%document}}.model' => Mission::className()]);
+                        break;
+                }
+            }
+
             $query->orderBy(['rank' => SORT_DESC]);
 
         }else{
@@ -180,6 +199,18 @@ class DocumentSearch extends Document
                 list($from_date_start, $to_date_start) = explode(' - ', $this->doc_date_range);
                 $query->andFilterWhere(['between', '{{%document}}.doc_date', $from_date_start, $to_date_start]);
             }
+
+            if(isset($this->entity_type)){
+                switch ($this->entity_type) {
+                    case Document::AGREEMENT_ENTITY :
+                        $query->andFilterWhere(['{{%document}}.model' => Agreement::className()]);
+                        break;
+                    case Document::MISSION_ENTITY :
+                        $query->andFilterWhere(['{{%document}}.model' => Mission::className()]);
+                        break;
+                }
+            }
+
 
             $query->orderBy(['created_at' => SORT_DESC]);
 

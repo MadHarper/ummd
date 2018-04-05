@@ -125,6 +125,11 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
         return $this->hasMany(SideAgr::className(), ['agreement_id' => 'id']);
     }
 
+    public function getOrganizations()
+    {
+        return $this->hasMany(Organization::className(), ['id' => 'org_id'])->viaTable('side_agr', ['agreement_id' => 'id']);
+    }
+
 
     public function getDocs()
     {
@@ -154,7 +159,9 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
         if($sides = $this->sideAgrs){
             $result = [];
             foreach ($sides as $side){
-                $result[] = $side->org->cityModel;
+                if($side->org->cityModel){
+                    $result[] = $side->org->cityModel;
+                }
             }
 
             return $result;

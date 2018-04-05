@@ -42,6 +42,11 @@ $this->title = 'Соглашения';
                     //'order'=>DynaGrid::ORDER_FIX_LEFT
                 ],
                 [
+                    'attribute'=>'desc',
+                    'vAlign'=>'middle',
+                    //'order'=>DynaGrid::ORDER_FIX_LEFT
+                ],
+                [
                     'attribute'=>'status',
                     'vAlign'=>'middle',
                     'width'=>'150px',
@@ -201,6 +206,44 @@ $this->title = 'Соглашения';
                     },
                     'filter' => [0 => "Нет", 1 => "Есть"]
                 ],
+//                [
+//                    'attribute'=>'subject_rf',
+//                    'vAlign'=>'middle',
+//                    'label' => 'Субъект РФ'
+//                    'content' => function($data){
+//                        $hasSubject = false;
+//                        $sideAgrs = $data->sideAgrs;
+//                        if($sideAgrs){
+//                            foreach($sideAgrs as $organization){
+//                                if($organization->subject_rf){
+//                                    $hasSubject = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        return $hasSubject ? "Субъект РФ" : "-";
+//                    },
+//                    'filter' => [0 => "Все", 1 => "Субъект РФ"];
+//                ],
+                [
+                    'attribute'=>'subject_rf',
+                    'vAlign'=>'middle',
+                    'label' => 'Субъект РФ',
+                    'content' => function($data){
+                        $hasSubject = false;
+                        $organizations = $data->organizations;
+                        if($organizations){
+                            foreach($organizations as $org){
+                                if($org->subject_rf){
+                                    $hasSubject = true;
+                                    break;
+                                }
+                            }
+                        }
+                        return $hasSubject ? "Субъект РФ" : "-";
+                    },
+                    'filter' => [0 => "Все", 1 => "Субъект РФ"]
+                ],
                 [
                     'attribute'=>'country',
                     'vAlign'=>'middle',
@@ -252,7 +295,8 @@ $this->title = 'Соглашения';
                     'vAlign'=>'middle',
                     'content' => function($data){
                         $str = '';
-                        if($cities = $data->cities){
+                        $cities = $data->cities;
+                        if($cities){
                             $n = 1;
                             foreach ($cities as $city){
                                 $str .= "<div class='intable_list'>";
@@ -296,7 +340,8 @@ $this->title = 'Соглашения';
             'allowThemeSetting' => false,
             'allowFilterSetting' => false,
             'allowSortSetting' => false,
-            'storage' => 'session',
+            //'storage' => 'db',
+            'storage' => 'cookie',
             'gridOptions'=>[
                 'dataProvider'=>$dataProvider,
                 'filterModel'=>$searchModel,
@@ -314,7 +359,7 @@ $this->title = 'Соглашения';
                     '{export}',
                 ]
             ],
-            'options'=>['id'=>'dynagrid-1'] // a unique identifier is important
+            'options'=>['id'=>'dynagrid-agreem'] // a unique identifier is important
         ]);
         if (substr($dynagrid->theme, 0, 6) == 'simple') {
             $dynagrid->gridOptions['panel'] = false;

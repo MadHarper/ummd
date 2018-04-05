@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\DocumentType;
 use kartik\daterange\DateRangePicker;
+use common\models\Document;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\search\DocumentSearch */
@@ -51,6 +52,9 @@ use kartik\daterange\DateRangePicker;
                                                 ->indexBy('id')
                                                 ->column(), ['prompt' => '...']) ?>
 
+    <?php echo $form->field($model, 'entity_type')
+        ->dropDownList(Document::LINKED_ENTYTIES, ['prompt' => '...'])->label('Связанная сущность') ?>
+
     <?php // echo $form->field($model, 'sea_name') ?>
 
     <?php // echo $form->field($model, 'link') ?>
@@ -63,7 +67,7 @@ use kartik\daterange\DateRangePicker;
 
     <div class="form-group">
         <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Очистить', ['class' => 'btn btn-default']) ?>
+        <?php //echo Html::resetButton('Очистить', ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -106,9 +106,20 @@ class AgreementSearch extends Agreement
             'agreement.updated_at' => $this->updated_at,
         ]);
 
+
         if(isset($this->organization)){
             $query->andFilterWhere([
                 'side_agr.org_id' => $this->organization,
+            ]);
+        }
+
+        if(isset($this->desc)){
+            $query->andFilterWhere(['ilike', 'agreement.desc', $this->desc]);
+        }
+
+        if(isset($this->subject_rf)){
+            $query->andFilterWhere([
+                'organization.subject_rf' => $this->subject_rf
             ]);
         }
 

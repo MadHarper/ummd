@@ -47,6 +47,7 @@ return [
         ],
         'user' => [
             'identityClass' => UserToris::class,
+            //'enableAutoLogin' => false,
             'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
             'loginUrl' => ['/site/login']

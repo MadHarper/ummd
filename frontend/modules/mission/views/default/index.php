@@ -191,7 +191,8 @@ $this->title = 'Командировки';
         'allowThemeSetting' => false,
         'allowFilterSetting' => false,
         'allowSortSetting' => false,
-        'storage' => 'session',
+        //'storage' => 'db',
+        'storage' => 'cookie',
         'gridOptions'=>[
             'dataProvider'=>$dataProvider,
             'filterModel'=>$searchModel,
@@ -217,7 +218,7 @@ $this->title = 'Командировки';
                 '{export}',
             ]
         ],
-        'options'=>['id'=>'dynagrid-1'] // a unique identifier is important
+        'options'=>['id'=>'dynagrid-mission'] // a unique identifier is important
     ]);
     if (substr($dynagrid->theme, 0, 6) == 'simple') {
         $dynagrid->gridOptions['panel'] = false;

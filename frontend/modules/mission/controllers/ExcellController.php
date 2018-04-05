@@ -63,11 +63,9 @@ class ExcellController  extends \frontend\components\BaseController
 
 
         // Вкладка командировка
-        $activeSheet = $spreadsheet->getActiveSheet();
-        $activeSheet->setTitle("Командировка");
-
         $spreadsheet->setActiveSheetIndex(0);
         $activeSheet = $spreadsheet->getActiveSheet();
+        $activeSheet->setTitle("Командировка");
 
         $activeSheet->getDefaultColumnDimension()->setWidth(16);
         $activeSheet->setCellValue('A1', "Наименование")->getStyle('A1')->getFont()->setBold(true);;

@@ -5,6 +5,7 @@ use yii\grid\GridView;
 use yii\helpers\Url;
 use common\models\Agreement;
 use common\models\Mission;
+use common\models\Document;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\DocumentSearch */
@@ -56,20 +57,41 @@ $this->title = 'Документы';
                 'filter' => false,
             ],
             [
-                'attribute'=>'status',
+                'attribute' =>'entity_type',
+                'label' => 'Связанная сущность',
                 'content' => function($data){
-                    if($data->status === \common\models\Document::STATUS_NOT_PROCESSED){
-                        return "<i class='fa fa-hourglass-start' aria-hidden='true'></i>
-                                <span class='doc_not_done'>В обработке</span>";
-                    }
-                    if($data->status === \common\models\Document::STATUS_YES_PROCESSED){
-                        return "<i class='fa fa-check-square-o' aria-hidden='true'></i>
-                                <span class='doc_done'>Загружен</span>";
+                    switch ($data->model) {
+                        case Agreement::className() :
+                            return "<a href='". Url::to(['/agreement/default/view', 'id' => $data->model_id]) ."'>
+                                        <span>Соглашение</span>
+                                    </a>";
+                            break;
+                        case Mission::className() :
+                            return "<a href='". Url::to(['/mission/default/view', 'id' => $data->model_id]) ."'>
+                                        <span>Командировка</span>
+                                    </a>";;
+                            break;
+                        default:
+                            return "";
                     }
                 },
                 'filter' => false,
-                'format' => 'html'
             ],
+//            [
+//                'attribute'=>'status',
+//                'content' => function($data){
+//                    if($data->status === \common\models\Document::STATUS_NOT_PROCESSED){
+//                        return "<i class='fa fa-hourglass-start' aria-hidden='true'></i>
+//                                <span class='doc_not_done'>В обработке</span>";
+//                    }
+//                    if($data->status === \common\models\Document::STATUS_YES_PROCESSED){
+//                        return "<i class='fa fa-check-square-o' aria-hidden='true'></i>
+//                                <span class='doc_done'>Загружен</span>";
+//                    }
+//                },
+//                'filter' => false,
+//                'format' => 'html'
+//            ],
             [
                 'attribute'=>'note',
                 'filter' => false,
