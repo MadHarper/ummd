@@ -2,6 +2,7 @@
 
 namespace frontend\modules\catalog\controllers;
 
+use common\models\Mission;
 use Yii;
 use common\models\Region;
 use common\models\search\RegionSearch;
@@ -112,7 +113,13 @@ class RegionController extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $region = $this->findModel($id);
+        $mission = Mission::find()->where(['region_id' => $id])->all();
+        if($mission){
+            \Yii::$app->session->setFlash('error', 'Нельзя удалить регион. Есть связи с другими сущностями');
+        }else{
+            $region->delete();
+        }
 
         return $this->redirect(['index']);
     }

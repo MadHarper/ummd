@@ -43,53 +43,7 @@ class ExcellController  extends \frontend\components\BaseController
 
 
 
-    public function actionIndex($missionId)
-    {
-        if(!$mission = Mission::find()->where(['id' => $missionId])->one()){
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-
-
-
-        $spreadsheet = new Spreadsheet();  /*----Spreadsheet object-----*/
-        $Excel_writer = new Xls($spreadsheet);
-
-
-        $spreadsheet->setActiveSheetIndex(0);
-        $activeSheet = $spreadsheet->getActiveSheet();
-
-        $activeSheet->setTitle("Shitttt");
-        $activeSheet->setCellValue('A1' , 'New file content')->getStyle('A1')->getFont()->setBold(true);
-
-
-
-        $spreadsheet->setActiveSheetIndex(1);
-        $activeSheet = $spreadsheet->getActiveSheet();
-        $activeSheet->setCellValue('B1' , 'Another')->getStyle('B1')->getFont()->setBold(true);
-
-
-
-        //header('Content-Type: application/vnd.ms-excel');
-        //header('Content-Disposition: attachment;filename="'. 'экспорт' .'.xls"'); /*-- $filename is  xsl filename ---*/
-        //header('Cache-Control: max-age=0');
-
-//        $Excel_writer->save('php://output');
-//        exit;
-
-        $path = \Yii::getAlias('@common/excel/file.xls');
-        $Excel_writer->save($path);
-        //return $exporter->send('items.xlsx');
-
-        if(file_exists($path)){
-            return \Yii::$app->response->sendFile($path);
-        }else{
-            throw new NotFoundHttpException('Такого файла не существует ');
-        }
-    }
-
-
-
-    public function actionSecond($missionId){
+    public function actionDownload($missionId){
         if(!$mission = Mission::find()->where(['id' => $missionId])->one()){
             throw new NotFoundHttpException('The requested page does not exist.');
         }
