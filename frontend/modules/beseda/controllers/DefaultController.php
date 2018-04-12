@@ -1,35 +1,27 @@
 <?php
 
-namespace frontend\modules\catalog\controllers;
+namespace frontend\modules\beseda\controllers;
 
-use common\models\Organization;
 use Yii;
-use common\models\City;
-use common\models\search\CitySearch;
+use common\models\Beseda;
+use common\models\search\BesedaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use toris\yii2Widgets\typeAheadAddress\AddressAction;
+use frontend\core\services\BesedaStatusService;
 
 /**
- * CityController implements the CRUD actions for City model.
+ * DefaultController implements the CRUD actions for Beseda model.
  */
-class CityController extends \frontend\components\BaseController
+class DefaultController extends \frontend\components\BaseController
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => \yii\filters\AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['viewDirectory']
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -39,13 +31,22 @@ class CityController extends \frontend\components\BaseController
         ];
     }
 
+
+    public function actions()
+    {
+        return [
+            'address' => AddressAction::class,
+        ];
+    }
+
+
     /**
-     * Lists all City models.
+     * Lists all Beseda models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CitySearch();
+        $searchModel = new BesedaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -55,7 +56,7 @@ class CityController extends \frontend\components\BaseController
     }
 
     /**
-     * Displays a single City model.
+     * Displays a single Beseda model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -68,15 +69,20 @@ class CityController extends \frontend\components\BaseController
     }
 
     /**
-     * Creates a new City model.
+     * Creates a new Beseda model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new City();
+        $model = new Beseda();
+        $model->iogv_id = Yii::$app->user->identity->iogv_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $besedaStatusService = new BesedaStatusService();
+            $besedaStatusService->checkAndChangeStatus($model);
+            $besedaStatusService->checkControlDay($model);
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -86,7 +92,7 @@ class CityController extends \frontend\components\BaseController
     }
 
     /**
-     * Updates an existing City model.
+     * Updates an existing Beseda model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -97,16 +103,25 @@ class CityController extends \frontend\components\BaseController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $besedaStatusService = new BesedaStatusService();
+            $besedaStatusService->checkAndChangeStatus($model);
+            $besedaStatusService->checkControlDay($model);
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $besedaStatusService = new BesedaStatusService();
+        $availableStatuses = $besedaStatusService->getStatusListFromCurrent($model->status);
+
+
         return $this->render('update', [
             'model' => $model,
+            'availableStatuses' => $availableStatuses
         ]);
     }
 
     /**
-     * Deletes an existing City model.
+     * Deletes an existing Beseda model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -114,28 +129,21 @@ class CityController extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
-
-        $city = $this->findModel($id);
-        $organization = Organization::find()->where(['city_id' => $city->id])->all();
-        if($organization){
-            \Yii::$app->session->setFlash('error', 'Нельзя удалить город. Есть связи с организациями');
-        }else{
-            $city->delete();
-        }
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the City model based on its primary key value.
+     * Finds the Beseda model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return City the loaded model
+     * @return Beseda the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = City::findOne($id)) !== null) {
+        if (($model = Beseda::findOne($id)) !== null) {
             return $model;
         }
 

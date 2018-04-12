@@ -13,5 +13,13 @@ return [
         'upload_path'   => '@common/seafile/docs/'
     ],
 
+    'address-web' => 'https://app.toris.gov.spb.ru/address-web/rest/building/search?pAddress=',
+    'mo-web' => 'https://app.toris.gov.spb.ru/address-web/rest/get/okrugs?okrugName=',
+
+//    'geo' => [
+//        'address-web' => 'https://app.toris.gov.spb.ru/address-web/rest/building/search?pAddress=',
+//        'mo-web' => 'https://app.toris.gov.spb.ru/address-web/rest/get/okrugs?okrugName=',
+//    ],
+
     'kvs_iogv_id'       => "0100000031"
 ];

@@ -29,6 +29,9 @@ return [
         'agreement' => [
             'class' => 'frontend\modules\agreement\Module',
         ],
+        'beseda' => [
+            'class' => 'frontend\modules\beseda\Module',
+        ],
         'dynagrid'=> [
             'class'=>'\kartik\dynagrid\Module',
             // other module settings

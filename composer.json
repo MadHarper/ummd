@@ -33,7 +33,9 @@
         "yii2mod/yii2-chosen-select": "*",
         "lavrentiev/yii2-toastr": "dev-master",
         "kartik-v/yii2-widget-fileinput": "@dev",
-        "phpoffice/phpspreadsheet": "dev-master"
+        "phpoffice/phpspreadsheet": "dev-master",
+        "kartik-v/yii2-widget-timepicker": "*",
+        "toris/yii2-widgets": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
@@ -44,12 +46,17 @@
     },
 
     "config": {
-        "process-timeout": 1800
+        "process-timeout": 1800,
+        "secure-http": false
     },
     "repositories": [
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "http://git.infra.toris.vpn/nikita.klyosow/yii2-widgets.git"
         }
     ]
 }

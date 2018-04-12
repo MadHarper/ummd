@@ -17,7 +17,8 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/doc_upload.js',
         'js/side_agr.js',
-        'js/mission.js'
+        'js/mission.js',
+        'js/beseda.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
