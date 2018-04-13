@@ -34,7 +34,7 @@ class BesedaBase extends \yii\db\ActiveRecord
             [['theme', 'target', 'notes', 'iogv_id', 'address'], 'string'],
             [['created_at', 'updated_at', 'iniciator_id', 'iogv_id'], 'default', 'value' => null],
             [['status', 'created_at', 'updated_at', 'iniciator_id'], 'integer'],
-            [['date_start', 'date_start_time', 'report_date', 'control_date', 'event_time'], 'safe'],
+            [['date_start', 'date_start_time', 'report_date', 'control_date', 'event_time', 'agreementsArray'], 'safe'],
             [['iniciator_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['iniciator_id' => 'id']],
         ];
     }

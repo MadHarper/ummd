@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use toris\yii2Widgets\typeAheadAddress\AddressAction;
 use frontend\core\services\BesedaStatusService;
+use common\models\Agreement;
+
 
 /**
  * DefaultController implements the CRUD actions for Beseda model.
@@ -86,8 +88,11 @@ class DefaultController extends \frontend\components\BaseController
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $besedaAgreementArr = [];
+
         return $this->render('create', [
             'model' => $model,
+            'besedaAgreementArr' => $besedaAgreementArr
         ]);
     }
 
@@ -113,10 +118,17 @@ class DefaultController extends \frontend\components\BaseController
         $besedaStatusService = new BesedaStatusService();
         $availableStatuses = $besedaStatusService->getStatusListFromCurrent($model->status);
 
+        $besedaAgreementArr = Agreement::find()
+            ->where(['id' => $model->agreementsArray])
+            ->select("name, id")
+            ->indexBy("id")
+            ->orderBy("id")
+            ->column();
 
         return $this->render('update', [
             'model' => $model,
-            'availableStatuses' => $availableStatuses
+            'availableStatuses' => $availableStatuses,
+            'besedaAgreementArr' => $besedaAgreementArr
         ]);
     }
 
@@ -133,6 +145,24 @@ class DefaultController extends \frontend\components\BaseController
 
         return $this->redirect(['index']);
     }
+
+
+    public function actionSearchAgreement($q)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        $out['results'] = array_values((new \yii\db\Query())
+            ->select(['id', "name as text"])
+            ->from('agreement')
+            ->where(['ilike','name',$q])
+            ->limit(10)
+            ->all());
+
+        return $out;
+    }
+
+
 
     /**
      * Finds the Beseda model based on its primary key value.
