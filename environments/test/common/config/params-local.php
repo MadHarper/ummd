@@ -12,5 +12,7 @@ return [
     'tokens' => [
         'baseUrl' => 'http://paaa.toris.test.adc.spb:8080/picketlink-oauth-provider-wwwserver/token'
     ],
-    'calendarService' => 'http://svc.test.toris.vpn/productioncalendar/api/rest/calendar/v1/%YEAR%?includeNotWorkDays=true'
+    'calendarService' => 'http://svc.test.toris.vpn/productioncalendar/api/rest/calendar/v1/%YEAR%?includeNotWorkDays=true',
+    'address-web' => 'https://app.toris.gov.spb.ru/address-web/rest/building/search?pAddress=',
+    'mo-web' => 'https://app.toris.gov.spb.ru/address-web/rest/get/okrugs?okrugName=',
 ];
