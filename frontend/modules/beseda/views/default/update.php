@@ -76,8 +76,7 @@ $this->params['breadcrumbs'][] = 'Редактировать';
 
     <?= $this->render('_form', [
         'model' => $model,
-        'availableStatuses' => $availableStatuses,
-        'besedaAgreementArr' => $besedaAgreementArr
+        'availableStatuses' => $availableStatuses
     ]) ?>
 
 </div>
