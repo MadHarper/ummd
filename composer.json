@@ -56,7 +56,7 @@
         },
         {
             "type": "vcs",
-            "url": "http://git.infra.toris.vpn:toris/php/ui-modules/source/yii2-widgets.git"
+            "url": "http://git.infra.toris.vpn/toris/php/ui-modules/source/yii2-widgets.git"
         }
     ]
 }
