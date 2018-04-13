@@ -1,5 +1,6 @@
 <?php
 return [
+    'proxySettings' => null,
     'torisSettings' => [
         'full_domain'   => 'http://beta.test.toris.vpn',
         'domain'        => 'beta.test.toris.vpn',
