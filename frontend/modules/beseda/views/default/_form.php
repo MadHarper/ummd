@@ -102,29 +102,6 @@ use yii\helpers\Url;
 
     <?= $form->field($model, 'notes')->textarea(['rows' => 6]) ?>
 
-    <?php
-    echo $form->field($model, 'agreementsArray')->widget(Select2::classname(),
-        [
-            'initValueText' => $besedaAgreementArr,
-            'options' => ['placeholder' => 'Выберите соглашения',
-                'multiple' => true, 'id' => 'agreementsArray4',
-                //'value' => $missionAgreementArr,
-            ],
-            'pluginOptions' => [
-                'allowClear' => false,
-                'minimumInputLength' => 4,
-                'ajax' => [
-                    'url' => '/beseda/default/search-agreement',
-                    'dataType' => 'json',
-                    'data' => new JsExpression('function(params) { return {q:params.term}; }')
-                ],
-                'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-                'templateResult' => new JsExpression('function(city) {  console.log(city); return city.text; }'),
-                'templateSelection' => new JsExpression('function (city) { console.log(city); return city.text;  }'),
-            ],
-        ])->label("Соглашения");
-    ?>
-
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

@@ -65,11 +65,12 @@ class BesedaAgreement extends \yii\db\ActiveRecord
         return $this->hasOne(Beseda::className(), ['id' => 'beseda_id']);
     }
 
-
-    /*
+    /**
+     * {@inheritdoc}
+     * @return BesedaAgreementQuery the active query used by this AR class.
+     */
     public static function find()
     {
         return new BesedaAgreementQuery(get_called_class());
     }
-    */
 }
