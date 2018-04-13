@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 '{export}',
             ]
         ],
-        'options'=>['id'=>'dynagrid-agreem'] // a unique identifier is important
+        'options'=>['id'=>'dynagrid-beseda'] // a unique identifier is important
     ]);
     if (substr($dynagrid->theme, 0, 6) == 'simple') {
         $dynagrid->gridOptions['panel'] = false;
