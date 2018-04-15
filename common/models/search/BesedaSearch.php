@@ -14,6 +14,8 @@ class BesedaSearch extends Beseda
 {
 
     public $created_at_range;
+    public $control_date_range;
+    public $report_date_range;
 
 
     /**
@@ -22,8 +24,8 @@ class BesedaSearch extends Beseda
     public function rules()
     {
         return [
-            [['id', 'created_at', 'updated_at', 'iniciator_id', 'status', 'iogv_id'], 'integer'],
-            [['theme', 'target', 'date_start', 'date_start_time', 'report_date', 'control_date', 'notes', 'created_at_range'], 'safe'],
+            [['id', 'created_at', 'updated_at', 'status', 'iogv_id'], 'integer'],
+            [['theme', 'target', 'date_start', 'date_start_time', 'report_date', 'control_date', 'notes', 'created_at_range', 'questions', 'address', 'iniciator_id', 'control_date_range', 'report_date'], 'safe'],
         ];
     }
 
@@ -45,7 +47,9 @@ class BesedaSearch extends Beseda
      */
     public function search($params)
     {
-        $query = Beseda::find();
+        $query = Beseda::find()
+            ->join('LEFT JOIN','organization', 'organization.id = beseda.iniciator_id');
+
 
         // add conditions that should always apply here
 
@@ -63,29 +67,40 @@ class BesedaSearch extends Beseda
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'date_start' => $this->date_start,
+            //'id' => $this->id,
+            //'created_at' => $this->created_at,
+            //'updated_at' => $this->updated_at,
+            //'date_start' => $this->date_start,
             'date_start_time' => $this->date_start_time,
-            'iniciator_id' => $this->iniciator_id,
-            'report_date' => $this->report_date,
-            'control_date' => $this->control_date,
-            'status' => $this->status,
-            'iogv_id' => $this->iogv_id,
+            //'iniciator_id' => $this->iniciator_id,
+            //'report_date' => $this->report_date,
+            //'control_date' => $this->control_date,
+            'beseda.status' => $this->status,
+            //'iogv_id' => $this->iogv_id,
         ]);
 
 
         if(!empty($this->created_at_range) && strpos($this->created_at_range, '-') !== false) {
             list($from_date_start, $to_date_start) = explode(' - ', $this->created_at_range);
-            $query->andFilterWhere(['between', 'agreement.date_start', $from_date_start, $to_date_start]);
+            $query->andFilterWhere(['between', 'beseda.date_start', $from_date_start, $to_date_start]);
         }
 
+        if(!empty($this->control_date_range) && strpos($this->control_date_range, '-') !== false) {
+            list($from_control_start, $to_control_end) = explode(' - ', $this->control_date_range);
+            $query->andFilterWhere(['between', 'beseda.control_date', $from_control_start, $to_control_end]);
+        }
 
+        if(!empty($this->report_date_range) && strpos($this->report_date_range, '-') !== false) {
+            list($from_report_start, $to_report_end) = explode(' - ', $this->report_date_range);
+            $query->andFilterWhere(['between', 'beseda.report_date', $from_report_start, $to_report_end]);
+        }
 
-        $query->andFilterWhere(['ilike', 'theme', $this->theme])
-            ->andFilterWhere(['ilike', 'target', $this->target])
-            ->andFilterWhere(['ilike', 'notes', $this->notes]);
+        $query->andFilterWhere(['ilike', 'beseda.theme', $this->theme])
+            ->andFilterWhere(['ilike', 'beseda.target', $this->target])
+            ->andFilterWhere(['ilike', 'beseda.notes', $this->notes])
+            ->andFilterWhere(['ilike', 'beseda.questions', $this->questions])
+            ->andFilterWhere(['ilike', 'beseda.address', $this->address])
+            ->andFilterWhere(['ilike', 'organization.name', $this->iniciator_id]);
 
         return $dataProvider;
     }

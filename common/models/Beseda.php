@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use frontend\core\interfaces\WithDocumentInterface;
+use frontend\core\services\BesedaStatusService;
 /**
  * This is the model class for table "beseda".
  *
@@ -47,5 +48,10 @@ class Beseda extends \common\models\base\BesedaBase implements WithDocumentInter
     public function getIogvId()
     {
         return $this->iogv_id;
+    }
+
+    public function getStatusString()
+    {
+         return BesedaStatusService::STATUS_LIST[$this->status];
     }
 }

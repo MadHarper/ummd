@@ -23,6 +23,8 @@ use yii\helpers\Url;
 
     <?= $form->field($model, 'target')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'questions')->textarea(['rows' => 6]) ?>
+
     <?= $form->field($model, 'date_start')->widget(DatePicker::class, [
         'type' => DatePicker::TYPE_INPUT,
         'pluginOptions' => [

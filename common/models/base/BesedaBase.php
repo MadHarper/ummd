@@ -31,7 +31,7 @@ class BesedaBase extends \yii\db\ActiveRecord
         return [
             ['status', 'default', 'value' => 1],
             [['date_start', 'theme', 'iogv_id', 'date_start', 'address'], 'required'],
-            [['theme', 'target', 'notes', 'iogv_id', 'address'], 'string'],
+            [['theme', 'target', 'notes', 'iogv_id', 'address', 'questions'], 'string'],
             [['created_at', 'updated_at', 'iniciator_id', 'iogv_id'], 'default', 'value' => null],
             [['status', 'created_at', 'updated_at', 'iniciator_id'], 'integer'],
             [['date_start', 'date_start_time', 'report_date', 'control_date', 'event_time'], 'safe'],
@@ -60,6 +60,7 @@ class BesedaBase extends \yii\db\ActiveRecord
             'iogv_id' => 'Iogv ID',
             'event_time' => "Время встречи",
             'address' => "Адрес",
+            'questions' => "Вопросы, обсуждаемые на беседе"
         ];
     }
 
