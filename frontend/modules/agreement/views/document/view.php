@@ -3,12 +3,15 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\helpers\Url;
+use common\models\Agreement;
+use common\models\Mission;
+use common\models\Beseda;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Document */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Documents', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Документы', 'url' => Url::to(['/agreement/document/list'])];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="document-view">
@@ -30,11 +33,22 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'model',
                 'value' => function($model){
-                    return HTML::a($model->masterModel->name,['/agreement/default/view', 'id' => $model->model_id]);
+
+                    switch ($model->model) {
+                        case Agreement::className():
+                            return HTML::a($model->masterModel->generalName,['/agreement/default/view', 'id' => $model->model_id]);
+                            break;
+                        case Mission::className():
+                            return HTML::a($model->masterModel->generalName,['/mission/default/view', 'id' => $model->model_id]);
+                            break;
+                        case Beseda::className():
+                            return HTML::a($model->masterModel->generalName,['/beseda/default/view', 'id' => $model->model_id]);
+                            break;
+                    }
+
                 },
                 'format' => 'html'
             ],
-            'origin_name',
             /*
             [
                 'attribute' => 'link',

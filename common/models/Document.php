@@ -118,6 +118,8 @@ class Document extends \yii\db\ActiveRecord
                 return $this->hasOne(Agreement::className(), ['id' => 'model_id']);
             case Mission::class:
                 return $this->hasOne(Mission::className(), ['id' => 'model_id']);
+            case Beseda::class:
+                return $this->hasOne(Beseda::className(), ['id' => 'model_id']);
         }
 
     }

@@ -21,6 +21,7 @@ use frontend\core\services\DocPrepareSaveService;
 use common\services\jobs\DocumentSaveJob;
 use common\services\jobs\FileRemoveJob;
 use common\services\jobs\PictureSaveJob;
+use common\models\Beseda;
 
 
 
@@ -245,6 +246,9 @@ class DocumentController extends \frontend\components\BaseController
                 break;
             case Mission::class :
                 $masterModel = Mission::find()->where(['id' => $document->model_id])->one();
+                break;
+            case Beseda::class :
+                $masterModel = Beseda::find()->where(['id' => $document->model_id])->one();
                 break;
         }
 

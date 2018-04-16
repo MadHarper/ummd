@@ -17,7 +17,7 @@ class BesedaStatusService
 
     const STATUS_LIST = [
         self::STATUS_PROJECT        => 'Проект',
-        self::STATUS_SENDING_IN_KVS => 'Напралвено в КВС',
+        self::STATUS_SENDING_IN_KVS => 'Направлено в КВС',
         self::STATUS_IN_ACTION      => 'Проводится',
         self::STATUS_DONE           => 'Состоялась',
         self::STATUS_CANCELLED      => 'Отменена',

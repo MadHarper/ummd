@@ -54,4 +54,8 @@ class Beseda extends \common\models\base\BesedaBase implements WithDocumentInter
     {
          return BesedaStatusService::STATUS_LIST[$this->status];
     }
+
+    public function getGeneralName(){
+        return $this->theme;
+    }
 }

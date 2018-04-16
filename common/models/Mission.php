@@ -219,4 +219,8 @@ class Mission extends \common\models\base\MissionBase implements WithDocumentInt
         return $this->hasMany(Employee::className(), ['id' => 'employee_id'])
             ->viaTable('mission_employee', ['mission_id' => 'id']);
     }
+
+    public function getGeneralName(){
+        return $this->name;
+    }
 }

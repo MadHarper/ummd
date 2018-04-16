@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use common\models\Agreement;
 use common\models\Mission;
 use common\models\Document;
+use common\models\Beseda;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\DocumentSearch */
@@ -71,6 +72,12 @@ $this->title = 'Документы';
                                         <span>Командировка</span>
                                     </a>";;
                             break;
+                        case Beseda::className() :
+                            return "<a href='". Url::to(['/beseda/default/view', 'id' => $data->model_id]) ."'>
+                                        <span>Беседа</span>
+                                    </a>";;
+                            break;
+
                         default:
                             return "";
                     }

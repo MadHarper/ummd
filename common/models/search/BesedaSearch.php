@@ -25,7 +25,7 @@ class BesedaSearch extends Beseda
     {
         return [
             [['id', 'created_at', 'updated_at', 'status', 'iogv_id'], 'integer'],
-            [['theme', 'target', 'date_start', 'date_start_time', 'report_date', 'control_date', 'notes', 'created_at_range', 'questions', 'address', 'iniciator_id', 'control_date_range', 'report_date'], 'safe'],
+            [['theme', 'target', 'date_start', 'date_start_time', 'report_date', 'control_date', 'notes', 'created_at_range', 'questions', 'address', 'iniciator_id', 'control_date_range', 'report_date', 'report_overdue'], 'safe'],
         ];
     }
 
@@ -76,6 +76,7 @@ class BesedaSearch extends Beseda
             //'report_date' => $this->report_date,
             //'control_date' => $this->control_date,
             'beseda.status' => $this->status,
+            'beseda.report_overdue' => $this->report_overdue,
             //'iogv_id' => $this->iogv_id,
         ]);
 

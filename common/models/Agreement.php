@@ -219,4 +219,9 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
         return $this->hasMany(Mission::className(), ['id' => 'mission_id'])
             ->viaTable('mission_agreement', ['agreement_id' => 'id']);
     }
+
+
+    public function getGeneralName(){
+        return $this->name;
+    }
 }
