@@ -39,11 +39,11 @@ class MissionStatusController extends Controller
 
 
 
-        // и смена статусов командировок
+        // и смена статусов бесед
         $besedaStatusService = new BesedaStatusService();
 
         $besedas = Beseda::find()
-                        ->where(['status' => [BesedaStatusService::STATUS_PROJECT, BesedaStatusService::STATUS_IN_ACTION]])->all();
+                        ->where(['status' => [BesedaStatusService::STATUS_SENDING_IN_KVS, BesedaStatusService::STATUS_IN_ACTION]])->all();
 
         if($besedas){
             foreach ($besedas as $beseda){
