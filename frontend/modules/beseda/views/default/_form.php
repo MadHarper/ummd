@@ -104,9 +104,12 @@ use yii\helpers\Url;
 
     <?= $form->field($model, 'notes')->textarea(['rows' => 6]) ?>
 
+    <?php if(!$model->isNewRecord): ?>
+        <?= $form->field($model, 'report_overdue')->checkbox() ?>
+    <?php endif; ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

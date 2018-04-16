@@ -34,6 +34,7 @@ class BesedaBase extends \yii\db\ActiveRecord
             [['theme', 'target', 'notes', 'iogv_id', 'address', 'questions'], 'string'],
             [['created_at', 'updated_at', 'iniciator_id', 'iogv_id'], 'default', 'value' => null],
             [['status', 'created_at', 'updated_at', 'iniciator_id'], 'integer'],
+            [['report_overdue'], 'boolean'],
             [['date_start', 'date_start_time', 'report_date', 'control_date', 'event_time'], 'safe'],
             [['iniciator_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organization::className(), 'targetAttribute' => ['iniciator_id' => 'id']],
         ];
@@ -60,7 +61,8 @@ class BesedaBase extends \yii\db\ActiveRecord
             'iogv_id' => 'Iogv ID',
             'event_time' => "Время встречи",
             'address' => "Адрес",
-            'questions' => "Вопросы, обсуждаемые на беседе"
+            'questions' => "Вопросы, обсуждаемые на беседе",
+            'report_overdue' => "Нарушен срок предоставления отчета"
         ];
     }
 

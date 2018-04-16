@@ -108,6 +108,10 @@ class BesedaStatusService
         return;
     }
 
+
+*/
+
+
     public function checkControlDay(Beseda $model)
     {
 
@@ -120,9 +124,24 @@ class BesedaStatusService
 
         $lastDay = array_pop($days);
         $model->control_date = $lastDay->day_date;
+
+        $today = date('Y-m-d');
+        if(!$model->report_date && $today > $model->control_date){
+            $model->report_overdue = true;
+        }
+
+        if(!$model->report_date && $today < $model->control_date){
+            $model->report_overdue = false;
+        }
+
+        if($model->report_date){
+            $model->report_overdue = false;
+        }
         $model->save(false);
     }
-*/
+
+
+
 
 
     public function checkAndChangeStatus(Beseda $model)
@@ -141,6 +160,7 @@ class BesedaStatusService
 
         return;
     }
+
 }
 
 

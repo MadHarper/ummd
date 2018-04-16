@@ -115,6 +115,10 @@ class DefaultController extends \frontend\components\BaseController
      */
     public function actionDelete($id)
     {
+
+        //ToDo в будущем будет журнал согласования с КВС об удалении.
+        //  Надо будет позаботиться о всех удаляемых сущностях из промежуточных таблиц
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
