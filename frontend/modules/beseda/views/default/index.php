@@ -139,6 +139,28 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter' => [0 => "Срок просрочен", 1 => "Срок не просрочен"],
             ],
+            [
+                'attribute' => 'agreements',
+                'vAlign'=>'middle',
+                'label' => 'Соглашения',
+                'content' => function ($data) {
+                    $str = '';
+                    if($data->hasAgreements){
+                        $n = 1;
+                        foreach ($data->hasAgreements as $agreement){
+                            if($agreement->name){
+                                $str .= "<div class='intable_list'>";
+                                $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                $str .= '<div>' . $agreement->name . '</div>';
+                                $str .= "</div>";
+                                $n++;
+                            }
+                        }
+                    }
+                    return $str;
+                },
+                'format' => 'raw',
+            ],
         [
             'class'=>'kartik\grid\ActionColumn',
             'dropdown'=>false,

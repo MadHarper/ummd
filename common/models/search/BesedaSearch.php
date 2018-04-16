@@ -16,6 +16,7 @@ class BesedaSearch extends Beseda
     public $created_at_range;
     public $control_date_range;
     public $report_date_range;
+    public $agreements;
 
 
     /**
@@ -25,7 +26,7 @@ class BesedaSearch extends Beseda
     {
         return [
             [['id', 'created_at', 'updated_at', 'status', 'iogv_id'], 'integer'],
-            [['theme', 'target', 'date_start', 'date_start_time', 'report_date', 'control_date', 'notes', 'created_at_range', 'questions', 'address', 'iniciator_id', 'control_date_range', 'report_date', 'report_overdue'], 'safe'],
+            [['theme', 'target', 'date_start', 'date_start_time', 'report_date', 'control_date', 'notes', 'created_at_range', 'questions', 'address', 'iniciator_id', 'control_date_range', 'report_date', 'report_overdue', 'agreements'], 'safe'],
         ];
     }
 
@@ -48,7 +49,9 @@ class BesedaSearch extends Beseda
     public function search($params)
     {
         $query = Beseda::find()
-            ->join('LEFT JOIN','organization', 'organization.id = beseda.iniciator_id');
+            ->join('LEFT JOIN','organization', 'organization.id = beseda.iniciator_id')
+            ->join('LEFT JOIN','beseda_agreement', 'beseda.id = beseda_agreement.beseda_id')
+            ->join('LEFT JOIN','agreement', 'agreement.id = beseda_agreement.agreement_id');
 
 
         // add conditions that should always apply here
@@ -95,6 +98,12 @@ class BesedaSearch extends Beseda
             list($from_report_start, $to_report_end) = explode(' - ', $this->report_date_range);
             $query->andFilterWhere(['between', 'beseda.report_date', $from_report_start, $to_report_end]);
         }
+
+
+        if(!empty($this->agreements)){
+            $query->andFilterWhere(['ilike', 'agreement.name', $this->agreements]);
+        }
+
 
         $query->andFilterWhere(['ilike', 'beseda.theme', $this->theme])
             ->andFilterWhere(['ilike', 'beseda.target', $this->target])
