@@ -123,7 +123,7 @@ use yii\helpers\Url;
                 ],
                 'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
                 'templateResult' => new JsExpression('function(city) {  console.log(city); return city.text; }'),
-                'templateSelection' => new JsExpression('function (city) { console.log(city); return city.text;  }'),
+                'templateSelection' => new JsExpression('format'),
             ],
         ])->label("Соглашения");
     ?>
@@ -153,6 +153,14 @@ $script = <<< JS
             return "/agreement/side/searchid";
         }
 }
+
+    function format(city) {       
+    return '<a href="/agreement/default/view?id=' + city.id + '" target="_blank">' + city.text + '</a>';
+}
+
+
 JS;
 $this->registerJs($script, yii\web\View::POS_HEAD);
 ?>
+
+

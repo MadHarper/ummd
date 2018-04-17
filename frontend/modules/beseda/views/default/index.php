@@ -161,6 +161,72 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'raw',
             ],
+            [
+                'attribute' => 'members',
+                'vAlign'=>'middle',
+                'label' => 'Участники',
+                'content' => function ($data) {
+                    $str = '';
+                    if($data->employes){
+                        $n = 1;
+                        foreach ($data->employes as $member){
+                            if($member->fio){
+                                $str .= "<div class='intable_list'>";
+                                $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                $str .= '<div>' . $member->fio . '</div>';
+                                $str .= "</div>";
+                                $n++;
+                            }
+                        }
+                    }
+                    return $str;
+                },
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'orgs',
+                'vAlign'=>'middle',
+                'label' => 'Организации',
+                'content' => function ($data) {
+                    $str = '';
+                    if($data->employes){
+                        $n = 1;
+                        foreach ($data->employes as $member){
+                            if($member->organization){
+                                $str .= "<div class='intable_list'>";
+                                $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                $str .= '<div>' . $member->organization->name . '</div>';
+                                $str .= "</div>";
+                                $n++;
+                            }
+                        }
+                    }
+                    return $str;
+                },
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'country',
+                'vAlign'=>'middle',
+                'label' => 'Страны',
+                'content' => function ($data) {
+                    $str = '';
+                    if($data->employes){
+                        $n = 1;
+                        foreach ($data->employes as $member){
+                            if($member->organization){
+                                $str .= "<div class='intable_list'>";
+                                $str .= '<div><span class="badge">' . $n .'</span></div>';
+                                $str .= '<div>' . $member->organization->country->name . '</div>';
+                                $str .= "</div>";
+                                $n++;
+                            }
+                        }
+                    }
+                    return $str;
+                },
+                'format' => 'raw',
+            ],
         [
             'class'=>'kartik\grid\ActionColumn',
             'dropdown'=>false,

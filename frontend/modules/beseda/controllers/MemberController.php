@@ -55,7 +55,7 @@ class MemberController extends \frontend\components\BaseController
         }
 
         $iogvList = Organization::find()->select(['name', 'id'])
-            ->where(['iogv' => true, 'history' => false])
+            ->where(['history' => false])
             ->indexBy('id')
             ->column();
 

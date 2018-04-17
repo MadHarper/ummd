@@ -67,6 +67,11 @@ class Beseda extends \common\models\base\BesedaBase implements WithDocumentInter
             ->viaTable('beseda_agreement', ['beseda_id' => 'id']);
     }
 
+    public function getEmployes()
+    {
+        return $this->hasMany(Employee::className(), ['id' => 'employee_id'])
+            ->viaTable('beseda_employee', ['beseda_id' => 'id']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery

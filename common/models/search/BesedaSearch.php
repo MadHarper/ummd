@@ -17,6 +17,9 @@ class BesedaSearch extends Beseda
     public $control_date_range;
     public $report_date_range;
     public $agreements;
+    public $members;
+    public $orgs;
+    public $country;
 
 
     /**
@@ -26,7 +29,9 @@ class BesedaSearch extends Beseda
     {
         return [
             [['id', 'created_at', 'updated_at', 'status', 'iogv_id'], 'integer'],
-            [['theme', 'target', 'date_start', 'date_start_time', 'report_date', 'control_date', 'notes', 'created_at_range', 'questions', 'address', 'iniciator_id', 'control_date_range', 'report_date', 'report_overdue', 'agreements'], 'safe'],
+            [['theme', 'target', 'date_start', 'date_start_time', 'report_date',
+                'control_date', 'notes', 'created_at_range', 'questions', 'address', 'iniciator_id', 'control_date_range',
+                'report_date', 'report_overdue', 'agreements', 'members', 'orgs', 'country'], 'safe'],
         ];
     }
 
@@ -49,9 +54,14 @@ class BesedaSearch extends Beseda
     public function search($params)
     {
         $query = Beseda::find()
-            ->join('LEFT JOIN','organization', 'organization.id = beseda.iniciator_id')
+            ->join('LEFT JOIN','organization t1', 't1.id = beseda.iniciator_id')
             ->join('LEFT JOIN','beseda_agreement', 'beseda.id = beseda_agreement.beseda_id')
-            ->join('LEFT JOIN','agreement', 'agreement.id = beseda_agreement.agreement_id');
+            ->join('LEFT JOIN','agreement', 'agreement.id = beseda_agreement.agreement_id')
+            ->join('LEFT JOIN','beseda_employee', 'beseda_employee.beseda_id = beseda.id')
+            ->join('LEFT JOIN','employee', 'beseda_employee.employee_id = employee.id')
+            ->join('LEFT JOIN','organization t2', 'employee.organization_id = t2.id')
+            ->join('LEFT JOIN','country', 't2.country_id = country.id')
+            ->distinct();
 
 
         // add conditions that should always apply here
@@ -104,13 +114,25 @@ class BesedaSearch extends Beseda
             $query->andFilterWhere(['ilike', 'agreement.name', $this->agreements]);
         }
 
+        if(!empty($this->members)){
+            $query->andFilterWhere(['ilike', 'employee.fio', $this->members]);
+        }
+
+        if(!empty($this->orgs)){
+            $query->andFilterWhere(['ilike', 't2.name', $this->orgs]);
+        }
+
+        if(!empty($this->country)){
+            $query->andFilterWhere(['ilike', 'country.name', $this->country]);
+        }
+
 
         $query->andFilterWhere(['ilike', 'beseda.theme', $this->theme])
             ->andFilterWhere(['ilike', 'beseda.target', $this->target])
             ->andFilterWhere(['ilike', 'beseda.notes', $this->notes])
             ->andFilterWhere(['ilike', 'beseda.questions', $this->questions])
             ->andFilterWhere(['ilike', 'beseda.address', $this->address])
-            ->andFilterWhere(['ilike', 'organization.name', $this->iniciator_id]);
+            ->andFilterWhere(['ilike', 't1.name', $this->iniciator_id]);
 
         return $dataProvider;
     }
