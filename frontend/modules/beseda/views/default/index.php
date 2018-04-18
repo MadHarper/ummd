@@ -133,12 +133,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter' => BesedaStatusService::STATUS_LIST,
             ],
+
             [
                 'attribute' => 'report_overdue',
                 'value' => function($data){
-                    return $data->report_overdue ? "Нет" : "Да";
+                    return $data->report_overdue ? "Нарушен" : "Не нарушен";
                 },
-                'filter' => [0 => "Срок просрочен", 1 => "Срок не просрочен"],
+                'filter' => [0 => "Срок не нарушен", 1 => "Срок нарушен"],
             ],
             [
                 'attribute' => 'agreements',

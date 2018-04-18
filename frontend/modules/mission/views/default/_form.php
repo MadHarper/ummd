@@ -184,10 +184,12 @@ use yii\jui\AutoComplete;
                 ],
                 'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
                 'templateResult' => new JsExpression('function(city) {  console.log(city); return city.text; }'),
-                'templateSelection' => new JsExpression('function (city) { console.log(city); return city.text;  }'),
+                'templateSelection' => new JsExpression('format'),
             ],
         ])->label("Соглашения");
     ?>
+
+    <?= $form->field($model, 'report_overdue')->checkbox() ?>
 
 
     <div class="form-group">
@@ -207,17 +209,6 @@ $script = <<< JS
     var dataHistory = $('#missform').data('history'); 
     var empHistoric = 0;
     
-    /*
-    function loadEmployee(orgId){
-        var carSelect = $('select[name="Mission[duty_man_id]"]');
-        $.get('/mission/default/list', {
-            id: orgId
-        }, function(res){
-            carSelect.html('');
-            carSelect.append(res);      
-        });
-    }
-    */
     function loadEmployee(orgId){
         if($("#emp_history").is(":checked")){
             empHistoric = 1;
@@ -258,6 +249,20 @@ $script = <<< JS
 });
 JS;
 $this->registerJs($script, yii\web\View::POS_READY);
+?>
+
+
+
+
+<?php
+$script = <<< JS
+
+function format(city) {       
+    return '<a href="/agreement/default/view?id=' + city.id + '" target="_blank">' + city.text + '</a>';
+}
+
+JS;
+$this->registerJs($script, yii\web\View::POS_HEAD);
 ?>
 
 

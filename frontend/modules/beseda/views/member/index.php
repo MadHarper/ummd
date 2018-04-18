@@ -16,7 +16,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\search\MissionEmployeeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $beseda->theme . ': Участники командировки';
+$this->title = $beseda->theme . ': Участники беседы';
 $this->params['breadcrumbs'][] = ['label' => $beseda->theme, 'url'=> Url::to(['/beseda/default/view', 'id' => $beseda->id])];
 $this->params['breadcrumbs'][] = 'Участники командировки';
 ?>

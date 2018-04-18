@@ -27,7 +27,7 @@ class MissionSearch extends Mission
     {
         return [
             [['id', 'country_id', 'region_id', 'organization_id', 'duty_man_id'], 'integer'],
-            [['name', 'date_start', 'date_end', 'order', 'target', 'visible', 'created_at_range', 'ended_at_range', 'iogv_id', 'organization_text', 'duty_text', 'member_text'], 'safe'],
+            [['name', 'date_start', 'date_end', 'order', 'target', 'visible', 'created_at_range', 'ended_at_range', 'iogv_id', 'organization_text', 'duty_text', 'member_text', 'report_overdue'], 'safe'],
         ];
     }
 
@@ -83,16 +83,17 @@ class MissionSearch extends Mission
             //'date_start' => $this->date_start,
             //'date_end' => $this->date_end,
             //'country_id' => $this->country_id,
-            'region_id' => $this->region_id,
+            'mission.region_id' => $this->region_id,
             //'organization_id' => $this->organization_id,
-            'duty_man_id' => $this->duty_man_id,
+            'mission.duty_man_id' => $this->duty_man_id,
+            'mission.report_overdue' => $this->report_overdue,
             //'iogv_id' => $this->iogv_id,
         ]);
 
-        $query->andFilterWhere(['ilike', 'name', $this->name])
-            ->andFilterWhere(['ilike', 'order', $this->order])
-            ->andFilterWhere(['ilike', 'target', $this->target])
-            ->andFilterWhere(['ilike', 'city', $this->city]);
+        $query->andFilterWhere(['ilike', 'mission.name', $this->name])
+            ->andFilterWhere(['ilike', 'mission.order', $this->order])
+            ->andFilterWhere(['ilike', 'mission.target', $this->target])
+            ->andFilterWhere(['ilike', 'mission.city', $this->city]);
 
 
         if(!empty($this->created_at_range) && strpos($this->created_at_range, '-') !== false) {

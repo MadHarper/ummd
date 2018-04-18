@@ -74,9 +74,10 @@ class MissionBase extends \yii\db\ActiveRecord
             [['name', 'country_id', 'order', 'iogv_id', 'date_start', 'date_end', 'organization_id', 'duty_man_id'], 'required'],
             [['name', 'target', 'iogv_id', 'city', 'cityName', 'notes'], 'string'],
             [['date_start', 'date_end', 'report_date', 'contol_date', 'agreementsArray'], 'safe'],
-            [['visible', 'with_boss'], 'boolean'],
+            [['visible', 'with_boss', 'report_overdue'], 'boolean'],
             [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['visible'], 'default', 'value' => true],
+            [['report_overdue'], 'default', 'value' => false],
             [['country_id', 'region_id', 'duty_man_id', 'created_at', 'updated_at', 'organization_id', 'city_id', 'status'], 'integer'],
             [['order'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
@@ -120,7 +121,8 @@ class MissionBase extends \yii\db\ActiveRecord
             'status' => 'Статус командировки',
             'report_date' => 'Дата предоставления отчета',
             'contol_date' => 'Контрольный срок',
-            'with_boss' => 'С участием главы ИОГВ'
+            'with_boss' => 'С участием главы ИОГВ',
+            'report_overdue' => 'Нарушен срок предоставления отчета'
         ];
     }
 

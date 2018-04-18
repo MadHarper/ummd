@@ -3,6 +3,7 @@
 namespace frontend\models\search;
 
 use common\models\Agreement;
+use common\models\Beseda;
 use common\models\Mission;
 use Yii;
 use yii\base\Model;
@@ -207,6 +208,9 @@ class DocumentSearch extends Document
                         break;
                     case Document::MISSION_ENTITY :
                         $query->andFilterWhere(['{{%document}}.model' => Mission::className()]);
+                        break;
+                    case Document::TALK_ENTITY :
+                        $query->andFilterWhere(['{{%document}}.model' => Beseda::className()]);
                         break;
                 }
             }

@@ -82,6 +82,13 @@ $this->title = 'Командировки';
                 'format' => 'raw',
             ],
             [
+                'attribute' => 'report_overdue',
+                'value' => function($data){
+                    return $data->report_overdue ? "Нарушен" : "Не нарушен";
+                },
+                'filter' => [0 => "Срок не нарушен", 1 => "Срок нарушен"],
+            ],
+            [
                 'attribute'=>'member_text',
                 'vAlign'=>'middle',
                 'label' => 'Участники',

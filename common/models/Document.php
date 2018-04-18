@@ -42,7 +42,7 @@ class Document extends \yii\db\ActiveRecord
     const LINKED_ENTYTIES = [
         self::AGREEMENT_ENTITY  => 'Соглашения',
         self::MISSION_ENTITY    => 'Командировки',
-        //self::TALK_ENTITY       => 'Беседы',
+        self::TALK_ENTITY       => 'Беседы',
     ];
 
 

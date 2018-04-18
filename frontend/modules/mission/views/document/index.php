@@ -90,6 +90,13 @@ $this->params['breadcrumbs'][] = 'Документы';
                 'attribute'=>'name',
                 'filter' => false,
             ],
+            [
+                'attribute' => 'doc_type_id',
+                'content' => function($data){
+                    return $data->docType ? $data->docType->name : " - ";
+                },
+                'filter' => false,
+            ],
 
             /*
             [

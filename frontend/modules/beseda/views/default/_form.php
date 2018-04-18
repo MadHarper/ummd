@@ -134,9 +134,7 @@ use yii\helpers\Url;
 
 
 
-    <?php if(!$model->isNewRecord): ?>
-        <?= $form->field($model, 'report_overdue')->checkbox() ?>
-    <?php endif; ?>
+    <?= $form->field($model, 'report_overdue')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

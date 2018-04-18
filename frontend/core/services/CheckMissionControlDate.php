@@ -25,7 +25,7 @@ class CheckMissionControlDate
         $this->missionId = $missionId;
     }
 
-    // Применяется когда у командировки или изменились дата начала или дата конца.
+    // Применяется когда у командировки или изменились дата конца.
     // Или когда поменялся состав участников (удалился или добавился)
     public function check()
     {
@@ -52,12 +52,14 @@ class CheckMissionControlDate
                         ->all();
 
 
-        if($boss && !$mission->with_boss){
+        if($boss){
             $mission->with_boss = true;
         }else{
             $mission->with_boss = false;
         }
 
+
+        // В случае если нет дней в календаре, например следующий год и нет данных
         if(!$days || count($days) < $this->overallDaysNumber){
             $mission->contol_date = null;
             $mission->save(false);
@@ -67,6 +69,11 @@ class CheckMissionControlDate
         $controlCalendarDay = array_pop($days);
         if($mission->contol_date != $controlCalendarDay->day_date){
             $mission->contol_date = $controlCalendarDay->day_date;
+        }
+
+        $today = date("Y-m-d");
+        if(!$mission->report_date && $today > $mission->contol_date){
+            $mission->report_overdue = true;
         }
 
         $mission->save(false);

@@ -55,7 +55,7 @@ class Document extends \common\models\Document
             'updated_at' => 'Обновлен',
             'status' => 'Статус',
             'iogv_id' => 'ID подразделения',
-            'name' => 'Имя',
+            'name' => 'Наименование',
             'doc_type_id' => 'Тип документа',
             'doc_date' => 'Дата документа',
             'note' => 'Примечание'

@@ -15,41 +15,40 @@ class MissionStatusController extends Controller
     {
         $today = date('Y-m-d');
 
-        $missions = MissionBase::find()
+        $missions1 = MissionBase::find()
                         ->where(['<=', 'date_start', $today])
                         ->andWhere(['>=', 'date_end', $today])
                         ->andWhere(['status' => MissionStatusService::STATUS_AGREDD])
                         ->all();
 
 
-        foreach ($missions as $mission){
+        foreach ($missions1 as $mission){
             $mission->status = MissionStatusService::STATUS_IN_ACTION;
             $mission->save(false);
         }
 
-        $missions = MissionBase::find()
+        $missions2 = MissionBase::find()
                         ->andWhere(['<', 'date_end', $today])
                         ->andWhere(['status' => MissionStatusService::STATUS_IN_ACTION])
                         ->all();
 
-        foreach ($missions as $mission){
+        foreach ($missions2 as $mission){
             $mission->status = MissionStatusService::STATUS_DONE;
             $mission->save(false);
         }
 
 
 
-        // и смена статусов бесед
-        $besedaStatusService = new BesedaStatusService();
+        $missions3 = MissionBase::find()
+                        ->where(['report_date' => NULL])
+                        ->andWhere(['<', 'contol_date', $today])
+                        ->all();
 
-        $besedas = Beseda::find()
-                        ->where(['status' => [BesedaStatusService::STATUS_SENDING_IN_KVS, BesedaStatusService::STATUS_IN_ACTION]])->all();
-
-        if($besedas){
-            foreach ($besedas as $beseda){
-                $besedaStatusService->checkAndChangeStatus($beseda);
-            }
+        foreach ($missions3 as $mission){
+            $mission->report_overdue = true;
+            $mission->save(false);
         }
+
 
     }
 }
