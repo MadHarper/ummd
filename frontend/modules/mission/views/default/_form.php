@@ -17,7 +17,7 @@ use yii\jui\AutoComplete;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="mission-form" id="missform" data-nonhistory="<?= preg_replace('#(\"+)#' , '\'', $nonHistoryOrgOptions);?>" data-history="<?= preg_replace('#(\"+)#' , '\'', $historyOrgOptions);?>" data-russia_id="<?= Country::RUSSIA_ID;?>">
+<div class="mission-form" id="missform" data-missionId="<?= $model->id;?>" data-nonhistory="<?= preg_replace('#(\"+)#' , '\'', $nonHistoryOrgOptions);?>" data-history="<?= preg_replace('#(\"+)#' , '\'', $historyOrgOptions);?>" data-russia_id="<?= Country::RUSSIA_ID;?>">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -91,6 +91,9 @@ use yii\jui\AutoComplete;
         'pluginOptions' => [
             'autoclose' => true,
             'format'    => 'yyyy-mm-dd'
+        ],
+        'pluginEvents' => [
+            "changeDate" => "function(e) {  changeMissionControl(this.value)}",
         ]
     ]) ?>
 

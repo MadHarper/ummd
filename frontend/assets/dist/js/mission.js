@@ -14,3 +14,22 @@ function seeRegion(country_id){
         }
     }
 }
+
+
+
+function changeMissionControl(newDate)
+{
+    if($("#mission-update-locus").length == 0){
+        return;
+    }
+
+    var missionId = $("#mission-update-locus").data('missionid');
+
+    $.get('/mission/default/check-control', {
+        day: newDate,
+        mission: missionId
+    }, function(res){
+        $('#mission-contol_date').val(res);
+    });
+
+}

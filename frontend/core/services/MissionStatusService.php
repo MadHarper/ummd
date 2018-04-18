@@ -100,7 +100,7 @@ class MissionStatusService
     {
         $today = date('Y-m-d');
 
-        if($model->date_end > $today && MissionStatusService::STATUS_IN_ACTION === $model->status ){
+        if($model->date_end < $today && MissionStatusService::STATUS_IN_ACTION === $model->status ){
             $model->status = MissionStatusService::STATUS_DONE;
             $model->save();
             return;

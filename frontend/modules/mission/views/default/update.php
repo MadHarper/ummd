@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = 'Редактировать';
 
 
 
-<div class="mission-update">
+<div class="mission-update" id="mission-update-locus" data-missionid="<?= $model->id;?>">
 
     <?= $this->render('_form', [
         'model' => $model,

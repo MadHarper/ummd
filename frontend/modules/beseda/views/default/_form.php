@@ -30,7 +30,11 @@ use yii\helpers\Url;
         'pluginOptions' => [
             'autoclose' => true,
             'format'    => 'yyyy-mm-dd'
+        ],
+        'pluginEvents' => [
+            "changeDate" => "function(e) {  changeBesedaControl(this.value) }",
         ]
+
     ]) ?>
 
     <?= $form->field($model, 'event_time')->widget(TimePicker::classname(), ['pluginOptions' => [

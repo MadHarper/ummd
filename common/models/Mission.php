@@ -155,6 +155,10 @@ class Mission extends \common\models\base\MissionBase implements WithDocumentInt
     }
 
 
+
+
+
+    // Блок приввязки соглашений из мультиселекта
     public function getAgreementsArray()
     {
         if ($this->_agreements === null) {
@@ -207,6 +211,8 @@ class Mission extends \common\models\base\MissionBase implements WithDocumentInt
             }
         }
     }
+    ///////////////////////////////////////
+
 
 
     public function getIogvId()

@@ -106,4 +106,24 @@ class CheckMissionControlDate
     }
 
 
+    public function checkAjax($date_end){
+        //$mission = Mission::find()->where(['id' => $this->missionId])->one();
+
+        $boss = MissionEmployee::find()->where(['mission_id' => $this->missionId, 'boss' => true])->all();
+        if($boss){
+            $this->overallDaysNumber = 10;
+        }
+
+
+        $days = Calendar::find()
+            ->where(['>', 'day_date', $date_end])
+            ->andWhere(['is_working' => true])
+            ->orderBy('day_date')
+            ->limit($this->overallDaysNumber)
+            ->all();
+
+        $controlCalendarDay = array_pop($days);
+        return $controlCalendarDay->day_date;
+    }
+
 }

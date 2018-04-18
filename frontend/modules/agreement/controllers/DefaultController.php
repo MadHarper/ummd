@@ -2,12 +2,14 @@
 
 namespace frontend\modules\agreement\controllers;
 
+use common\models\Beseda;
 use Yii;
 use common\models\Agreement;
 use common\models\search\AgreementSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Mission;
 
 /**
  * DefaultController implements the CRUD actions for Agreement model.
@@ -81,8 +83,13 @@ class DefaultController extends \frontend\components\BaseController
             return $this->redirect(['update', 'id' => $model->id]);
         }
 
+        $missionAgreementArr = [];
+        $besedaAgreementArr = [];
+
         return $this->render('create', [
             'model' => $model,
+            'missionAgreementArr' => $missionAgreementArr,
+            'besedaAgreementArr' => $besedaAgreementArr
         ]);
     }
 
@@ -101,8 +108,24 @@ class DefaultController extends \frontend\components\BaseController
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $missionAgreementArr = Mission::find()
+            ->where(['id' => $model->missionsArray])
+            ->select("name, id")
+            ->indexBy("id")
+            ->orderBy("id")
+            ->column();
+
+        $besedaAgreementArr = Beseda::find()
+            ->where(['id' => $model->besedaArray])
+            ->select("theme, id")
+            ->indexBy("id")
+            ->orderBy("id")
+            ->column();
+
         return $this->render('update', [
             'model' => $model,
+            'missionAgreementArr' => $missionAgreementArr,
+            'besedaAgreementArr' => $besedaAgreementArr
         ]);
     }
 
@@ -175,5 +198,41 @@ class DefaultController extends \frontend\components\BaseController
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    public function actionSearchMission($q)
+    {
+        if(Yii::$app->request->isAjax){
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $out = ['results' => ['id' => '', 'text' => '']];
+
+            $out['results'] = array_values((new \yii\db\Query())
+                ->select(['id', "name as text"])
+                ->from('mission')
+                ->where(['ilike','name',$q])
+                ->limit(10)
+                ->all());
+
+            return $out;
+        }
+    }
+
+
+    public function actionSearchBeseda($q)
+    {
+        if(Yii::$app->request->isAjax){
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $out = ['results' => ['id' => '', 'text' => '']];
+
+            $out['results'] = array_values((new \yii\db\Query())
+                ->select(['id', "theme as text"])
+                ->from('beseda')
+                ->where(['ilike','theme',$q])
+                ->limit(10)
+                ->all());
+
+            return $out;
+        }
     }
 }

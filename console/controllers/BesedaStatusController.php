@@ -36,12 +36,5 @@ class BesedaStatusController extends Controller
             }
         }
 
-        $otherBesedes = BesedaBase::find()->where(['not', ['report_date' => null]])->andWhere(['report_overdue' => true])->all();
-        if($otherBesedes){
-            foreach ($otherBesedes as $bes){
-                $bes->report_overdue = false;
-                $bes->save(false);
-            }
-        }
     }
 }

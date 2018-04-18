@@ -327,4 +327,16 @@ class DefaultController  extends \frontend\components\BaseController
         return $cityList;
     }
 
+
+    public function actionCheckControl(){
+        if(Yii::$app->request->isAjax){
+            $newDate = Yii::$app->request->get('day');
+            $missionId = Yii::$app->request->get('mission');
+
+            $service = new CheckMissionControlDate($missionId);
+
+            return $service->checkAjax($newDate);
+        }
+    }
+
 }

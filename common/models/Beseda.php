@@ -83,6 +83,8 @@ class Beseda extends \common\models\base\BesedaBase implements WithDocumentInter
 
 
 
+
+    // Блок привязки соглашений из мультиселекта
     public function getAgreementsArray()
     {
         if ($this->_agreements === null) {
@@ -135,5 +137,5 @@ class Beseda extends \common\models\base\BesedaBase implements WithDocumentInter
             }
         }
     }
-
+    ///////////////////////////////////////
 }

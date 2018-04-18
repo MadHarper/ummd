@@ -1,9 +1,8 @@
-/*
-function give_org() {
-    if ($("#with_history").is(":checked")) {
-        return "/agreement/side/searchid-history";
-    } else {
-        return "/agreement/side/searchid";
-    }
+function changeBesedaControl(newDate){
+    $.get('/beseda/default/check-control', {
+        day: newDate
+    }, function(res){
+        $('.beseda-form #beseda-control_date').val(res);
+    });
 }
-*/
+

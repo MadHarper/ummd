@@ -134,9 +134,6 @@ class BesedaStatusService
             $model->report_overdue = false;
         }
 
-        if($model->report_date){
-            $model->report_overdue = false;
-        }
         $model->save(false);
     }
 

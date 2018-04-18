@@ -6,6 +6,7 @@ use kartik\daterange\DateRangePicker;
 use kartik\dynagrid\DynaGrid;
 USE yii\helpers\Url;
 use frontend\core\services\BesedaStatusService;
+use frontend\core\services\CheckBesedaControlDate;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\BesedaSearch */
@@ -263,6 +264,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'gridOptions'=>[
             'dataProvider'=>$dataProvider,
             'filterModel'=>$searchModel,
+            'rowOptions' => function ($model, $key, $index, $grid)
+            {
+                $checkMissionControlDate = new CheckBesedaControlDate();
+                if($style = $checkMissionControlDate->checkForGrid($model))
+                {
+                    return $style;
+                }
+            },
             'showPageSummary'=>true,
             'floatHeader'=>false,
             'pjax'=>false,

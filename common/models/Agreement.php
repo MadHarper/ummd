@@ -28,6 +28,9 @@ use frontend\core\interfaces\WithDocumentInterface;
 class Agreement extends ActiveRecord implements WithDocumentInterface
 {
 
+    public $_missionArr;
+    public $_besedaArr;
+
 
     const STATUS_PROJECT = 1;
     const STATUS_DONE = 2;
@@ -70,7 +73,7 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
             [['status', 'iogv_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['status', 'created_at', 'updated_at', 'state'], 'integer'],
             [['name', 'desc', 'iogv_id',], 'string'],
-            [['date_start', 'date_end'], 'safe'],
+            [['date_start', 'date_end', 'missionsArray', 'besedaArray'], 'safe'],
             [['meropriatie'], 'boolean'],
             ['status', 'filter', 'filter' => 'intval'],
         ];
@@ -190,6 +193,10 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
             ]));
         }
 
+
+        $this->updateMissionsArray();
+        $this->updateBesedaArray();
+
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -221,7 +228,131 @@ class Agreement extends ActiveRecord implements WithDocumentInterface
     }
 
 
+
+    public function getMissionAgreements()
+    {
+        return $this->hasMany(MissionAgreement::className(), ['agreement_id' => 'id']);
+    }
+
+    public function getBesedaAgreements()
+    {
+        return $this->hasMany(BesedaAgreement::className(), ['agreement_id' => 'id']);
+    }
+
     public function getGeneralName(){
         return $this->name;
+    }
+
+
+
+
+
+
+    // Блок привязки командировок из мультиселекта
+    public function getMissionsArray()
+    {
+        if ($this->_missionArr === null) {
+            $this->_missionArr = $this->getMissionAgreements()
+                ->select('mission_id')
+                ->where(['agreement_id' => $this->id])
+                ->orderBy("mission_id")
+                ->column();
+        }
+
+        return $this->_missionArr;
+    }
+
+    public function setMissionsArray($value)
+    {
+        if(empty($value)){
+            $this->_missionArr = [];
+        }else{
+            $this->_missionArr = (array)$value;
+        }
+    }
+
+
+    private function updateMissionsArray()
+    {
+        $currentMissionsIds = $this->getMissionAgreements()->select('mission_id')->column();
+        $newMissionsIds = $this->getMissionsArray();
+
+        $new = [];
+        foreach ($newMissionsIds as $item){
+            $new[] = (int)$item;
+        }
+
+        foreach (array_filter(array_diff($new, $currentMissionsIds)) as $missId) {
+            if ($ms = Mission::findOne($missId)) {
+                if($ms){
+                    $missionAgreement = new MissionAgreement(['agreement_id' => $this->id, 'mission_id' => $missId]);
+                    $missionAgreement->save();
+                }
+            }
+        }
+
+        foreach (array_filter(array_diff($currentMissionsIds, $new)) as $oldId) {
+            if($ma = MissionAgreement::find()->where(['agreement_id' => $this->id, 'mission_id' => $oldId])->one()){
+                if($ma){
+                    $ma->delete();
+                }
+            }
+        }
+    }
+    //////////////////////////////
+
+
+
+
+    // Блок привязки бесед из мультиселекта
+    public function getBesedaArray()
+    {
+        if ($this->_besedaArr === null) {
+            $this->_besedaArr = $this->getBesedaAgreements()
+                ->select('beseda_id')
+                ->where(['agreement_id' => $this->id])
+                ->orderBy("beseda_id")
+                ->column();
+        }
+
+        return $this->_besedaArr;
+    }
+
+    public function setBesedaArray($value)
+    {
+        if(empty($value)){
+            $this->_besedaArr = [];
+        }else{
+            $this->_besedaArr = (array)$value;
+        }
+    }
+
+
+    private function updateBesedaArray()
+    {
+        $currentBesedaIds = $this->getBesedaAgreements()->select('beseda_id')->column();
+        $newBesedaIds = $this->getBesedaArray();
+
+        $new = [];
+        foreach ($newBesedaIds as $item){
+            $new[] = (int)$item;
+        }
+
+        foreach (array_filter(array_diff($new, $currentBesedaIds)) as $besedaId) {
+            if ($bs = Mission::findOne($besedaId)) {
+                if($bs){
+                    $besedaAgreement = new BesedaAgreement(['agreement_id' => $this->id, 'beseda_id' => $besedaId]);
+                    $besedaAgreement->save();
+                }
+            }
+        }
+
+        foreach (array_filter(array_diff($currentBesedaIds, $new)) as $oldId) {
+            if($bs = BesedaAgreement::find()->where(['agreement_id' => $this->id, 'mission_id' => $oldId])->one()){
+                if($bs){
+                    $bs->delete();
+                }
+            }
+        }
     }
 }

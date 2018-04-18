@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use toris\yii2Widgets\typeAheadAddress\AddressAction;
 use frontend\core\services\BesedaStatusService;
 use common\models\Agreement;
+use common\models\Calendar;
 
 /**
  * DefaultController implements the CRUD actions for Beseda model.
@@ -188,6 +189,24 @@ class DefaultController extends \frontend\components\BaseController
             ->all());
 
         return $out;
+    }
+
+
+    public function actionCheckControl(){
+        if(Yii::$app->request->isAjax){
+            $newDate = Yii::$app->request->get('day');
+
+            $days = Calendar::find()
+                ->where(['>', 'day_date', $newDate])
+                ->andWhere(['is_working' => true])
+                ->orderBy('day_date')
+                ->limit(5)
+                ->all();
+
+            $lastDay = array_pop($days);
+
+            return $lastDay->day_date;
+        }
     }
 
 }
